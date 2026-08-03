@@ -1,0 +1,209 @@
+/* pages/personal/personal.wxss */
+page {
+  background-color: #f7f8fa; /* 浅灰背景，突出白色卡片 */
+}
+
+.container {
+  padding-bottom: 20rpx 0;
+}
+
+/* --- 顶部名片 --- */
+.profile-section {
+  border-radius: 20rpx; /* 设置圆角，数值可根据喜好调整 */
+  padding: 30rpx 150rpx;
+  display: flex;
+  align-items: center;
+  background-color: #fff; /* 名片也是白底 */
+  margin-bottom: 20rpx;
+  text-align: left; /* 强制文字靠左 */
+}
+
+.avatar-box {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 30rpx;
+  background-color: #eee;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.nickname {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+  text-align: left;
+}
+
+.user-id {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.user-role {
+  font-size: 26rpx;
+  color: #666;
+  margin-top: 6rpx;
+}
+
+/* 2. 动态分组标题 */
+.section-group {
+  margin-bottom: 30rpx;
+  width: 90%;
+}
+
+/* 标题区域 */
+.section-header {
+  padding: 0rpx; /* 标题稍微留点边距，或者也可以拉满 */
+  margin-bottom: 0; /* 紧贴卡片 */
+  text-align: left;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5rpx;
+}
+
+.main-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #302b47;
+}
+
+/* 新增：灰色英文小字 */
+.sub-title {
+  display: block;
+  font-size: 20rpx;
+  color: #b0b5b9; /* 浅灰色 */
+  letter-spacing: 1rpx;
+  margin-bottom: 15rpx; /* 与下方卡片拉开一点距离 */
+}
+
+/* --- 全宽卡片样式 --- */
+.full-width-card {
+  border-radius: 50rpx;
+  background-color: #fff;
+  width: 100%; /* 宽度拉满 */
+  box-sizing: border-box;
+  border-top:bottom;
+  /* 如果需要卡片上下有极细微的分割线感，可以加 border-top/bottom */
+}
+
+/* 列表项 */
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1rpx solid #eee;/*内部淡分割线 */
+  align-items: center;
+  background-color: #fff;
+  height: 140rpx;
+  border-radius: 16rpx; /* 卡片圆角 */
+  margin-bottom: 20rpx; /* 卡片之间的间距 */
+
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.item-left {
+  display: flex;
+  align-items: column;
+  justify-content: center;
+  align-items: flex-start; /* 强制靠左对齐 */
+}
+
+/* 图标占位符 (纯文字模式下保持间距) */
+.icon-placeholder {
+  width: 40rpx; 
+  height: 40rpx;
+  margin-right: 24rpx;
+  /* background-color: red; 调试用，以后放 icon */
+}
+
+.text-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-name {
+  font-size: 30rpx;
+  color: #333;
+}
+
+.item-desc {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.arrow {
+  font-size: 28rpx;
+  color: #ccc;
+  font-family: monospace;
+  margin-left: 50rpx; /* 关键：给箭头左边加间距，实现呼吸感 */
+}
+
+/* 右侧组合元素（如标签+箭头） */
+.item-right {
+  display: flex;
+  align-items: center;
+  text-align: right;
+  
+}
+
+/* --- 底部退出登录按钮 --- */
+.bottom-action {
+  margin-top: 60rpx;
+  padding: 0 30rpx; /* 底部区域整体留一点边距 */
+  text-align: center; /* 辅助居中 */
+}
+
+.logout-btn {
+  width: 90%;
+  height: 88rpx;
+  margin: 0 auto;       /* 上下外边距为0，左右自动，实现水平居中 */
+
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;     /* 垂直居中 */
+
+  line-height: 88rpx;
+  background-color: #aa4545;
+  color: #f3f3f3;
+  font-size: 30rpx;
+  border-radius: 12rpx;
+  border: 1rpx solid #ede9f1;
+
+  /* 去除小程序 button 默认样式 */
+  line-height: normal;  
+  padding: 0;
+}
+
+/* 修复小程序 button ::after 边框问题 */
+.logout-btn::after {
+  border: none;
+}
+
+/* 列表项点击反馈 */
+.list-item:active {
+  background-color: #f7f8fa; /* 按下变灰 */
+  opacity: 0.8;
+}
+
+/* 退出按钮点击反馈 */
+.logout-btn:active {
+  background-color: #e63946; /* 按下颜色变深 */
+  transform: scale(0.98); /* 微微缩小，增加质感 */
+}

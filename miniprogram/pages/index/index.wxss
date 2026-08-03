@@ -1,0 +1,566 @@
+/* index.wxss */
+
+/* 页面背景 */
+page-container {
+  min-height: 100vh;
+  background-color: #f2f4f8; /* 浅灰背景 */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 【关键】让里面的子元素（标题组、卡片）都水平居中 */
+}
+/* 标题区 */
+.header-group {
+  width: 100%;           /* 占满宽度 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* 【关键】强制内部文字水平居中对齐 */
+  justify-content: center;
+  margin-top: 60rpx;     /* 距离顶部的距离 */
+  margin-bottom: 30rpx;  /* 距离下面卡片的距离 */
+}
+
+/* 主标题：查询库存 */
+.main-title {
+  font-size: 46rpx;      /* 字号 */
+  font-weight: bold;     /* 加粗 */
+  color: #2c3e50;        /* 深色文字 */
+  line-height: 1.2;      /* 行高紧凑 */
+  margin-bottom: 12rpx;  /* 与副标题的间距 */
+   /* 防止文字自身偏移 */
+   text-align: center;    
+   width: auto;           
+ }
+
+ .sub-title {
+  font-size: 26rpx;      /* 小字号 */
+  color: #95a5a6;        /* 浅灰色 */
+  line-height: 1;        /* 去掉多余行高 */
+  text-align: center;    /* 确保文字居中 */
+}
+
+.container {
+  padding: 40rpx 30rpx; /* 上下左右留白 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* --- 1. 右上角圆形待办图标 --- */
+.floating-todo-btn {
+  position: absolute;
+  top: 30rpx; /* 距离顶部距离 */
+  right: 30rpx; /* 距离右侧距离 */
+  width: 80rpx;
+  height: 80rpx;
+  background-color: #ffffff;
+  border-radius: 50%; /* 正圆形 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1); /* 阴影增加立体感 */
+  z-index: 10;
+}
+
+.todo-icon-text {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+}
+
+.red-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30rpx;
+  height: 30rpx;
+  background-color: #ff4d4f;
+  border-radius: 50%;
+  border: 2rpx solid #fff;
+  color: #fff;
+  font-size: 20rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- 2. 核心大卡片 (竖向长方形) --- */
+.main-card {
+  width: 78%;             /* 稍微留点边距，不要撑满 */
+  margin: 20rpx auto;     /* 居中显示 */
+  background-color: #ffffff; /* 【关键】改成纯白色，这样就能看清卡片轮廓了 */
+  border-radius: 48rpx;   /* 圆角 */
+  padding: 120rpx 35rpx;   /* 内部留白，让卡片看起来高一点 */
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.08); /* 【关键】加上阴影，卡片就立体了 */
+   /* 保持整体内容居中 */
+   display: flex;
+   flex-direction: column; 
+   align-items: center;
+ }
+
+
+/* 输入框 */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 50rpx;
+}
+
+.search-input {
+  width: 100%;
+  height: 90rpx;
+  background-color: #f5f6f7;
+  border-radius: 45rpx; /* 胶囊形输入框 */
+  padding: 0 40rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+.clear-btn {
+  position: absolute;
+  right: 30rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40rpx;
+  color: #ccc;
+  padding: 10rpx;
+}
+
+/* --- 3. 按钮组 (垂直排列，间距均匀) --- */
+.btn-group-vertical {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 25rpx; /* 按钮之间的间距 */
+}
+
+.action-btn {
+  width: 100% !important;
+  height: 90rpx;
+  line-height: 90rpx;
+  margin: 0 !important;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box; /* 包含边框和内边距 */
+}
+
+/* 去除小程序 button 默认边框 */
+.btn::after {
+  border: none;
+}
+
+.btn-icon {
+  margin-right: 10rpx;
+  font-size: 34rpx;
+}
+
+/* --- 2. 扫一扫识别：白色方框 + 绿色字体 --- */
+.btn-primary {
+  background-color: #051a019a; /* 白色背景 */
+  color: #f0eded;            /* 黑色文字 */
+  border: 2rpx solid #e0e0e0; /* 绿色细边框 */
+}
+/* --- 3. 查询库存：深绿色实心 (保持不变) --- */
+.btn-highlight {
+  background-color: #3f8814; /* 深绿色 */
+  color: #fff;
+  border: none;
+  box-shadow: 0 6rpx 15rpx rgba(56, 158, 13, 0.3);
+}
+
+.footer-tip {
+  text-align: center;
+  font-size: 25rpx;
+  color: #bbb;
+  margin-top: 30rpx;
+}
+/* ================= 结果卡片样式 ================= */
+/* 解决问题1：卡片太小，通过宽度和阴影增强存在感 */
+.result-card {
+  width: 88%; /* 宽度拉满 */
+  background-color: #fff; /* 白底 */
+  border-radius: 24rpx; /* 大圆角 */
+  overflow: hidden; /* 隐藏溢出内容，配合圆角 */
+  margin: 30rpx auto; /* 上下间距30rpx，左右auto实现自动居中 */
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.08); /* 较深的阴影，突出层级 */
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out; /* 应用出现动画 */
+}
+
+/* 定义向上滑入的动画关键帧 */
+@keyframes slideUp {
+  from { transform: translateY(20rpx); opacity: 0; } /* 初始状态：向下偏移且透明 */
+  to { transform: translateY(0); opacity: 1; } /* 结束状态：归位且不透明 */
+}
+/* --- 1. 卡片头部 --- */
+.card-header {
+  display: flex;             /* 启用 Flex 布局 */
+  align-items: center;       /* 垂直居中 */
+  padding: 30rpx 30rpx 20rpx; /* 上左右内边距，底部留少一点给分割线 */
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-title {
+  font-size: 32rpx; /* 标题字号 */
+  font-weight: bold; /* 加粗 */
+  color: #2f8157; /* 绿色文字 */
+}
+
+/* --- 2. 分割线样式 --- */
+.divider-line {
+  width: 100%;
+  height: 2rpx;              /* 线条粗细 */
+  background-color: #f0f0f0; /* 浅灰色线条 */
+  margin-bottom: 20rpx;      /* 线条与下方内容的间距 */
+}
+
+/* --- 3. 状态胶囊标签  --- */
+.status-tag {
+  display: inline-flex;       /* 保持行内块特性 */
+  margin-left: auto;             
+  
+  /* 内部对齐：确保文字在标签内部居中 */
+  align-items: center;        
+  justify-content: center;    
+  
+  /* --- 尺寸与外观 --- */
+  min-width: 160rpx;          /* 最小宽度 */
+  height: 56rpx;              /* 固定高度 */
+  padding: 0 24rpx;           /* 左右内边距 */
+  box-sizing: border-box;     /* 确保 padding不会撑大高度 */
+  
+  /* --- 胶囊形状 --- */
+  border-radius: 999rpx;      /* 【推荐】使用大数值实现完美半圆胶囊效果 */
+  
+  /* --- 字体样式 --- */
+  font-size: 24rpx;           /* 稍微调小一点字体，显得更精致 */
+  font-weight: bold;
+  line-height: 1;             /* 消除行高干扰，确保垂直绝对居中 */
+  white-space: nowrap;        /* 防止文字换行 */
+}
+
+/* 2. 针对“需要补货”的特定颜色 (橙色风格) */
+.status-tag.warning, 
+.status-tag.need-replenish { 
+  background-color: #ff9f43;  /* 橙色背景 */
+  color: #ffffff;             /* 白色文字 */
+  border: none;               /* 去除边框 */
+}
+
+/* 3. 针对“库存充足”的特定颜色 (绿色风格 - 备用) */
+.status-tag.success {
+  background-color: #2ecc71;  /* 绿色背景 */
+  color: #ffffff;
+}
+
+/* 状态颜色变体：库存充足 (绿色) */
+.status-in {
+  background-color: #52c41a !important; 
+}
+
+/* 状态颜色变体：需要补货 (黄色) */
+.status-low {
+  background-color: #faad14 !important; 
+}
+
+/* 状态颜色变体：无库存 (红色) */
+.status-out {
+  background-color: #ff4d4f !important; 
+}
+
+/* 额外的库存状态类 (可能用于其他地方) */
+.in-stock { background-color: #17a55c; }
+.out-stock { background-color: #fa5151; }
+
+/* 卡片主体内容区 */
+.card-body {
+  padding: 30rpx; /* 内边距 */
+}
+
+/* 信息行样式 (Key-Value 结构) */
+.info-row {
+  display: flex; /* Flex 布局 */
+  margin-bottom: 25rpx; /* 行间距 */
+  align-items: flex-start; /* 顶部对齐，防止多行文字错位 */
+}
+
+.info-row:last-child {
+  margin-bottom: 12rpx; /* 最后一行去掉底部间距 */
+  font-size: 28rpx;
+  color: #333;
+  align-items: flex-start;
+  display: flex;
+}
+
+.label {
+  width: 140rpx;           /* 固定宽度，确保冒号上下对齐 */
+  flex-shrink: 0;          /* 防止被挤压 */
+  color: #666;             /* 稍微浅一点的颜色，更有层次感 */
+}
+
+/*年款和库存的样式*/
+.highlight {
+  color: #0f0f0f; /* 黑色高亮 */
+  font-weight: 0; /* 加粗 */
+  font-size: 30rpx; /* 字号加大 */
+}
+
+/* 分割线 */
+.divider {
+  height: 1rpx; /* 极细线条 */
+  background-color: #eee; /* 浅灰 */
+  margin: 10rpx 0 25rpx 0; /* 上下间距 */
+}
+
+/* 加载提示文字 */
+.loading-tip {
+  margin-top: 20rpx; /* 顶部间距 */
+  color: #999; /* 灰色 */
+  font-size: 28rpx; /* 字号 */
+}
+
+/* 次要操作区容器 */
+.secondary-actions {
+  width: 90%; /* 宽度稍窄，居中显示 */
+  margin: 20rpx auto; /* 上下间距，左右自动居中 */
+}
+
+/* ================= 流水日志按钮样式 (幽灵按钮) ================= */
+.ghost-btn {
+  width: 100%; /* 全宽 */
+  height: 88rpx; /* 高度 */
+  line-height: 88rpx; /* 行高 */
+  
+  background-color: #2E7D32; /* 深绿色背景 (原注释说是透明，但代码是深色) */
+  border: 2rpx solid #d1df11; /* 黄绿色边框 */
+  border-radius: 48rpx; /* 圆角 */
+  
+  color: #f4f5ef; /* 米白色文字 */
+  font-size: 30rpx;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* 清除默认padding */
+}
+
+.ghost-btn::after {
+  border: none; /* 去除小程序按钮默认边框 */
+}
+
+.ghost-btn:active {
+  background-color: rgba(7, 193, 96, 0.1); /* 点击出现淡绿色背景 */
+}
+/* --- 补充样式：用于修复卡片内部布局 --- */
+
+/* 1. 状态行的特殊处理 */
+.status-row {
+  align-items: center; /* 让文字和标签垂直居中 */
+}
+
+/* 2. 卡片底部按钮容器 */
+.action-buttons {
+  display: flex; /* 开启 Flex 布局 */
+  flex-direction: row; /* 水平排列 */
+  padding: 0 30rpx 30rpx 30rpx; /* 上右下左内边距 */
+  gap: 20rpx; /* 两个按钮中间的间距 */
+  border-top: 1rpx solid #f0f0f0; /* 可选：加一条分割线，更好看 */
+}
+
+/* 3. 强制覆盖卡片内按钮的宽度 */
+/* 因为 .custom-btn 默认是 100% 宽，在并排时需要改为 50% 减去间距的一半 */
+.action-buttons .custom-btn {
+  width: calc(50% - 10rpx) !important; 
+  height: 80rpx !important; /* 卡片内的按钮稍微矮一点更精致 */
+  line-height: 80rpx !important;
+  font-size: 28rpx !important;
+}
+
+/* 4. 确保状态标签文字不换行 */
+.status-tag {
+  white-space: nowrap; 
+}
+
+/* 2. 按钮基础样式：强制覆盖微信默认样式 */
+.action-btn {
+  flex: 1; /* 让两个按钮平分宽度 */
+  height: 80rpx !important; /* 固定高度 */
+  font-size: 28rpx !important;
+  line-height: 80rpx !important;
+  margin: 0 !important; /* 去除默认margin */
+  padding: 0 !important; /* 去除默认padding */
+  border-radius: 24rpx !important; /* 圆角 */
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  border: none !important; /* 去除边框 */
+}
+
+/* 底部操作按钮专用样式 */
+.custom-btn {
+  /* 1. 开启 Flex 布局 */
+  display: flex !important;
+  align-items: center !important;     /* 垂直居中 */
+  justify-content: center !important; /* 水平居中 */
+  
+  /* 2. 尺寸控制 (根据你的截图大概估算) */
+  height: 80rpx !important;           /* 设定固定高度 */
+  width: 48% !important;              /* 两个按钮并排，各占约一半 */
+  
+  /* 3. 字体与重置 */
+  font-size: 30rpx !important;        /* 字体稍微大一点更清晰 */
+  line-height: 1 !important;          /* 【关键】重置行高，防止文字偏下 */
+  padding: 0 !important;              /* 清除默认内边距 */
+  margin: 0 1% !important;            /* 左右留一点缝隙 */
+  border-radius: 12rpx !important;    /* 圆角 */
+  border: none !important;
+  color: #fff !important;             /* 文字白色 */
+}
+
+/* 3. 入库按钮 (绿色) */
+.btn-in {
+  background: linear-gradient(135deg, #52c41a, #73d13d) !important; /* 绿色渐变 */
+  color: #ffffff !important; /* 白色文字 */
+  box-shadow: 0 4rpx 10rpx rgba(82, 196, 26, 0.3); /* 绿色投影 */
+}
+
+/* 4. 出库按钮 (红色) */
+.btn-out {
+  background: linear-gradient(135deg, #ff4d4f, #ff7875) !important; /* 红色渐变 */
+  color: #ffffff !important; /* 白色文字 */
+  box-shadow: 0 4rpx 10rpx rgba(255, 77, 79, 0.3); /* 红色投影 */
+}
+
+
+/* 1. 滚动容器的样式 */
+.img-scroll-container {
+  width: 100%;       /* 宽度占满父容器 */
+  white-space: nowrap; /* 关键：强制子元素不换行 */
+}
+
+/* 2. 图片列表容器 */
+.img-list {
+  display: inline-block; /* 配合 white-space: nowrap 使用 */
+}
+
+/* 3. 图片样式调整 */
+.preview-img {
+  width: 200rpx;     /* 根据你的设计稿调整宽度 */
+  height: 200rpx;    /* 高度通常与宽度一致 */
+  margin-right: 15rpx; /* 图片之间的间距 */
+  border-radius: 8rpx; /* 可选：圆角 */
+  display: inline-block; /* 确保图片横向排列 */
+  vertical-align: top;
+}
+
+/* 4. 单张默认图的样式（可选） */
+.single-img {
+  width: 200rpx;
+  height: 200rpx;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between; /* 两端对齐，或者用 space-around */
+  gap: 20rpx; /* 按钮之间的间距 */
+  margin-top: 30rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx dashed #e0e0e0; /* 用虚线分割，显得更轻盈 */
+}
+
+/* 2. 按钮通用样式 */
+.btn-custom {
+  flex: 1; /* 两个按钮平分宽度 */
+  height: 76rpx; /* 高度适中 */
+  line-height: 76rpx;
+  font-size: 28rpx;
+  border-radius: 12rpx; /* 圆角 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* 清除默认padding */
+  transition: all 0.2s; /* 点击时的动画过渡 */
+}
+
+/* 图标微调 */
+.btn-custom .icon {
+  margin-right: 8rpx;
+  font-size: 30rpx;
+}
+
+/* 3. 编辑按钮样式 (绿色系 - 呼应你的查询按钮) */
+.btn-edit {
+  background-color: #2763a8; /* 极浅的绿色背景 */
+  color: #e3f1e4; /* 深绿色文字 */
+}
+
+/* 编辑按钮点击态 */
+.btn-edit:active {
+  background-color: #266777;
+}
+
+/* 4. 删除按钮样式 (红色系 - 警示) */
+.btn-delete {
+  background-color: #922e38; /* 红色背景 */
+  color: #e6cccc; /* 深红色文字 */
+}
+
+/* 删除按钮点击态 */
+.btn-delete:active {
+  background-color: #c25862;
+}
+.search-btn {
+  display: flex !important;       /* 强制开启flex，覆盖小程序默认样式 */
+  justify-content: center;        /* 水平居中 */
+  align-items: center;            /* 垂直居中 */
+  padding-left: 0;                /* 清除默认内边距，防止偏左 */
+}
+
+/* 2. 控制图标的大小和间距 */
+.btn-icon-img {
+  width: 32rpx;   /* 图标宽度，根据实际效果调整 */
+  height: 32rpx;  /* 图标高度 */
+  margin-right: 10rpx; /* 图标和文字之间的距离 */
+  filter: brightness(0) invert(1);
+  /* 如果图标颜色不对，可以用滤镜变白（假设你下载的是黑色图标） */
+  /* filter: brightness(0) invert(1); */ 
+}
+
+.scan-btn {
+  display: flex !important;       /* 强制开启 Flex */
+  justify-content: center;        /* 水平居中 */
+  align-items: center;            /* 垂直居中 */
+}
+
+.btn-custom {
+  justify-content: center;        /* 水平居中 */
+  align-items: center;            /* 垂直居中 */
+}
+
+/* 图标样式 */
+.btn-icon {
+  width: 30rpx;   /* 根据实际效果调整大小 */
+  height: 30rpx;
+  margin-right: 10rpx; /* 图标和文字之间的间距 */
+  opacity: 1; 
+  filter: brightness(0) invert(1);
+}
+
+/* 文字样式（可选，防止文字跑偏） */
+.btn-text {
+  line-height: 1; /* 防止文字行高导致不对齐 */
+}
+
+.btn-inner {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;     /* 垂直居中 */
+  width: 100%;             /* 撑满按钮宽度 */
+}

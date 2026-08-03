@@ -1,0 +1,65 @@
+/* pages/account_setting/setting.wxss */
+/* pages/account_setting/setting.wxss */
+page {
+  background-color: #f7f8fa;
+}
+
+.container {
+  padding-bottom: 50rpx;
+}
+
+/* 顶部卡片 */
+.user-card {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 60rpx 40rpx;
+  margin-bottom: 20rpx;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 30rpx;
+  background-color: #eee; /* 占位色 */
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.nickname {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.id {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 列表组 */
+.list-group {
+  background-color: #fff;
+  margin-bottom: 20rpx;
+}
+
+/* 底部按钮 */
+.footer {
+  margin-top: 40rpx;
+  padding: 0 30rpx;
+}
+
+
+/* 弹窗输入框 */
+.dialog-input {
+  border: 1rpx solid #eee;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  margin: 30rpx 0;
+  font-size: 28rpx;
+}

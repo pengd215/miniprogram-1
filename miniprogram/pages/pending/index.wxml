@@ -1,0 +1,65 @@
+<view class="pending-page">
+  
+  <!-- 1. 顶部标题区 -->
+  <view class="page-header">
+    <view class="header-title">
+      <view class="title-bar"></view>
+      <text>待完善档案</text>
+    </view>
+    <!-- 动态显示数量 -->
+    <text class="header-count">({{pendingList.length}})</text>
+  </view>
+
+  <!-- 2. 卡片列表区 -->
+  <view class="card-list">
+    
+    <!-- 循环渲染列表 -->
+    <!-- 【关键】bindtap 绑定点击事件，data-id 传递数据库ID -->
+    <view 
+      class="task-card" 
+      wx:for="{{pendingList}}" 
+      wx:key="_id" 
+      bindtap="goToEdit" 
+      data-id="{{item._id}}"
+    >
+      
+      <!-- 核心信息网格 -->
+      <view class="card-info-grid" catchtap="stopPropagation"> <!-- catchtap防止点击内部触发跳转，如果不需要可去掉 -->
+        
+        <!-- 第一行：OE编号 -->
+        <view class="info-item">
+          <text class="label">OE编号</text>
+          <!-- 假设数据库字段是 oe_code，请根据实际情况修改 -->
+          <text class="value highlight">{{item.oe_no || '未填写'}}</text>
+        </view>
+
+        <!-- 第二行：状态 -->
+        <view class="info-item">
+          <text class="label">状态</text>
+          <text class="value status-warning">{{item.status_text || '待补全'}}</text>
+        </view>
+
+        <!-- 第三行：车型信息 (占满一行) -->
+        <view class="info-item full-width">
+          <text class="label">车型信息</text>
+          <!-- 假设数据库字段是 car_model -->
+          <text class="value">{{item.car_model || '暂无信息'}}</text>
+        </view>
+
+      </view>
+
+      <!-- 底部操作栏 -->
+      <view class="card-footer">
+        <text class="footer-text">点击进入补全</text>
+        <image class="arrow-icon" src="/images/icon-arrow-right.png" mode="aspectFit"></image>
+      </view>
+
+    </view>
+
+    <!-- 空状态提示 (当列表为空时显示) -->
+    <view class="empty-state" wx:if="{{pendingList.length === 0}}">
+      <text>🎉 太棒了，所有档案已完善！</text>
+    </view>
+
+  </view>
+</view>

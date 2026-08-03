@@ -1,0 +1,123 @@
+/* pages/pending/index.wxss */
+/* 页面背景 */
+.pending-page {
+  background-color: #f7f8fa; /* 浅灰底色，突出白色卡片 */
+  min-height: 100vh;
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+
+/* --- 1. 顶部标题区 --- */
+.page-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.title-bar {
+  width: 8rpx;
+  height: 32rpx;
+  background-color: #07c160; /* 微信绿或你的主题色 */
+  margin-right: 16rpx;
+  border-radius: 4rpx;
+}
+
+.header-count {
+  margin-left: 12rpx;
+  font-size: 28rpx;
+  color: #999;
+  font-weight: normal;
+}
+
+/* --- 2. 卡片容器 --- */
+.task-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04); /* 轻微阴影 */
+  margin-bottom: 24rpx;
+}
+
+.task-card:active {
+  transform: scale(0.98); /* 点击时的按压效果 */
+  background-color: #fafafa;
+}
+
+/* --- 3. 信息网格布局 --- */
+.card-info-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 30rpx;
+}
+
+.info-item {
+  width: 50%; /* 两列布局 */
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24rpx;
+}
+
+/* 让车型信息占满一行 */
+.info-item.full-width {
+  width: 100%;
+}
+
+.label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.value {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 特殊样式：高亮数字 */
+.value.highlight {
+  color: #000;
+  font-family: monospace; /* 数字用等宽字体更好看 */
+}
+
+/* 特殊样式：警告状态 */
+.value.status-warning {
+  color: #ff976a; /* 橙色警告 */
+}
+
+/* --- 4. 底部操作区 --- */
+.card-footer {
+  border-top: 1rpx solid #eee; /* 分割线 */
+  padding-top: 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #07c160; /* 引导色 */
+  font-size: 28rpx;
+}
+
+.footer-text {
+  font-size: 28rpx;
+  color: #576b95; /* 链接蓝 */
+}
+
+.arrow-icon {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding-top: 100rpx;
+  color: #999;
+  font-size: 28rpx;
+}

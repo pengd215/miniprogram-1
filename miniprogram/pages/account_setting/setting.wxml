@@ -1,0 +1,63 @@
+<!--pages/account_setting/setting.wxml-->
+<view class="container">
+  <!-- 顶部用户卡片 -->
+  <view class="user-card">
+    <image 
+      class="avatar" 
+      src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" 
+      mode="aspectFill"
+    ></image>
+    <view class="info">
+      <!-- 优先显示 name，没有则显示 username -->
+      <text class="nickname">{{userInfo.name || userInfo.username || '未设置姓名'}}</text>
+      <text class="id">ID: {{userInfo._id || '加载中...'}}</text>
+    </view>
+  </view>
+
+  <!-- 可修改的信息列表 -->
+  <view class="list-group">
+    <!-- 1. 姓名 (对应数据库 name) -->
+    <van-cell 
+      title="姓名" 
+      value="{{userInfo.name}}" 
+      is-link 
+      bind:click="onEditName" 
+    />
+    
+    <!-- 2. 用户名 (对应数据库 username，假设不可修改，去掉 is-link) -->
+    <van-cell 
+      title="用户名" 
+      value="{{userInfo.username}}" 
+    />
+
+    <!-- 3. 个性签名 (对应数据库 bio) -->
+    <van-cell 
+      title="个性签名" 
+      value="{{userInfo.bio || '暂无签名'}}" 
+      is-link 
+      bind:click="onEditBio" 
+    />
+
+    <!-- 4. 角色 (对应数据库 role，仅展示) -->
+    <van-cell 
+      title="当前角色" 
+      value="{{userInfo.role}}" 
+    />
+  </view>
+
+  <!-- 修改信息的弹窗 -->
+  <van-dialog 
+    use-slot 
+    title="修改信息" 
+    show="{{ showEditDialog }}" 
+    show-cancel-button 
+    bind:confirm="onConfirmEdit"
+  >
+    <input 
+      class="dialog-input" 
+      model:value="{{ editValue }}" 
+      placeholder="请输入新内容" 
+      focus="{{ showEditDialog }}" 
+    />
+  </van-dialog>
+</view>

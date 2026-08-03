@@ -1,0 +1,58 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/index/index",
+    "pages/example/index",
+    "pages/inbound/inbound",
+    "pages/outbound/outbound",
+    "pages/createPart/index",
+    "pages/pending/index",
+    "pages/editPart/index",
+    "pages/logs/logs",
+    "pages/product/list",
+    "pages/employee/profile",
+    "pages/account_setting/setting",
+    "pages/help_feedback/feedback"
+  ],
+    "tabBar": {
+      "color": "#999999",
+      "selectedColor": "#333333",
+      "backgroundColor": "#ffffff",
+      "list": [
+        {
+          "pagePath": "pages/index/index",
+          "text": "工作台",
+          "iconPath": "/images/tab_workbench1.png",
+          "selectedIconPath": "/images/tab_workbench.png" 
+        },
+        {
+          "pagePath": "pages/product/list",
+          "text": "产品列表",
+          "iconPath": "/images/tab_product1.png",
+          "selectedIconPath": "/images/tab_product.png"
+        },
+        {
+          "pagePath": "pages/logs/logs",
+          "text": "流水日志",
+          "iconPath": "/images/tab_logs1.png",
+          "selectedIconPath": "/images/tab_logs.png" 
+        },
+        {
+          "pagePath": "pages/employee/profile",
+          "text": "个人中心",
+          "iconPath": "/images/tab_profile1.png",
+          "selectedIconPath": "/images/tab_profile.png"
+        }
+      ]
+    },
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F6F6F6",
+    "navigationBarTitleText": "云开发 QuickStart",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

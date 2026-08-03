@@ -1,0 +1,135 @@
+/* pages/outbound/outbound.wxss */
+
+/* 全局容器 */
+.container {
+  padding: 30rpx;
+  background-color: #f7f8fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶部标题 */
+.header-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+/* 白色卡片背景 */
+.form-card {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+  flex: 1; /* 让卡片占据剩余空间 */
+}
+
+/* 表单项 */
+.form-item {
+  margin-bottom: 40rpx;
+}
+
+.label {
+  font-size: 30rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+/* 核心修复：输入框宽度设置 */
+.full-input {
+  width: 100%; /* 强制占满父容器宽度 */
+  height: 88rpx;
+  line-height: 88rpx;
+  background-color: #f5f6f7;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 32rpx;
+  box-sizing: border-box; /* 防止padding撑大宽度导致溢出 */
+}
+
+/* 文本域样式 */
+.full-textarea {
+  width: 100%;
+  min-height: 160rpx;
+  background-color: #f5f6f7;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 32rpx;
+  box-sizing: border-box;
+}
+
+/* 带扫一扫的一行布局 */
+.input-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 两端对齐，防止挤压 */
+  gap: 20rpx; /* 输入框和按钮之间的间距 */
+  width: 100%;
+}
+
+/* 扫一扫按钮 */
+.scan-btn {
+  background: linear-gradient(135deg, #07c160, #05a550);
+  color: white !important;
+  border-radius: 12rpx;
+  height: 88rpx !important;
+  line-height: 88rpx !important;
+  padding: 0 30rpx !important;
+  font-size: 28rpx;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+.scan-btn::after { border: none; } /* 去掉默认边框 */
+/* --- 3. 输入框样式补全  --- */
+/* 保证和按钮一样高 */
+.full-input {
+  flex: 1; /* 占据剩余所有宽度 */
+  height: 88rpx; /* 强制高度与按钮一致 */
+  line-height: 88rpx;
+  background-color: #f7f8fa; /* 浅灰背景，显得更有层次 */
+  border-radius: 12rpx; /* 圆角与按钮呼应 */
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+/* 底部按钮区域 */
+.footer-action {
+  margin-top: 60rpx;
+  padding: 0 30rpx; /* 左右留白，不要完全贴边 */
+  padding-bottom: 60rpx; /* 适配全面屏底部 */
+}
+
+/* 确认按钮基础样式 */
+/* --- 5. 确认出库按钮 (升级版) --- */
+.confirm-btn {
+  width: 100%;
+  height: 96rpx;
+  line-height: 96rpx;
+  
+  /* 视觉升级：使用微渐变色，比纯色更显高级 */
+  background: linear-gradient(90deg, #ff6b6b, #ee5253); 
+  color: white;
+  
+  border-radius: 48rpx; /* 胶囊形状 */
+  font-size: 34rpx;
+  font-weight: bold; /* 加粗字体 */
+  letter-spacing: 2rpx; /* 字间距微调 */
+  
+  /* 增加投影，制造悬浮感 */
+  box-shadow: 0 8rpx 20rpx rgba(255, 107, 107, 0.3);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-btn::after { 
+  border: none !important; 
+}

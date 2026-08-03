@@ -1,0 +1,134 @@
+/* pages/login/login.wxss */
+
+/* 定义全局绿色主题变量 */
+page {
+  --primary-color: #2e7d32; /* 深绿，主色调 */
+  --primary-light: #4caf50; /* 亮绿，用于高亮 */
+  --bg-gradient-start: #e8f5e9; /* 极浅绿背景起始 */
+  --bg-gradient-end: #c8e6c9;   /* 浅绿背景结束 */
+  --text-main: #333333;
+  --text-sub: #888888;
+}
+
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 15vh; /* 顶部留白 */
+  box-sizing: border-box;
+}
+
+/* --- 头部区域 --- */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.logo-box {
+  width: 80px;
+  height: 80px;
+  background-color: var(--primary-color);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3); /* 绿色投影 */
+  margin-bottom: 20px;
+  transform: rotate(-10deg); /* 稍微倾斜一点，增加活泼感 */
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary-color);
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 5px;
+  letter-spacing: 2px;
+}
+
+/* --- 表单卡片区域 --- */
+.form-card {
+  width: 85%;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 30px 25px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05); /* 柔和的卡片阴影 */
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background-color: #f5f9f5; /* 极淡的绿色背景框 */
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+/* 输入框聚焦时的效果 */
+.input-group:focus-within {
+  background-color: #fff;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.icon-user, .icon-lock {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.input-field {
+  flex: 1;
+  font-size: 15px;
+  color: var(--text-main);
+  height: 24px; /* 保证垂直居中 */
+}
+
+.placeholder-style {
+  color: #bbbbbb;
+  font-size: 14px;
+}
+
+/* --- 按钮样式 --- */
+.login-btn {
+  margin-top: 10px;
+  background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+  color: white;
+  border-radius: 50px; /* 胶囊按钮 */
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  box-shadow: 0 8px 16px rgba(46, 125, 50, 0.4);
+  border: none;
+  height: 48px;
+  line-height: 48px;
+  padding: 0;
+}
+
+.login-btn:active {
+  opacity: 0.9;
+  transform: scale(0.98);
+}
+
+.footer-text {
+  text-align: center;
+  font-size: 12px;
+  color: #cccccc;
+  margin-top: 20px;
+}

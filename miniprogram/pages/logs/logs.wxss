@@ -1,0 +1,280 @@
+/* pages/logs/logs.wxss */
+page {
+  background-color: #f7f8fa;
+  min-height: 100vh;
+}
+
+.container {
+  padding: 25rpx 30rpx;
+  display: flex;
+  flex-direction: column;
+  /*align-items: center; */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- 筛选卡片样式 (保持不变) --- */
+.search-card {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 0 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 25rpx;
+}
+/* 输入框行布局 */
+.input-group {
+  display: flex;
+  align-items: center;
+  height: 100rpx;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: bold;
+  margin-right: 20rpx;
+  white-space: nowrap;
+}
+
+.main-input {
+  flex: 1;
+  height: 100%;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.divider {
+  height: 1rpx;
+  background-color: #eeeeee;
+  margin: 0; /* 0 0 0 10rpx*/
+}
+
+.action-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100rpx;
+}
+
+.date-picker-box {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding-right: 20rpx;
+}
+
+.date-text {
+  font-size: 28rpx;
+  margin-left: 10rpx;
+  flex: 1;
+}
+
+.date-text.placeholder { color: #999999; }
+.date-text.active { color: #080808; font-weight: 500; }
+
+.arrow {
+  font-size: 20rpx;
+  color: #ccc;
+  margin-left: 10rpx;
+}
+
+.search-btn {
+  background-color: #6f7ed3;
+  color: #fff;
+  font-size: 28rpx;
+  border-radius: 8rpx;
+  padding: 0 30rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  margin: 0;
+}
+.search-btn::after { border: none; }
+
+/* --- 流水列表卡片 --- */
+.list-area {
+  width: 100%;
+  /* 如果这里有 padding: 0 50rpx; 那卡片就会被迫缩得更小 */
+  /* 建议父容器 padding 设为 0，把间距交给 .list-item 的 margin 处理 */
+  padding: 0; 
+}
+
+.list-item {
+  margin: 28rpx 22rpx;
+  box-sizing: border-box; 
+  background: #fff;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  border-radius: 12rpx ; 
+  border-bottom: 1rpx solid #f0f0f0;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+  min-height: 240rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 让内容在垂直方向均匀分布 */
+}
+
+/* 第一行：顶部 */
+.row-top {
+  display: flex;
+  justify-content: space-between;/* 两端对齐 */
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0; /* 分割线 */
+  padding-bottom: 15rpx;
+}
+
+.left-info {
+  display: flex;
+  align-items: flex-start; /* 基线对齐，让编号和文字底部对齐 */
+  overflow: hidden;
+  margin-right: 20rpx; /* 给右侧数量留出最小间距 */
+  flex: 1;
+}
+
+.serial-num {
+  font-size: 24rpx;
+  color: #999;
+  margin-right: 12rpx;
+  font-weight: bold;
+  background: #f0f0f0;
+  padding: 2rpx 8rpx;
+  border-radius: 6rpx;
+  flex-shrink: 0; /* ✅ 防止序号被压缩 */
+  height: fit-content;     /* 高度自适应 */
+}
+
+/* OE码容器 */
+.oe-container {
+  display: flex;
+  flex-wrap: wrap; /* 允许换行 */
+  gap: 12rpx;      /* 间距 */
+  margin-top: 8rpx;
+  width: 100%;
+}
+
+/* 单个OE码标签 */
+.oe-tag {
+  background-color: #f7f8fa; /* 浅灰背景 */
+  color: #333;
+  font-size: 24rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 6rpx; /* 圆角 */
+  border: 1rpx solid #e1e4e8; 
+  word-break: break-all;
+}
+
+.qty-text {
+  font-size: 34rpx;
+  font-weight: 800;
+  white-space: nowrap; /* ✅ 防止数字换行 */
+  flex-shrink: 0;      /* ✅ 防止数字被挤压 */
+}
+
+.qty-num {
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.text-green { color: #02753a; } /* 入库绿 */
+.text-red { color: #b62828; }   /* 出库红 */
+
+/* 第二行：中部 */
+.row-mid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.operator {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.type-tag {
+  font-size: 24rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  border: 1rpx solid transparent;
+}
+
+/* 入库标签样式 */
+.tag-in {
+  background-color: #c8ecdc;
+  color: #176d40;
+  border-color: #30c578;
+}
+
+/* 出库标签样式 */
+.tag-out {
+  background-color: #fff0f0;
+  color: #7e2727;
+  border-color: #fa5151;
+}
+
+/* 第三行：底部时间 */
+.row-bottom {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.time-text {
+  font-size: 24rpx;
+  color: #bbb;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 150rpx;
+}
+.empty-icon { font-size: 80rpx; margin-bottom: 20rpx; opacity: 0.5; }
+.empty-text { color: #999; font-size: 28rpx; }
+
+/* 容器：横向排列，留出一点间距 */
+.tab-container {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx; /* 上下左右内边距 */
+  background-color: #fff; /* 背景色，根据你整体设计可以是透明或白色 */
+}
+
+/* 单个按钮的基础样式 */
+.tab-item {
+  display: inline-flex; 
+  justify-content: center;
+  align-items: center;
+  /* 尺寸控制 */
+  height: 60rpx;        /* 固定高度，保证圆润 */
+  padding: 0 35rpx;     /* 左右内边距，决定按钮宽度 */
+  min-width: 100rpx;    /* 最小宽度，防止文字太少时太窄 */
+  /* 外观样式 */
+  font-size: 28rpx;
+  border-radius: 30rpx; /* 圆角设为高度的一半，形成胶囊状 */
+  margin-right: 20rpx;  /* 按钮之间的间距 */
+  /* 默认状态（未选中） */
+  background-color: #f5f5f5; /* 浅灰背景 */
+  color: #666;               /* 深灰文字 */
+  /* 禁止换行和收缩 */
+  white-space: nowrap;
+  flex-shrink: 0; 
+  /* 点击反馈效果 */
+  transition: all 0.2s ease;
+}
+
+/* 选中状态 (.active) */
+.tab-item.active {
+  background-color: #2979ff; /* 选中背景：亮蓝色 (参照图片的颜色) */
+  color: #ffffff; /* 选中文字：白色 */
+  font-weight: 500; /* 选中时字体稍微加粗 */
+  box-shadow: 0 4rpx 10rpx rgba(41, 121, 255, 0.2); /* 可选：加一点阴影更有立体感 */
+}
+
+/* 最后一个按钮去掉右边距 */
+.tab-item:last-child {
+  margin-right: 0;
+}

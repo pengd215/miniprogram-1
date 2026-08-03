@@ -1,0 +1,81 @@
+<!--pages/editPart/index.wxml-->
+<view class="container">
+  <view class="page-tip">请补全配件信息，带 <text class="red">*</text> 为必填</view>
+
+  <!-- 基础档案 -->
+  <view class="card">
+    <view class="card-title">基础档案</view>
+    
+    <view class="form-group">
+      <view class="label">OE 编号 <text class="red">*</text></view>
+      <input class="input-full" type="text" value="{{formData.oe_no}}" data-key="oe_no" bindinput="onInput" disabled />
+    </view>
+
+    <view class="form-group">
+      <view class="label">适用车型 <text class="red">*</text></view>
+      <input class="input-full" type="text" placeholder="例如：思域" value="{{formData.car_model}}" data-key="car_model" bindinput="onInput" />
+    </view>
+
+    <view class="form-group">
+      <view class="label">库存位置 <text class="red">*</text></view>
+      <input class="input-full" type="text" placeholder="例如：A-01-01" value="{{formData.location}}" data-key="location" bindinput="onInput" />
+    </view>
+
+    <view class="form-group">
+      <view class="label">初始库存</view>
+      <input class="input-full" type="number" placeholder="0" value="{{formData.stock}}" data-key="stock" bindinput="onInput" disabled="{{isReadOnlyStock}}" />
+      <view class="hint">建档时已录入，不可修改</view>
+    </view>
+  </view>
+
+  <!-- 详细参数 -->
+  <view class="card">
+    <view class="card-title">详细参数 (选填)</view>
+    
+      <!-- 图片上传区域 -->
+    <view class="form-section">
+     <view class="section-title">产品图片 (选填)</view>
+      <view class="image-grid">
+        <!-- 已上传的图片列表 -->
+        <block wx:for="{{formData.images}}" wx:key="index">
+          <view class="img-item">
+           <image src="{{item}}" mode="aspectFill" class="preview-img" bindtap="previewImage" data-src="{{item}}"></image>
+            <!-- 删除按钮 -->
+            <view class="delete-btn" bindtap="deleteImage" data-index="{{index}}">×</view>
+          </view>
+       </block>
+
+    <!-- 上传按钮 (限制最多3张) -->
+        <view class="upload-btn" wx:if="{{formData.images.length < 3}}" bindtap="chooseImage">
+          <text class="icon">+</text>
+          <text class="tip">添加图片</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <view class="label">适用年款</view>
+      <input class="input-full" type="text" placeholder="例如：12-15" value="{{formData.model_year}}" data-key="model_year" bindinput="onInput" />
+    </view>
+
+    <view class="form-group">
+      <view class="label">方向</view>
+      <input class="input-full" type="text" placeholder="例如：前右" value="{{formData.direction}}" data-key="direction" bindinput="onInput" />
+    </view>
+
+    <view class="form-group">
+      <view class="label">KYB 编号</view>
+      <input class="input-full" type="text" placeholder="选填" value="{{formData.kyb_no}}" data-key="kyb_no" bindinput="onInput" />
+    </view>
+
+    <view class="form-group">
+      <view class="label">参考价格</view>
+      <input class="input-full" type="digit" placeholder="选填" value="{{formData.price}}" data-key="price" bindinput="onInput" />
+    </view>
+
+  </view>
+
+  <view class="footer-btn-area">
+    <button class="submit-btn" bindtap="handleSubmit">保存补全信息</button>
+  </view>
+</view>

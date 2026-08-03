@@ -1,0 +1,58 @@
+<!-- pages/outbound/outbound.wxml -->
+<view class="container">
+  <!-- 顶部标题 -->
+  <view class="header-title">销售出库单</view>
+
+  <!-- 表单卡片区域 -->
+  <view class="form-card">
+    
+    <!-- OE码输入区 -->
+    <view class="form-item">
+      <view class="label">减震器编号 / OE码</view>
+      <view class="input-row">
+        <!-- 这里的 class="full-input" 是解决输入框太窄的关键 -->
+        <input 
+          class="full-input" 
+          placeholder="请输入或扫描 OE 编码" 
+          value="{{oeCode}}"
+          bindinput="onOeInput"
+        />
+        <button class="scan-btn" size="mini" bindtap="handleScan">
+          <text class="icon"></text> 扫一扫
+        </button>
+      </view>
+    </view>
+
+    <!-- 数量输入区 -->
+    <view class="form-item">
+      <view class="label">出库数量</view>
+      <input 
+        class="full-input" 
+        type="number" 
+        placeholder="请输入出库数量" 
+        value="{{quantity}}" 
+        bindinput="onQuantityInput"
+      />
+    </view>
+
+    <!-- 备注信息区 -->
+    <view class="form-item">
+      <view class="label">备注信息</view>
+      <textarea 
+        class="full-textarea" 
+        placeholder="选填，如：客户名称" 
+        value="{{remark}}" 
+        bindinput="onRemarkInput"
+        auto-height
+      ></textarea>
+    </view>
+
+  </view>
+
+  <!-- 底部操作按钮 (改为红色主题) -->
+  <view class="footer-action">
+    <button class="confirm-btn btn-red" bindtap="confirmOutbound">
+      确认出库
+    </button>
+  </view>
+</view>

@@ -1,0 +1,57 @@
+<!-- pages/personal/personal.wxml -->
+<view class="container">
+
+<!-- 1. 顶部个人名片 -->
+<view class="profile-section">
+  <view class="avatar-box">
+    <!-- 微信头像占位 -->
+    <open-data type="userAvatarUrl" class="avatar"></open-data>
+  </view>
+
+  <view class="user-details">
+    <view class="nickname">
+      <open-data type="userNickName" style="display: none;"></open-data>
+      <text>{{userName || '加载中...'}}</text>
+    </view>
+
+    <text class="user-role">{{roleText}}</text>
+      <text class="user-_id">ID: {{userId}}</text>
+       <!-- 上面动态ID -->
+  </view>
+</view>
+
+<!-- 2. 动态菜单分组 -->
+<block wx:for="{{menuGroups}}" wx:key="groupTitle">
+    <view class="section-group">
+      <!-- 分组标题（如：账户服务） -->
+      <view class="section-header">
+        <view class="title-row">
+          <text class="main-title">{{item.groupTitle}}</text>
+        </view>
+        <text class="sub-title">{{item.groupEn}}</text>
+      </view>
+
+      <!-- 分组下的菜单卡片 -->
+      <view class="full-width-card">
+        <block wx:for="{{item.items}}" wx:key="url">
+          <view class="list-item" bindtap="navigateTo" data-url="{{item.url}}">
+            <view class="item-left">
+              <view class="icon-placeholder"></view>
+              <view class="text-content">
+                <text class="item-name">{{item.name}}</text>
+                <text class="item-desc">{{item.desc}}</text>
+              </view>
+            </view>
+            <text class="arrow">></text>
+          </view>
+        </block>
+      </view>
+    </view>
+  </block>
+
+<!-- 5. 底部退出登录 -->
+  <view class="bottom-action">
+    <button class="logout-btn" bindtap="handleLogout">退出登录</button>
+  </view>
+  
+</view>

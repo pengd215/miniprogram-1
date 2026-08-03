@@ -1,0 +1,65 @@
+<view class="container">
+
+  <view class="page-tip">请录入配件的基础信息，带 <text class="required-mark">*</text> 为必填</view>
+    <!-- 第一组：核心必填信息 -->
+
+  <view class="form-section">
+    <view class="section-title">基础档案</view>
+
+  <view class="form-group required">
+    <text class="label">OE编号 <text class="star">*</text></text>
+    <input class="input" placeholder="请输入OE号" value="{{formData.oe_no}}" bindinput="onInput" maxlength="-1" data-key="oe_no" />
+  </view>
+
+  <view class="form-group required">
+    <text class="label">适用车型 <text class="star">*</text></text>
+    <input class="input" placeholder="例如：思域、雅阁" value="{{formData.car_model}}" bindinput="onInput" data-key="car_model" />
+  </view>
+
+  <view class="form-group required">
+    <text class="label">初始库存 <text class="star">*</text></text>
+    <input class="input" type="number" placeholder="0" value="{{formData.stock}}" bindinput="onInput" data-key="stock" />
+  </view>
+
+  <view class="form-group required">
+    <text class="label">库存位置<text class="star">*</text></text>
+    <input class="input" placeholder="例如：A-01-01" value="{{formData.location}}" bindinput="onInput" data-key="location" />
+  </view>
+  </view>
+
+
+
+ <!-- 第二组：详细参数 -->
+  <view class="form-section">
+    <view class="section-title">详细参数 (选填)</view>
+
+  <!-- 选填区域 -->
+  <view class="form-group">
+    <text class="label">KYB编号</text>
+    <input class="input" placeholder="例如：332405" value="{{formData.brand}}" bindinput="onInput" data-key="kyb_no" />
+  </view>
+
+  <view class="form-group">
+    <text class="label">适用方向</text>
+    <input class="input" placeholder="例如：前右" value="{{formData.direction}}" bindinput="onInput" data-key="direction" />
+  </view>
+
+
+  <view class="form-group">
+    <text class="label">参考价格</text>
+    <input class="input" placeholder="例如：50" value="{{formData.price}}" bindinput="onInput" data-key="price" />
+  </view>
+
+  <view class="form-group">
+    <text class="label">适用年款</text>
+    <input class="input" placeholder="例如：12-14" value="{{formData.model_year}}" bindinput="onInput" data-key="model_year" />
+  </view>
+
+ 
+ <!-- 底部占位，防止内容被按钮遮挡 -->
+  <view class="bottom-spacer"></view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <button class="submit-btn" bindtap="handleSubmit">立即建档入库</button>
+</view>

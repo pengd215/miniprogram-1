@@ -1,0 +1,191 @@
+page {
+  background-color: #f7f8fa;
+   /* 定义全局字体栈，优先使用苹果和安卓系统的原生字体，保证文字清晰 */
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+}
+/* 页面的主要包裹容器 */
+.container {
+  padding: 30rpx;/* 上下左右内边距，防止内容贴边 */
+  padding-bottom: 150rpx; /* 底部留出较大空间，防止内容被底部的固定按钮遮挡 */
+}
+/* 页面顶部的提示文字样式 */
+.page-tip {
+  font-size: 26rpx;
+  color: #999; /* 灰色文字 */
+  margin-bottom: 30rpx;
+  text-align: center;/* 文字居中 */
+}
+.red { color: #0f0c0c; }
+/* 白色卡片容器：用于包裹表单区域 */
+.card {
+  background-color: #ffffff;/* 纯白背景 */
+  border-radius: 16rpx;/* 圆角设计，视觉更柔和 */
+  padding: 10rpx 30rpx; /* 内部留白 */
+  margin-bottom: 30rpx;/* 卡片之间的间距 */
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);/* 添加淡淡的阴影，制造悬浮感 */
+}
+/* 卡片内部的标题栏 */
+.card-title {
+  font-size: 30rpx;
+  font-weight: bold; /* 加粗 */
+  color: #333;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;/* 标题下方的一条分割线 */
+  margin-bottom: 10rpx;
+}
+/* 表单项的分组容器 */
+.form-group {
+  padding: 25rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;/* 每一项之间用极细的灰线分隔 */
+}
+.form-group:last-child { border-bottom: none; }/* 最后一项去掉底边框，保持美观 */
+/* 输入框上方的标签文字（如“OE编号”） */
+.label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 15rpx;
+  display: block;/* 让标签独占一行 */
+}
+/* 输入框主体样式 */
+.input-full {
+  width: 100%;
+  font-size: 32rpx;
+  color: #333;
+  background-color: #f9f9f9;
+  padding:25rpx 20rpx;/* <--- 输入框内边距（决定高度） */
+  min-height: 88rpx;
+  line-height: 1.5;
+  border-radius: 8rpx;
+  display: flex; /* 4. 垂直居中修正（针对部分安卓机） */
+  align-items: center;
+  box-sizing: border-box;/* 确保padding不会撑大宽度 */
+}
+/* 输入框占位符（Placeholder）样式提示词 */
+.input-full::placeholder {
+  color: #ccc;
+  font-size: 25rpx;
+  line-height: normal;  /* 确保提示词也是单行垂直居中 */
+}
+.input-full[disabled] {
+  background-color: #f0f0f0;
+  color: #999;
+}
+
+.hint {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+.footer-btn-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+  box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.05);
+  z-index: 99;
+  padding-bottom: calc(20rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+}
+/* 提交按钮主体 */
+.submit-btn {
+  background: linear-gradient(90deg, #07c160, #1ab827);/* 微信绿渐变背景 */
+  color: #fff;
+  border-radius: 50rpx;/* 胶囊形状圆角 */
+  font-size: 32rpx;
+  height: 90rpx;
+  line-height: 90rpx;
+  font-weight: bold;
+  box-shadow: 0 6rpx 20rpx rgba(7, 193, 96, 0.3);/* 绿色投影，增加立体感 */
+}
+/* 按钮点击时的按压效果 */
+.submit-btn:active {
+  opacity: 0.9;
+  transform: scale(0.88);/* 轻微缩小 */
+}
+
+
+/* --- 图片网格容器 --- */
+.image-grid {
+  display: flex;
+  flex-wrap: wrap; /* 允许换行 */
+  gap: 20rpx; /* 图片和按钮之间的间距 */
+  padding: 20rpx 0; /* 上下留白 */
+}
+
+/* --- 单个图片/按钮容器 --- */
+.img-item, .upload-btn {
+  width: 200rpx; /* 固定宽度 */
+  height: 200rpx; /* 固定高度，保持正方形 */
+  position: relative;
+  border-radius: 16rpx; /* 圆角设计 */
+  overflow: hidden; /* 裁剪溢出内容 */
+  background-color: #f7f8fa; /* 浅灰底色，防止透明图穿帮 */
+  border: 1rpx solid #ebedf0; /* 淡淡的边框 */
+}
+
+/* --- 已上传的图片样式 --- */
+.preview-img {
+  width: 100%;
+  height: 100%;
+  display: block; /* 消除图片底部间隙 */
+}
+
+/* --- 删除按钮样式 (悬浮在图片右上角) --- */
+.delete-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44rpx;
+  height: 44rpx;
+  background-color: rgba(0, 0, 0, 0.6); /* 半透明黑底 */
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom-left-radius: 16rpx; /* 只有左下角有圆角 */
+}
+
+/* 删除图标 (使用伪元素画个叉，或者你原本的icon字体) */
+.delete-btn::before, .delete-btn::after {
+  content: '';
+  position: absolute;
+  width: 20rpx;
+  height: 2rpx;
+  background-color: #fff;
+}
+.delete-btn::before { transform: rotate(45deg); }
+.delete-btn::after { transform: rotate(-45deg); }
+
+
+/* --- 上传按钮样式 (+号框) --- */
+.upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f7f8fa;
+  border: 2rpx dashed #dcdee0; /* 虚线边框暗示可点击 */
+  box-sizing: border-box;
+}
+
+.upload-btn:active {
+  background-color: #e5e5e5; /* 点击时的反馈色 */
+}
+
+/* 加号图标 */
+.upload-btn .icon {
+  font-size: 60rpx;
+  color: #3296fa; /* 品牌蓝 */
+  line-height: 1;
+  margin-bottom: 8rpx;
+}
+
+/* 提示文字 */
+.upload-btn .tip {
+  font-size: 24rpx;
+  color: #969799;
+}

@@ -1,0 +1,197 @@
+<!-- index.wxml -->
+<view class="page-container">
+
+<!-- 1. 右上角悬浮：待办圆形图标 -->
+<view class="floating-todo-btn" bindtap="goToPending">
+  <!-- 这里用文字模拟图标，你可以换成 image -->
+  <text class="todo-text">待办</text> 
+  <!-- 红点角标 (右上角) -->
+  <view class="red-dot" wx:if="{{pendingCount > 0}}">{{pendingCount}}</view>
+</view>
+
+<view class="header-group">
+    <text class="main-title">查询库存</text>
+    <text class="sub-title">快速查询商品库存与价格</text>
+  </view>
+
+<!-- 2. 核心搜索卡片 (竖向长方形) -->
+<view class="main-card">
+  
+
+  <!-- 输入框 (居中) -->
+  <view class="input-wrapper">
+    <input 
+      class="search-input"
+      placeholder="输入 KYB/OE号/车型"
+      value="{{oeCode}}"
+      bindinput="onInput"
+      confirm-type="search"
+      bindconfirm="handleSearch"
+      maxlength="-1"
+    />
+    <!-- 清除按钮 -->
+    <view wx:if="{{oeCode}}" class="clear-btn" bindtap="clearInput">×</view>
+  </view>
+
+  <!-- 按钮组 (垂直排列，间距均匀) -->
+  <view class="btn-group-vertical">
+    <!-- 按钮1：扫一扫 (绿色) -->
+    <button class="action-btn btn-primary scan-btn" bindtap="handleScan">
+      <image 
+    src="/images/icons/scan_icon.png" 
+    class="btn-icon-img" 
+    mode="aspectFit"
+      ></image>
+  
+      <text>扫码识别</text>
+    </button>
+
+    <!-- 按钮2：查询库存 (深绿/强调) -->
+    <button class="action-btn btn-highlight search-btn" bindtap="handleSearch">
+      <image 
+    src="/images/icons/search_icon.png" 
+    class="btn-icon-img" 
+    mode="aspectFit"
+      ></image>
+  
+      <text>查询库存</text>
+    </button>
+
+  </view>
+
+  <!-- 底部提示文字 -->
+  <view class="footer-tip">支持型号模糊搜索</view>
+
+</view>
+
+  <!-- 4. 加载状态提示 (放在结果卡片前面体验更好) -->
+  <view wx:if="{{loading}}" class="loading-tip">
+    <text>正在云端检索数据...</text>
+  </view>
+
+  <!-- 5. 结果展示区域 (核心修复部分) -->
+  <!-- 只有 productData 有值时才显示整个卡片 -->
+  <view wx:if="{{productData}}" class="result-card">
+
+    <!-- 卡片头部 -->
+    <view class="card-header">
+      <text class="card-title">查询结果</text>
+        <!-- 根据 stock 数值动态切换样式类名 -->
+      <text class="status-tag {{productData.stock > 10 ? 'status-in' : (productData.stock > 0 ? 'status-low' : 'status-out')}}">
+          {{productData.stock > 10 ? '库存充足' : (productData.stock > 0 ? '需要补货' : '缺货预警')}}
+        </text>
+    </view>
+
+    <!-- 2. 分割线：贯穿整个卡片宽度 -->
+    <view class="divider-line"></view>
+
+    <!-- 卡片内容区 -->
+    <view class="item-left">
+    <!-- 判断是否有图片，有则显示，无则显示默认占位图 -->
+      <scroll-view 
+      class="img-scroll-container" 
+      scroll-x="{{true}}" 
+      wx:if="{{productData.images && productData.images.length > 0}}"
+    >
+    <!-- 【新增】内部列表容器，用于排列图片 -->
+      <view class="img-list">
+      <!-- 【修改】使用 wx:for 循环渲染所有图片 -->
+       <image 
+         wx:for="{{productData.images}}" 
+         wx:key="*this" 
+         src="{{item}}" 
+         mode="aspectFill" 
+         class="preview-img"
+         bindtap="previewImage"
+         data-src="{{item}}" 
+       />
+      </view>
+      </scroll-view>
+
+  <!-- 【保留】没有图片时显示默认占位图 -->
+      <image 
+       wx:else
+        src="../../images/default-product.png" 
+        mode="aspectFill" 
+        class="preview-img single-img"
+      />
+    </view>
+
+    <view class="card-body">
+      <view class="info-row">
+        <text class="label">适用车型:</text>
+        <text class="value">{{productData.car_model || '暂无'}}</text>
+      </view>
+
+      <view class="info-row">
+        <text class="label">KYB编号:</text>
+        <text class="value">{{productData.kyb_no || '暂无'}}</text>
+      </view>
+
+      <!-- ✅ 修改这里：OE编号区域 -->
+      <view class="info-row oe-container">
+        <text class="label">OE编号:</text>
+    <!-- 这里的 value 类名保留，但内容直接放 item.oe_no -->
+        <text class="value oe-grid-text">{{productData.oe_no}}</text> 
+      </view>
+
+      <view class="info-row">
+        <text class="label">适用方向:</text>
+        <text class="value">{{productData.direction || '暂无'}}</text>
+      </view>
+
+      <view class="info-row">
+        <text class="label">适用年款:</text>
+        <text class="value highlight">{{productData.model_year}}</text>
+      </view>
+
+      <view class="info-row">
+        <text class="label">当前库存:</text>
+        <text class="value highlight">{{productData.stock}}</text>
+      </view>
+
+      <view class="info-row">
+        <text class="label">库存位置:</text>
+        <text class="value">{{productData.location || '未分配'}}</text>
+      </view>
+
+      <view class="info-row">
+        <text class="label">参考价格:</text>
+        <text class="value price">￥{{productData.price || '0'}}</text>
+      </view>
+
+      <view class="action-buttons">
+      <!-- 编辑按钮：传递 _id -->
+       <button 
+          class="btn-custom btn-edit" 
+          bindtap="goToEdit" 
+          data-id="{{productData._id}}"
+       >
+        <view class="btn-inner">
+  <!-- 👇 将 text 替换为 image -->
+            <image src="/images/icons/icon_edit.png" class="btn-icon" mode="aspectFit"></image>
+            <text class="btn-text">编辑</text>
+          </view>
+        </button>
+    
+    <!-- 删除按钮：传递 _id -->
+        <button 
+          class="btn-custom btn-delete" 
+          bindtap="handleDelete" 
+         data-id="{{productData._id}}"
+        >
+  <!-- 👇 将 text 替换为 image -->
+          <image src="/images/icons/icon_delete.png" class="btn-icon" mode="aspectFit"></image>
+          <text class="btn-text">删除</text>
+       </button>
+      </view>
+    </view>
+
+    <!-- 6. 底部操作按钮 -->
+    <view class="action-buttons">
+      <button class="custom-btn btn-in" bindtap="goToInbound" data-item="{{productData}}">入库</button>
+      <button class="custom-btn btn-out" bindtap="goToOutbound" data-item="{{productData}}">出库</button>
+    </view>
+
+  </view> 
+</view>

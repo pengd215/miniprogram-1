@@ -1,0 +1,121 @@
+/* pages/createPart/index.wxss */
+page {
+  background-color: #f7f8fa; /* 浅灰背景，减少视觉疲劳 */
+  height: 100%;
+}
+
+.container {
+  padding: 30rpx;
+  padding-bottom: 160rpx; /* 为底部按钮留出空间 */
+}
+
+/* 顶部提示文字 */
+.page-tip {
+  font-size: 26rpx;
+  color: #969799;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.required-mark {
+  color: #161112;
+  font-size: 32rpx;
+}
+
+/* 卡片容器样式 */
+.form-section {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 20rpx 80rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+}
+
+/* 分组标题 */
+.section-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #323233;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #ebedf0;
+  margin-bottom: 10rpx;
+}
+
+/* 表单行布局 */
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 25rpx 0;
+  border-bottom: 1rpx solid #f2f3f5;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+/* 标签样式 */
+.label {
+  width: 180rpx;
+  font-size: 28rpx;
+  color: #646566;
+  flex-shrink: 0; /* 防止标签被压缩 */
+}
+
+.required {
+  color: #ee0a24;
+  margin-left: 4rpx;
+}
+
+/* 输入框样式 */
+.input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #323233;
+  text-align: right; /* 输入内容靠右，符合移动端习惯 */
+  height: 60rpx;
+  line-height: 60rpx;
+}
+
+.placeholder {
+  color: #c8c9cc;
+}
+
+/* 双列布局 */
+.form-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.half {
+  width: 48%;
+}
+
+/* 底部固定栏 */
+.footer-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+/* 提交按钮 */
+.submit-btn {
+  background-color: #752328; /* 提交按钮颜色，或者用你的品牌色 */
+  color: #ffffff;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  height: 90rpx;
+  line-height: 90rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-btn:active {
+  opacity: 0.8;
+}

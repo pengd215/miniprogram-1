@@ -1,0 +1,103 @@
+<!-- pages/logs/logs.wxml -->
+<view class="container">
+  
+  <!-- 顶部筛选卡片 -->
+  <view class="search-card">
+    <view class="input-group">
+      <text class="label">🔍搜索</text>
+      <input class="main-input" placeholder="输入OE编码或单号" value="{{searchKey}}" bindinput="onInputSearch" confirm-type="search" />
+    </view>
+    <view class="divider"></view>
+    <view class="action-group">
+      <picker mode="date" value="{{selectedDate}}" bindchange="onDateChange">
+        <view class="date-picker-box">
+          <text class="label">📅日期</text>
+          <text class="date-text {{selectedDate ? 'active' : 'placeholder'}}">{{selectedDate ? selectedDate : '不限'}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+      <button class="search-btn" bindtap="onSearch">查询</button>
+    </view>
+    <!-- Tab 切换区域 -->
+    <view class="tab-container">
+      <view class="tab-item {{currentTab === 'all' ? 'active' : ''}}" 
+      bindtap="onTabChange" 
+      data-type="all">
+      全部</view>
+      <view class="tab-item {{currentTab === 'inbound' ? 'active' : ''}}" 
+      bindtap="onTabChange" 
+      data-type="inbound">
+      入库</view>
+      <view class="tab-item {{currentTab === 'outbound' ? 'active' : ''}}" 
+      bindtap="onTabChange" 
+      data-type="outbound">
+      出库</view>
+   </view>
+  </view>
+
+  <!-- 列表区域 -->
+  <view class="list-area">
+    <block wx:if="{{FlowList.length > 0}}">
+      <!-- wx:for-index="idx" 用于获取索引，实现从1开始编号 -->
+      <view class="list-item" wx:for="{{FlowList}}" wx:key="_id" wx:for-index="idx">
+        
+        <!-- 第一行：编号+OE码 (左) 与 数量 (右) -->
+        <view class="row-top">
+          <view class="left-info">
+            <!-- 序号：索引值 + 1 -->
+            <text class="serial-num">{{idx + 1}}</text>
+            <!-- OE码容器 -->
+            <view class="oe-container">
+            <!-- 循环渲染拆分后的数组 -->
+                <block wx:for="{{item.oeList}}" wx:key="index" wx:for-item="oe">
+                  <text class="oe-tag" wx:if="{{oe}}">{{oe}}</text>
+                </block>
+                <text class="oe-tag" wx:if="{{!item.oeList || item.oeList.length === 0}}">
+          {{item.order_no || item.oe_code || '无单号'}}
+                </text>
+            </view>
+          </view>
+          <!-- 通过 wx:if 判断类型来决定正负号和颜色 -->
+          <block wx:if="{{item.type == 'inbound'}}">
+             <text class="qty-text text-green">+{{item.quantity}}</text>
+          </block>
+          <block wx:else>
+             <text class="qty-text text-red">{{item.quantity}}</text>
+          </block>
+        </view>
+
+        <!-- 第二行：操作人 (左) 与 类型标签 (右) -->
+        <view class="row-mid">
+          <text class="_openid">操作人：{{item._openid_name ||item._openid|| '无数据'}}</text>
+          
+          <!-- 动态类名：如果是入库用 tag-in，否则用 tag-out -->
+          <!-- 核心修复：通过 wx:if 决定标签样式和文字 -->
+          <block wx:if="{{item.type == 'inbound'}}">
+            <text class="tag tag-in">入库</text>
+          </block>
+          <block wx:else>
+            <text class="tag tag-out">出库</text>
+          </block>
+        </view>
+
+        <!-- 第三行：时间 (底部通栏) -->
+        <view class="row-bottom">
+          <text class="time-text">时间：{{item.formatted_time || item.create_time || '未知时间 '}}</text>
+        </view>
+        
+        <!-- 底部备注区域 -->
+        <view class="item-remark" wx:if="{{item.remark}}">
+          <text class="remark-label">备注：</text>
+          <text class="remark-content">{{item.remark|| '无'}}</text>
+        </view>
+
+      </view>
+    </block>
+
+    <!-- 空状态提示 -->
+    <view wx:else class="empty-state">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无流水记录</text>
+    </view>
+  </view>
+</view>
