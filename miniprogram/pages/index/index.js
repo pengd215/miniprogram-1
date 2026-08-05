@@ -6,12 +6,18 @@ Page({
     oeCode: '',           // 搜索框输入内容
     productData: null,    // 查询到的完整商品对象
     loading: false,        // 加载状态
-    pendingCount: 0 // 待办数量
+    pendingCount: 0        // 待办数量
   },
 
   onShow() {
     // 每次进入首页，刷新待办数量
     this.fetchPendingCount();
+    // 2. 关键修复：如果当前输入框有值（说明是查询后进去的），返回时自动重新查询
+    if (this.data.oeCode && this.data.oeCode.trim() !== '') {
+      setTimeout(() => {
+        this.handleSearch(); 
+      }, 300); // 延迟300毫秒，避免和页面渲染冲突
+    }
   },
 
   // 获取待办数量
@@ -76,7 +82,7 @@ Page({
           if (logsRes.data.length > 0) {
             const logIds = logsRes.data.map(item => item._id);
             
-            // 使用 _.in 进行批量删除 (需引入 db.command)
+            // 使用 _.in 进行批量删除 引入 db.command
             await db.collection('transaction_logs')
               .where({ _id: db.command.in(logIds) })
               .remove();
@@ -137,7 +143,7 @@ Page({
 
     this.setData({ loading: true, productData: null });
 
-    // 调用云函数 checkPart (假设云函数已更新为支持扁平化字段)
+    // 调用云函数 checkPart 
     wx.cloud.callFunction({
       name: 'checkPart',
       data: { keyword: keyword },
@@ -166,7 +172,8 @@ Page({
               stock: item.stock || 0,
               location: item.location || '-',
               price: item.price || 0,
-              images: item.images || []
+              images: item.images || [],
+              remark: item.remark || ''
             };
 
             this.setData({ productData: formattedProduct });
@@ -238,7 +245,7 @@ Page({
     }
   
     wx.navigateTo({
-      url: `/pages/inbound/inbound?data=${JSON.stringify(item)}`, // 将对象转为字符串传递
+      url: `/pages/inbound/inbound?id=${item._id}` // 将对象转为字符串传递
     });
   },
 
@@ -250,10 +257,9 @@ Page({
       wx.showToast({ title: '请先查询数据', icon: 'none' });
       return;
     }
-    const dataStr = encodeURIComponent(JSON.stringify(item));
     
     wx.navigateTo({
-      url: `/pages/outbound/outbound?data=${dataStr}`,
+      url: `/pages/outbound/outbound?id=${item._id}`
     });
   }
 });

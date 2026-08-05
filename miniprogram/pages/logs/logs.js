@@ -28,7 +28,7 @@ Page({
   },
 
   onLoad() {
-    wx.cloud.callFunction({ name: 'login' }).then(res => {
+    wx.cloud.callFunction({ name: 'userLogin' }).then(res => {
       this.setData({ myOpenId: res.result.openid });
     });
     // 页面加载时自动查一次

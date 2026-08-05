@@ -21,19 +21,18 @@ exports.main = async (event, context) => {
       { oe_no: db.RegExp({ regexp: k, options: 'i' }) },
       
       // 车型/适用车型：模糊匹配
-      { car_model: db.RegExp({ regexp: k, options: 'i' }) },
-
-      // 【可选】如果有时候用户会扫通用号，也可以加上
-      // { universal_no: db.RegExp({ regexp: k, options: 'i' }) } 
+      { car_model: db.RegExp({ regexp: k, options: 'i' }) }, 
     ])
 
     const res = await db.collection('products')
       .where(queryCondition)
+      .orderBy('_id', 'desc') // 按 ID 降序，确保优先拿到最新录入/修改的记录
       .limit(10) // 限制返回数量，防止数据过多
       .get()
 
     if (res.data.length > 0) {
       // 找到多个结果时，默认返回第一个（或者你可以把整个列表返回给前端做选择）
+      const targetItem = res.data[0];
       return { 
         code: 200, 
         data: res.data[0],

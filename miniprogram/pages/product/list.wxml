@@ -1,6 +1,6 @@
 <!--pages/product/list.wxml-->
 <view class="container">
-<!-- 顶部搜索栏 (参考截图) -->
+<!-- 顶部搜索栏 -->
 <view class="search-bar">
   <view class="search-input-box">
     <text class="icon-search">🔍</text>
@@ -36,7 +36,7 @@
         <text class="count">{{item.stockCount}}</text>
       </view>
 
-       <!-- 显示状态标签 (如果不需要显示文字，只变色，可以只保留 class) -->
+       <!-- 显示状态标签  -->
       <view class="status-tag {{item.statusClass}}">
         {{item.statusText}}
       </view>
@@ -44,7 +44,7 @@
     </view>
   </block>
 
-  <!-- 空状态提示 (当搜索无结果或无数据时) -->
+  <!-- 空状态提示 -->
   <view wx:else class="empty-state">
     <image src="/images/404.png" class="empty-img" mode="aspectFit"></image> <!-- 请替换为你的空状态图片路径 -->
     <text class="empty-title">暂无库存商品</text>

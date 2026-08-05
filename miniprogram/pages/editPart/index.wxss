@@ -18,6 +18,7 @@ page {
 .red { color: #0f0c0c; }
 /* 白色卡片容器：用于包裹表单区域 */
 .card {
+  width: 80%;
   background-color: #ffffff;/* 纯白背景 */
   border-radius: 16rpx;/* 圆角设计，视觉更柔和 */
   padding: 10rpx 30rpx; /* 内部留白 */
@@ -63,7 +64,7 @@ page {
 /* 输入框占位符（Placeholder）样式提示词 */
 .input-full::placeholder {
   color: #ccc;
-  font-size: 25rpx;
+  font-size: 30rpx;
   line-height: normal;  /* 确保提示词也是单行垂直居中 */
 }
 .input-full[disabled] {
@@ -98,8 +99,10 @@ page {
   font-size: 32rpx;
   height: 90rpx;
   line-height: 90rpx;
-  font-weight: bold;
   box-shadow: 0 6rpx 20rpx rgba(7, 193, 96, 0.3);/* 绿色投影，增加立体感 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 /* 按钮点击时的按压效果 */
 .submit-btn:active {
@@ -189,3 +192,4 @@ page {
   font-size: 24rpx;
   color: #969799;
 }
+

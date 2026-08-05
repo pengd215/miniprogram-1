@@ -13,7 +13,7 @@ page {
   padding: 30rpx 150rpx;
   display: flex;
   align-items: center;
-  background-color: #fff; /* 名片也是白底 */
+  background: #cecece; 
   margin-bottom: 20rpx;
   text-align: left; /* 强制文字靠左 */
 }

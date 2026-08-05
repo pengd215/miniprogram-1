@@ -3,7 +3,7 @@
 
 <!-- 1. 右上角悬浮：待办圆形图标 -->
 <view class="floating-todo-btn" bindtap="goToPending">
-  <!-- 这里用文字模拟图标，你可以换成 image -->
+  <!-- 这里用文字模拟图标，可换成 image -->
   <text class="todo-text">待办</text> 
   <!-- 红点角标 (右上角) -->
   <view class="red-dot" wx:if="{{pendingCount > 0}}">{{pendingCount}}</view>
@@ -64,12 +64,12 @@
 
 </view>
 
-  <!-- 4. 加载状态提示 (放在结果卡片前面体验更好) -->
+  <!-- 4. 加载状态提示 -->
   <view wx:if="{{loading}}" class="loading-tip">
     <text>正在云端检索数据...</text>
   </view>
 
-  <!-- 5. 结果展示区域 (核心修复部分) -->
+  <!-- 5. 结果展示区域-->
   <!-- 只有 productData 有值时才显示整个卡片 -->
   <view wx:if="{{productData}}" class="result-card">
 
@@ -120,7 +120,7 @@
     <view class="card-body">
       <view class="info-row">
         <text class="label">适用车型:</text>
-        <text class="value">{{productData.car_model || '暂无'}}</text>
+        <text class="value"  selectable="true" user-select="true">{{productData.car_model || '暂无'}}</text>
       </view>
 
       <view class="info-row">
@@ -128,11 +128,10 @@
         <text class="value">{{productData.kyb_no || '暂无'}}</text>
       </view>
 
-      <!-- ✅ 修改这里：OE编号区域 -->
       <view class="info-row oe-container">
         <text class="label">OE编号:</text>
-    <!-- 这里的 value 类名保留，但内容直接放 item.oe_no -->
-        <text class="value oe-grid-text">{{productData.oe_no}}</text> 
+    <!-- value 类名保留，但内容放 item.oe_no -->
+        <text class="value oe-grid-text"  selectable="true" user-select="true">{{productData.oe_no}}</text> 
       </view>
 
       <view class="info-row">
@@ -160,6 +159,12 @@
         <text class="value price">￥{{productData.price || '0'}}</text>
       </view>
 
+      <view class="info-row" >
+        <text class="label">备注内容:</text>
+  <!-- 使用 text 标签包裹，防止长文本破坏 flex 布局，同时保留换行符 -->
+        <text class="value remark-content"  selectable="true" user-select="true">{{productData.remark||'暂无备注'}}</text>
+      </view>
+
       <view class="action-buttons">
       <!-- 编辑按钮：传递 _id -->
        <button 
@@ -168,7 +173,6 @@
           data-id="{{productData._id}}"
        >
         <view class="btn-inner">
-  <!-- 👇 将 text 替换为 image -->
             <image src="/images/icons/icon_edit.png" class="btn-icon" mode="aspectFit"></image>
             <text class="btn-text">编辑</text>
           </view>
@@ -180,7 +184,6 @@
           bindtap="handleDelete" 
          data-id="{{productData._id}}"
         >
-  <!-- 👇 将 text 替换为 image -->
           <image src="/images/icons/icon_delete.png" class="btn-icon" mode="aspectFit"></image>
           <text class="btn-text">删除</text>
        </button>

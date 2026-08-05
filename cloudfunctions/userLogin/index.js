@@ -32,7 +32,7 @@ exports.main = async (event, context) => {
         role: userData.role|| 'guest',
         name: userData.name|| '未知用户',  
         username: userData.username, 
-        openid: wxContext.OPENID // 【重要】把 OpenID 也一起返回给前端，方便前端存入 globalData
+        openid: wxContext.OPENID // 把 OpenID 也一起返回给前端，方便前端存入 globalData
       }
     } else {
       // 登录失败

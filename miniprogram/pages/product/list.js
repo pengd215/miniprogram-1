@@ -3,7 +3,11 @@ const db = wx.cloud.database();
 Page({
   data: {
     keyword: '', // 搜索框输入的关键词
-    productList: [] // 存放从数据库查出来的列表数据
+    productList: [], // 存放从数据库查出来的列表数据
+    page: 1,          // 当前页码
+    pageSize: 20,     // 新增：每页条数
+    hasMore: true,     // 新增：是否还有更多数据
+    isLoading: false // 增加加载锁，防止重复请求
   },
 
   onLoad: function () {
@@ -21,40 +25,59 @@ Page({
   // 点击搜索按钮
   onSearch: function() {
     const keyword = this.data.keyword;
-    this.fetchData(keyword);
+    this.fetchData(keyword,false);
+  },
+
+  onReachBottom: function() {
+    if (this.data.hasMore && !this.data.isLoading) {
+      this.fetchData(this.data.keyword, true); // 传入 true 表示加载更多
+    }
+  },
+
+  onPullDownRefresh: function() {
+    this.fetchData(this.data.keyword, false); // 下拉刷新时重置分页
+    wx.stopPullDownRefresh();
   },
 
   // 核心函数：从数据库获取数据
-  fetchData: function(keyword) {
-    wx.showLoading({ title: '加载中...' });
+  fetchData: function(keyword, isLoadMore = false) {
+    if (!isLoadMore) {
+      this.setData({ 
+        page: 1, 
+        productList: [], 
+        hasMore: true,
+        isLoading: false 
+      });
+    }
+  
+    // 如果正在加载或没有更多数据，直接返回
+    if (this.data.isLoading || !this.data.hasMore) return;
+    // 🔒 加锁
+    this.setData({ isLoading: true });
+    wx.showLoading({ title: isLoadMore ? '加载中...' : '搜索中...' });
 
     let query = db.collection('products');
 
     // 如果有关键词，就添加模糊搜索条件
     if (keyword && keyword.trim() !== '') {
-      // 使用正则表达式进行模糊匹配 (kyb_no 或 car_model 包含关键词)
-      // 这里的逻辑是：只要 kyb_no 包含关键词，或者 car_model 包含关键词，都搜出来
       query = query.where(
         db.command.or([
-          {
-            kyb_no: db.RegExp({ regexp: keyword,options:'i',  })//  i  表示忽略大小写
-          },
-          {car_model: db.RegExp({ regexp: keyword,options: 'i',})
-          }
+          {kyb_no: db.RegExp({ regexp:keyword,options:'i',  })},
+          {car_model: db.RegExp({ regexp: keyword,options: 'i',})}
         ])
       );
     }
-    // 2. 【关键修改】在这里添加排序逻辑
-  // stockCount: 你的库存字段名（请确保与数据库一致）
+    //排序逻辑
   // 'asc': 升序（从小到大，即库存少的在最上面）
-    query = query.orderBy('stock', 'asc').limit(20); 
-     // 3. 执行查询
-    query.get().then(res => {
-      wx.hideLoading();
-
+  const skipCount = (this.data.page - 1)* this.data.pageSize;
+    query.orderBy('stock', 'asc')
+    .skip(skipCount)
+    .limit(this.data.pageSize)
+    .get()
+    .then(res => {
       // 处理数据，适配你页面的显示需求
-      // 注意：数据库里叫 quantity，你之前的代码可能习惯叫 stock，这里做个映射
       const list = res.data.map(item => {
+
         console.log('当前条目数据:', item);
         let rawStock = item.stock;
         if (rawStock === undefined || rawStock === null) {
@@ -87,8 +110,16 @@ Page({
         };
       });
 
+       // 追加数据而非覆盖
+      const newList = isLoadMore
+      ? [...this.data.productList, ...list]
+      : list;
+
       this.setData({
-        productList: list
+        productList: newList,
+        page: this.data.page + 1,
+        hasMore: list.length === this.data.pageSize,  // 返回条数等于pageSize说明还有下一页
+        isLoading: false
       });
       wx.hideLoading();
     }).catch(err => {

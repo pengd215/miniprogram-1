@@ -8,18 +8,13 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   
   // 1. 接收参数
-  // 兼容前端可能传来的 oeCode 或 oe_no
-  const { oeCode, oe_no, kyb_no, quantity, remark } = event;
-  
-  // 优先取 oe_no，如果没有则取 oeCode
-  const targetOe = oe_no || oeCode; 
-
+  const { productId, quantity, remark } = event;
   // 将数量转为数字，防止计算错误
   const qty = parseInt(quantity);
 
   // --- 基础校验 ---
-  if (!targetOe && !kyb_no) {
-    return { success: false, message: '请提供 OE码 或 KYB号' };
+  if (!productId) {
+    return { success: false, message: '产品ID缺失，无法出库' };
   }
   if (isNaN(qty) || qty <= 0) {
     return { success: false, message: '出库数量必须大于0' };
@@ -30,22 +25,14 @@ exports.main = async (event, context) => {
     await db.runTransaction(async transaction => {
       
       // --- 步骤 A: 查找该零件的库存信息 ---
-      // 构建查询条件：只要 OE码匹配 或者 KYB号匹配 都可以
-      // 注意：这里假设数据库字段名为 oe_no 和 kyb_no
-      const queryCondition = {};
-      if (targetOe) queryCondition.oe_no = targetOe;
-      if (kyb_no) queryCondition.kyb_no = kyb_no;
+      const productRes = await transaction.collection('products').doc(productId).get();
 
-      const productRes = await transaction.collection('products').where(queryCondition).get();
-
-      if (productRes.data.length === 0) {
-        throw new Error(`未找到 OE:${targetOe} 或 KYB:${kyb_no} 的零件信息`);
+      if (!productRes.data) {
+        throw new Error('未找到该零件信息，请检查是否已入库');
       }
 
-      const product = productRes.data[0];
-      
-      // 获取当前库存，如果数据库没这个字段默认为0
-      const currentStock = product.stock || 0; 
+      const product = productRes.data;
+      const currentStock = product.stock || 0;
 
       // --- 步骤 B: 校验库存是否充足 ---
       if (currentStock < qty) {
@@ -54,7 +41,7 @@ exports.main = async (event, context) => {
 
       // --- 步骤 C: 扣减库存 (更新 products 表) ---
       // 使用 _.inc(-qty) 进行原子扣减
-      await transaction.collection('products').doc(product._id).update({
+      await transaction.collection('products').doc(productId).update({
         data: {
           stock: _.inc(-qty) 
         }
@@ -63,17 +50,14 @@ exports.main = async (event, context) => {
       // --- 步骤 D: 记录流水 (写入 transaction_logs 表) ---
       await transaction.collection('transaction_logs').add({
         data: {
-          // 【修复点】这里之前写的是 productId，但变量名其实是 product._id
-          product_id: product._id, 
-          
+          product_id: productId, 
           // 冗余存储 OE码 和 KYB号，方便以后搜索流水
-          oe_no: product.oe_no || targetOe,
-          kyb_no: product.kyb_no || kyb_no,
-          
+          oe_no: product.oe_no ||'',
+          kyb_no: product.kyb_no ||'', 
           quantity: -qty, // 出库记为负数，方便统计总账
           type: 'outbound',
           _openid: wxContext.OPENID, // 记录操作人
-          remark: remark || '无备注',
+          remark: remark || '暂无备注',
           create_time: db.serverDate() // 使用服务器时间
         }
       });

@@ -73,6 +73,19 @@
       <input class="input-full" type="digit" placeholder="选填" value="{{formData.price}}" data-key="price" bindinput="onInput" />
     </view>
 
+    <view class="form-group">
+      <view class="label">备注内容</view>
+      <!-- 使用 textarea 支持多行输入，auto-height 随内容自动增高 -->
+      <input 
+        class="input-full" 
+        type="text" 
+        placeholder="请输入配件备注信息（选填）" 
+        value="{{formData.remark}}" 
+        data-key="remark" 
+        bindinput="onInput" 
+      />
+    </view>
+
   </view>
 
   <view class="footer-btn-area">

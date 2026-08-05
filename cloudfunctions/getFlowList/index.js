@@ -44,13 +44,12 @@ exports.main = async (event, context) => {
       // D. 连表查询：去 employees 表找名字
       .lookup({
         from: 'employees',            // 关联的集合名 
-        localField: '_openid',       // 当前流水表的字段 (存的是 _OpenID)
-        foreignField: '_openid',       // 员工表的字段 (存的也是 _OpenID)
+        localField: '_openid',       // 当前流水表的字段 
+        foreignField: '_openid',       // 员工表的字段 
         as: 'empInfo'         // 关联后的结果存放在这个临时字段里
       })
       // E. 【关键】数据清洗：提取名字 & 格式化时间
       .addFields({
-        // 1. 提取名字：如果找到了员工信息，就取 name，否则显示 '未知'
         _openid_name: $.cond({
           if: $.gt([$.size('$empInfo'), 0]),
           then: $.arrayElemAt(['$empInfo.name', 0]),
@@ -63,7 +62,7 @@ exports.main = async (event, context) => {
           timezone: 'Asia/Shanghai' 
         })
       })
-      // F. 投影：隐藏不需要的原始数据
+      //投影：隐藏不需要的原始数据
       .project({
         empInfo: 0, // 隐藏刚才连表查出来的原始数组
         create_time: 0,     // 隐藏原始的 Date 对象 (前端直接用 formatted_time)

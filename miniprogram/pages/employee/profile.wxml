@@ -5,7 +5,11 @@
 <view class="profile-section">
   <view class="avatar-box">
     <!-- 微信头像占位 -->
-    <open-data type="userAvatarUrl" class="avatar"></open-data>
+    <image 
+      class="avatar" 
+      src="{{avatarUrl || '/images/icons/avatar.png'}}" 
+      mode="aspectFill"
+    ></image>
   </view>
 
   <view class="user-details">
@@ -23,7 +27,7 @@
 <!-- 2. 动态菜单分组 -->
 <block wx:for="{{menuGroups}}" wx:key="groupTitle">
     <view class="section-group">
-      <!-- 分组标题（如：账户服务） -->
+      <!-- 分组标题 -->
       <view class="section-header">
         <view class="title-row">
           <text class="main-title">{{item.groupTitle}}</text>

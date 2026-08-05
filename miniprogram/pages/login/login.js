@@ -28,7 +28,7 @@ Page({
 
     // 调用刚才部署的云函数
     wx.cloud.callFunction({
-      name: 'userLogin', // 必须和云函数文件夹名字一致
+      name: 'userLogin', 
       data: {
         username: username,
         password: password
@@ -41,7 +41,7 @@ Page({
         wx.setStorageSync('userName', res.result.name)
         wx.setStorageSync('userId', res.result._id)
 
-        // 3. 将用户信息存入 app 全局变量（profile.js 页面会从这里读）
+        // 3. 将用户信息存入 app 全局变量
         app.globalData.userInfo = {
           _id: res.result._id,
           role: res.result.role,
@@ -51,11 +51,11 @@ Page({
         };
         
         if (res.result && res.result.success) {
-          // 1. 登录成功，将关键信息保存到本地缓存（供所有页面使用）
+          // 1. 登录成功，将关键信息保存到本地缓存
           wx.setStorageSync('userRole', res.result.role)
           wx.setStorageSync('userName', res.result.name)
           
-          // 2. 保存到全局变量（供当前运行周期使用）
+          // 2. 保存到全局变量
           app.globalData.userInfo = {
             _id: res.result._id,
             role: res.result.role,
@@ -69,7 +69,7 @@ Page({
           // 把用户信息存到本地缓存，方便后面页面使用
           wx.setStorageSync('userInfo', res.result.data)
           
-          // 跳转到首页（根据你的实际路径修改）
+          // 跳转到首页
           setTimeout(() => {
             wx.reLaunch({ url: '/pages/index/index' }) 
           }, 1000)

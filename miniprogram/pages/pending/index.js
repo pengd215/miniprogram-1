@@ -16,9 +16,9 @@ Page({
     
     db.collection('products')
       .where({
-        status: 'pending' // 【核心】只查待完善的
+        status: 'pending' // 只查待完善的
       })
-      .orderBy('create_time', 'desc') // 按时间倒序，最新的在最上面
+      .orderBy('create_time', 'desc') // 按时间倒序
       .limit(20) // 每次加载20条
       .get()
       .then(res => {

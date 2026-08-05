@@ -1,93 +1,246 @@
-// pages/account_setting/account_setting.js
-const db = wx.cloud.database();
-const app = getApp();
-
+// account-settings.js
+const db = wx.cloud.database();// 初始化数据库引用
+const app = getApp(); // 获取全局App实例
 Page({
   data: {
-    userInfo: {},
-    showEditDialog: false,
-    editType: '', // 标记当前正在修改哪个字段: 'name', 'bio', 'gender'
-    editValue: '' // 弹窗输入框的值
+    avatarUrl: '', // 头像路径
+    nickName: '微信用户',  // 昵称
+    name: '',      // 姓名
+    bio: '',       // 简介
+    gender: 0,     // 性别代码 0:未选 1:男 2:女
+    genderText: '请选择', 
+    isSaving: false// 防止重复点击保存
   },
 
   onLoad() {
+    // 可以在这里加载用户已有的数据
     this.loadUserInfo();
   },
-
-  // 1. 从数据库加载用户信息
+// 1. 从云端加载最新数据
   loadUserInfo() {
-    const userId = app.globalData.userInfo?._id;
-    if (!userId){
-      console.warn('未获取到用户ID，请检查登录状态');
-     return;
-     }
-
-    db.collection('employees').doc(userId).get().then(res => {
-      this.setData({
-        userInfo: res.data
-      });
-    }).catch(err => {
-      console.error('获取用户信息失败', err);
-    });
-  },
-
-  // 2. 点击修改项，打开弹窗
-  onEditField(type) {
-    const currentVal = this.data.userInfo[type] || '';
-    this.setData({
-      editType: type,
-      editValue: currentVal,
-      showEditDialog: true
-    });
-  },
-
-  onEditname() { this.onEditField('name'); },
-  onEditBio() { this.onEditField('bio'); },
-  
-  // 性别特殊处理，通常用选择器而不是输入框，这里简化为输入演示
-  onEditGender() { 
-    wx.showActionSheet({
-      itemList: ['男', '女', '保密'],
-      success: (res) => {
-        const genderMap = {'男': 1, '女': 2, '保密': 0};
-        const text = res.tapIndex === 0 ? '男' : (res.tapIndex === 1 ? '女' : '保密');
-        this.updateUserInfo('gender', genderMap[text], 'genderText', text);
+    wx.showLoading({ title: '加载中...' });
+    
+    // 获取当前用户的 OpenID (用于查询)
+    wx.cloud.callFunction({
+      name: 'userLogin', 
+      success: res => {
+        const openid = res.result.openid;
+        
+        db.collection('employees')
+          .where({ _openid: openid })
+          .get()
+          .then(res => {
+            wx.hideLoading();
+            if (res.data.length > 0) {
+              const userData = res.data[0];
+              this.setData({
+                name: userData.name || '',
+                bio: userData.bio || '',
+                gender: userData.gender || 0,
+                genderText: userData.gender === 1 ? '男' : (userData.gender === 2 ? '女' : '请选择'),
+                // 如果数据库里有存头像昵称，也可以一并回显
+                avatarUrl: userData.avatarUrl || '/images/icons/avatar.png',
+                nickName: userData.nickName || '微信用户'
+              });
+            }
+          })
+          .catch(err => {
+            console.error("加载失败", err);
+            wx.hideLoading();
+          });
       }
     });
   },
 
-  // 3. 确认修改，更新数据库
-  async onConfirmEdit() {
-    if (!this.data.editValue.trim()) {
-      return wx.showToast({ title: '内容不能为空', icon: 'none' });
-    }
+        // 1. 选择头像并上传
+  chooseAvatar() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      success: (res) => {
+        const tempFilePath = res.tempFiles[0].tempFilePath;
+        wx.showLoading({ title: '上传中...' });
 
-    const { editType, editValue } = this.data;
+        // 上传到云存储
+        wx.cloud.uploadFile({
+          cloudPath: `avatars/${Date.now()}.png`,
+          filePath: tempFilePath,
+          success: uploadRes => {
+            const newAvatarUrl = uploadRes.fileID;
+
+            // 获取当前用户的 openid 用于更新数据库
+            wx.cloud.callFunction({
+              name: 'userLogin',
+              success: res => {
+                const openid = res.result.openid;
+
+                // 将新头像链接保存到云数据库
+                db.collection('employees').where({
+                  _openid: openid
+                }).update({
+                  data: {
+                    avatarUrl: newAvatarUrl
+                  }
+                }).then(updateRes => {
+                  wx.hideLoading();
+
+                  // 更新页面显示
+                  this.setData({
+                    avatarUrl: newAvatarUrl
+                  });
+
+                  // 🔑 通知个人中心：头像已更新，返回时自动刷新
+                  app.globalData.eventChannel = true;
+
+                  wx.showToast({
+                    title: '头像更新成功',
+                    icon: 'success',
+                    duration: 1500
+                  });
+                }).catch(err => {
+                  wx.hideLoading();
+                  console.error("更新数据库失败", err);
+                  wx.showToast({ title: '保存失败', icon: 'none' });
+                });
+              },
+              fail: err => {
+                wx.hideLoading();
+                console.error("获取openid失败", err);
+                wx.showToast({ title: '获取用户信息失败', icon: 'none' });
+              }
+            });
+          },
+          fail: err => {
+            wx.hideLoading();
+            console.error("上传失败", err);
+            wx.showToast({ title: '上传失败', icon: 'none' });
+          }
+        });
+      },
+      fail: err => {
+        console.error("选择图片失败", err);
+      }
+    });
+  },
     
-    try {
-      await db.collection('employees').doc(app.globalData.userInfo._id).update({
-        data: { [editType]: editValue }
-      });
 
-      wx.showToast({ title: '修改成功', icon: 'success' });
-      
-      // 更新本地显示
-      this.setData({
-        [`userInfo.${editType}`]: editValue,
-        showEditDialog: false
-      });
-      
-      // 同步更新全局缓存（可选）
-      app.globalData.userInfo[editType] = editValue;
-      
-    } catch (err) {
-      console.error('更新失败', err);
-      wx.showToast({ title: '修改失败', icon: 'none' });
-    }
+  // 2. 姓名输入监听
+  onNameInput(e) {
+    this.setData({
+      'name': e.detail.value
+    });
   },
 
-  onLogout() {
-    wx.clearStorageSync();
-    wx.reLaunch({ url: '/pages/login/login' });
+  // 3. 性别选择
+  showGenderPicker() {
+    wx.showActionSheet({
+      itemList: ['男', '女'],
+      success: (res) => {
+        if (res.tapIndex !== undefined) {
+        const genderMap = ['男', '女'];
+      const genderValueMap = [1, 2]; // 假设 1是男，2是女
+      this.setData({
+        genderText: genderMap[res.tapIndex],
+        gender: genderValueMap[res.tapIndex]
+        });
+        }
+      }
+      })
+    },
+
+  // 4. 简介输入监听
+  onBioInput(e) {
+    const value = e.detail.value;
+  this.setData({
+    bio: value
+    });
+  },
+
+  // 5. 保存修改
+  handleSave() {
+    if (this.data.isSaving) return; // 防止重复提交
+    
+    const { name, bio, gender,avatarUrl } = this.data;
+    
+    // 简单校验
+    if (!name || name.trim() === '') {
+      wx.showToast({ title: '请输入姓名', icon: 'none' });
+      return;
+    }
+    
+    this.setData({ isSaving: true });
+    wx.showLoading({ title: '保存中...' });
+
+    wx.cloud.callFunction({
+      name: 'userLogin', 
+      success: res => {
+        const openid = res.result.openid;
+
+        // 执行数据库更新
+        db.collection('employees') 
+          .where({
+            _openid: openid // 根据 openid 查找当前用户的记录
+          })
+          .update({
+            data: {
+              name: name,       // 更新姓名
+              gender: gender,   // 更新性别
+              bio: bio,         // 更新简介
+              avatarUrl: avatarUrl, // 将头像URL存入数据库
+              updatedAt: db.serverDate() // 顺便记录更新时间
+            },
+            success: () => {
+              wx.hideLoading();
+              this.setData({ isSaving: false });
+
+              if (app.globalData.userInfo) {
+                app.globalData.userInfo.avatarUrl = avatarUrl; // 确保这里的 uploadRes.fileID 是最新头像的 CloudID
+              }
+            
+              // 触发个人中心刷新
+              app.globalData.userInfoChanged = true;
+              
+              wx.showToast({
+                title: '保存成功',
+                icon: 'success'
+              });
+              const eventChannel = app.globalData.eventChannel;
+              if (eventChannel && typeof eventChannel.emit === 'function') {
+                eventChannel.emit('avatarUpdated', {
+                  avatarUrl: avatarUrl,
+                  nickName: this.data.nickName
+                });
+              }
+
+              // 延迟返回上一页
+              setTimeout(() => {
+                wx.navigateBack();
+              }, 1500);
+            },
+            fail: err => {
+              console.error("更新失败", err);
+              wx.hideLoading();
+              this.setData({ isSaving: false });
+              wx.showToast({ title: '保存失败，请重试', icon: 'none' });
+              let msg = '保存失败';
+              if (err.errMsg.includes('performed without permission')) {
+                msg = '权限不足：请在云开发控制台开启 employees 集合的写入权限';
+              } else if (err.errMsg.includes('not found')) {
+                msg = '未找到记录：请先注册或检查集合名';
+              }
+              wx.showToast({ title: msg, icon: 'none', duration: 3000 });
+            }
+          });
+      },
+      fail: err => {
+        console.error("获取OpenID失败", err);
+        wx.hideLoading();
+        this.setData({ isSaving: false });
+        wx.showToast({ title: '登录状态失效', 
+        icon: 'none'    
+      });
+      }
+    });
   }
-});
+})

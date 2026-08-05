@@ -34,6 +34,21 @@
     <view class="section-title">详细参数 (选填)</view>
 
   <!-- 选填区域 -->
+    
+  <view class="form-group">
+    <text class="label">备注内容</text>
+  <!-- 使用 textarea 支持多行输入，auto-height 自动增高 -->
+    <textarea 
+    class="input textarea-style" 
+    placeholder="请输入配件备注（选填）" 
+    value="{{formData.remark}}" 
+    bindinput="onInput" 
+    data-key="remark" 
+    auto-height
+    maxlength="200"
+    ></textarea>
+  </view>
+
   <view class="form-group">
     <text class="label">KYB编号</text>
     <input class="input" placeholder="例如：332405" value="{{formData.brand}}" bindinput="onInput" data-key="kyb_no" />

@@ -10,7 +10,6 @@
     <view class="form-item">
       <view class="label">减震器编号 / OE码</view>
       <view class="input-row">
-        <!-- 这里的 class="full-input" 是解决输入框太窄的关键 -->
         <input 
           class="full-input" 
           placeholder="请输入或扫描 OE 编码" 

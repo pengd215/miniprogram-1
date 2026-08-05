@@ -1,5 +1,5 @@
+<!--pages/pending/index.wxml-->
 <view class="pending-page">
-  
   <!-- 1. 顶部标题区 -->
   <view class="page-header">
     <view class="header-title">
@@ -14,7 +14,6 @@
   <view class="card-list">
     
     <!-- 循环渲染列表 -->
-    <!-- 【关键】bindtap 绑定点击事件，data-id 传递数据库ID -->
     <view 
       class="task-card" 
       wx:for="{{pendingList}}" 
@@ -24,12 +23,11 @@
     >
       
       <!-- 核心信息网格 -->
-      <view class="card-info-grid" catchtap="stopPropagation"> <!-- catchtap防止点击内部触发跳转，如果不需要可去掉 -->
+      <view class="card-info-grid" catchtap="stopPropagation"> <!-- catchtap防止点击内部触发跳转 -->
         
         <!-- 第一行：OE编号 -->
         <view class="info-item">
           <text class="label">OE编号</text>
-          <!-- 假设数据库字段是 oe_code，请根据实际情况修改 -->
           <text class="value highlight">{{item.oe_no || '未填写'}}</text>
         </view>
 
@@ -42,7 +40,6 @@
         <!-- 第三行：车型信息 (占满一行) -->
         <view class="info-item full-width">
           <text class="label">车型信息</text>
-          <!-- 假设数据库字段是 car_model -->
           <text class="value">{{item.car_model || '暂无信息'}}</text>
         </view>
 

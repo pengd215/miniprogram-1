@@ -1,63 +1,69 @@
-<!--pages/account_setting/setting.wxml-->
+<!-- account-settings.wxml -->
 <view class="container">
-  <!-- 顶部用户卡片 -->
-  <view class="user-card">
-    <image 
-      class="avatar" 
-      src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" 
-      mode="aspectFill"
-    ></image>
-    <view class="info">
-      <!-- 优先显示 name，没有则显示 username -->
-      <text class="nickname">{{userInfo.name || userInfo.username || '未设置姓名'}}</text>
-      <text class="id">ID: {{userInfo._id || '加载中...'}}</text>
+  <!-- 顶部绿色卡片区域 -->
+  <view class="header-card">
+    <view class="card-content">
+      <view class="avatar-wrapper" bindtap="chooseAvatar">
+        <image class="avatar" src="{{avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
+        <view class="camera-icon">📷</view>
+      </view>
+      <view class="user-info">
+        <text class="nickname">{{nickName || '微信用户'}}</text>
+        <text class="sub-text">完善头像、姓名和个人简介</text>
+      </view>
+    </view>
+    <!-- 底部提示条 -->
+    <view class="tip-bar">
+      <text class="icon">ℹ️</text>
+      <text class="tip-text">保持资料准确，团队成员更容易识别你的操作记录</text>
     </view>
   </view>
 
-  <!-- 可修改的信息列表 -->
-  <view class="list-group">
-    <!-- 1. 姓名 (对应数据库 name) -->
-    <van-cell 
-      title="姓名" 
-      value="{{userInfo.name}}" 
-      is-link 
-      bind:click="onEditName" 
-    />
-    
-    <!-- 2. 用户名 (对应数据库 username，假设不可修改，去掉 is-link) -->
-    <van-cell 
-      title="用户名" 
-      value="{{userInfo.username}}" 
-    />
+  <!-- 基础信息表单 -->
+  <view class="section-title">基础信息</view>
+  <view class="form-group">
+    <!-- 姓名输入行 -->
+    <view class="form-item">
+      <view class="item-left">
+        <view class="icon-box name-icon">👤</view>
+        <text class="label">姓名</text>
+      </view>
+      <input class="input" placeholder="请输入姓名" value="{{name}}" bindinput="onNameInput" />
+    </view>
 
-    <!-- 3. 个性签名 (对应数据库 bio) -->
-    <van-cell 
-      title="个性签名" 
-      value="{{userInfo.bio || '暂无签名'}}" 
-      is-link 
-      bind:click="onEditBio" 
-    />
-
-    <!-- 4. 角色 (对应数据库 role，仅展示) -->
-    <van-cell 
-      title="当前角色" 
-      value="{{userInfo.role}}" 
-    />
+    <!-- 性别选择行 -->
+    <view class="form-item" bindtap="showGenderPicker">
+      <view class="item-left">
+        <view class="icon-box gender-icon">⚥</view>
+        <text class="label">性别</text>
+      </view>
+      <view class="picker-value">
+        <text class="{{gender ? 'value-text' : 'placeholder'}}">{{genderText || '请选择'}}</text>
+        <text class="arrow">></text>
+      </view>
+    </view>
   </view>
 
-  <!-- 修改信息的弹窗 -->
-  <van-dialog 
-    use-slot 
-    title="修改信息" 
-    show="{{ showEditDialog }}" 
-    show-cancel-button 
-    bind:confirm="onConfirmEdit"
-  >
-    <input 
-      class="dialog-input" 
-      model:value="{{ editValue }}" 
-      placeholder="请输入新内容" 
-      focus="{{ showEditDialog }}" 
-    />
-  </van-dialog>
+  <!-- 个人简介 -->
+  <view class="section-title">个人简介</view>
+  <view class="textarea-group">
+    <textarea 
+      class="bio-input" 
+      placeholder="介绍一下自己，例如负责的仓库、岗位或备注信息" 
+      maxlength="60"
+      value="{{bio}}"
+      bindinput="onBioInput"
+    ></textarea>
+    <view class="footer-info">
+      <text class="usage-tip">用于团队资料展示</text>
+      <text class="count">{{bio.length}}/60</text>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-btn-area">
+    <button class="save-btn" bindtap="handleSave">
+      <text class="btn-icon">✈️</text> 保存修改
+    </button>
+  </view>
 </view>

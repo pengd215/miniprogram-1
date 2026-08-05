@@ -7,33 +7,94 @@ Page({
     userId: '',
     roleText: '',
     userRole: '',
-    menuGroups: [] // 动态菜单列表
+    menuGroups: [], // 动态菜单列表
+    avatarUrl: ''
   },
 
-  // 1. 通过 openid 去云数据库查找该用户
-  
-
   onLoad() {
-    this.initUserInfo();
-    this.renderMenuByRole();
+    this.initUserInfo();// 首次加载用户信息
+    this.renderMenuByRole();// 初始化菜单
+
+       // 监听头像更新事件
+    try {
+      const eventChannel = this.getOpenerEventChannel?.();
+      if (eventChannel) {
+        eventChannel.on('avatarUpdated', (data) => {
+          console.log('收到头像更新通知:', data);
+          // 更新全局数据
+          app.globalData.userInfo.avatarUrl = data.avatarUrl;
+          // 刷新页面
+          this.setData({
+            avatarUrl: data.avatarUrl
+          });
+        });
+      }
+    } catch (e) {
+      console.log('eventChannel 不支持:', e);
+    }
+  },
+  // 每次页面显示时检查是否需要刷新
+  onShow() {
+    if (app.globalData.eventChannel) {
+      this.initUserInfo(); // 重新加载用户信息
+      app.globalData.eventChannel = false; // 重置标志
+    }
   },
 
   // 1. 初始化用户信息
   initUserInfo() {
-    const userInfo = app.globalData.userInfo || {};
-    console.log('全局用户信息:', userInfo);
-    this.setData({
-      userName: userInfo.name || '用户',
-      userId: userInfo._id || '暂无',
-      userRole: userInfo.role || 'employee',
-      roleText: this.getRoleText(userInfo.role)
+    wx.showLoading({ title: '加载中...' });
+
+    wx.cloud.callFunction({
+      name: 'userLogin', // 获取当前用户的 openid
+      success: res => {
+        const openid = res.result.openid;
+        
+        // 实时查询数据库，获取最新资料
+        db.collection('employees')
+          .where({ _openid: openid })
+          .get()
+          .then(dbRes => {
+            wx.hideLoading();
+            if (dbRes.data.length > 0) {
+              const latestUserData = dbRes.data[0];
+              
+              // 1. 同步更新全局缓存（确保其他页面也能拿到最新数据）
+              app.globalData.userInfo = latestUserData;
+              this.setData({
+                userName: latestUserData.name || '微信用户',
+                userId: latestUserData._id || '暂无',
+                userRole: latestUserData.role || 'employee',
+                roleText: this.getRoleText(latestUserData.role),
+                avatarUrl: latestUserData.avatarUrl || '' // 实时拉取最新头像
+              });
+              app.globalData.userInfo = latestUserData;
+              this.renderMenuByRole();
+              // 3. 如果角色发生变化，需要重新渲染菜单
+              if (this.data.userRole !== latestUserData.role) {
+                this.renderMenuByRole();
+              }
+            } else {
+              wx.showToast({ title: '未找到用户信息', icon: 'none' });
+            }
+          })
+          .catch(err => {
+            wx.hideLoading();
+            console.error("拉取用户信息失败", err);
+            wx.showToast({ title: '数据加载失败', icon: 'none' });
+          });
+      },
+      fail: err => {
+        wx.hideLoading();
+        console.error("登录校验失败", err);
+      }
     });
   },
 
   // 2. 根据角色渲染菜单（核心权限控制）
   renderMenuByRole() {
     const role = this.data.userRole; 
-  const userName = this.data.userName; // 👈 正确获取方式
+  const userName = this.data.userName; 
   const userInfo = app.globalData.userInfo || {};
 
   console.log('当前用户:', userName, '角色:', role);
@@ -215,7 +276,7 @@ Page({
       // 3. 跳转回登录页 (使用 reLaunch 清空页面栈)
       setTimeout(() => {
         wx.reLaunch({
-          url: '/pages/login/login' // 替换为你实际的登录页路径
+          url: '/pages/login/login' 
         });
       }, 1500);
       

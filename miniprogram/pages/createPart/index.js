@@ -65,7 +65,7 @@ Page({
       quantity: initialStock, // 确保是数字
       stock: initialStock,
       price: Number(data.price) || 0, // 确保是数字
-
+      remark: this.data.formData.remark || '',
       status: 'pending', // 设置初始状态为 pending (待完善)
 
       create_time: db.serverDate() // 使用服务器时间
@@ -76,7 +76,7 @@ Page({
       oe_no: data.oe_no,
       quantity: initialStock, // 变动数量（即初始库存）
       current_stock: initialStock, // 变动后库存
-      _openid: app.globalData.openId, // TODO: 如果有登录系统，这里填用户ID或昵称
+      _openid: app.globalData.openId,
       remark: `新建：${data.car_model} `,
       create_time: db.serverDate()
     };
@@ -143,14 +143,14 @@ Page({
     db.collection('products').add({
       data: {
         oe_no: oe_no,
-        car_model: car_model,   // 注意：数据库里叫 car_model，这里要对应
+        car_model: car_model,   
         brand: brand,
         location: location,
         model_year: finalYear, // 存入格式化后的年份
         stock: parseInt(stock) || 0, // 确保库存是数字
         kyb_no: kyb_no || '',
         direction:direction||'',//方向
-        create_time: db.serverDate() // 可选：记录创建时间
+        create_time: db.serverDate() // 记录创建时间
       },
       success: res => {
         wx.hideLoading();

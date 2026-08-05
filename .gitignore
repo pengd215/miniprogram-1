@@ -1,14 +1,12 @@
-# Windows
-[Dd]esktop.ini
-Thumbs.db
-$RECYCLE.BIN/
+# 排除微信小程序敏感配置
+project.config.json
+project.private.config.json
 
-# macOS
-.DS_Store
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
+# 排除云开发环境ID
+cloudfunctions/*/config.json
 
-# Node.js
+# 排除编译产物和缓存
+miniprogram_npm/
 node_modules/
+unpackage/
+*.log

@@ -1,5 +1,9 @@
 // app.js
 App({
+  globalData: {
+    eventChannel: null // ✅ 初始化全局事件通道
+  },
+
   onLaunch: function () {
     // 1. 初始化云开发环境
     if (!wx.cloud) {

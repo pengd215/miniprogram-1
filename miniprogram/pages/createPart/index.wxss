@@ -5,6 +5,7 @@ page {
 }
 
 .container {
+  width: 100;
   padding: 30rpx;
   padding-bottom: 160rpx; /* 为底部按钮留出空间 */
 }
@@ -24,6 +25,7 @@ page {
 
 /* 卡片容器样式 */
 .form-section {
+  width: 80%;
   background-color: #ffffff;
   border-radius: 16rpx;
   padding: 20rpx 80rpx;
@@ -118,4 +120,11 @@ page {
 
 .submit-btn:active {
   opacity: 0.8;
+}
+
+.textarea-style {
+  min-height: 80rpx; /* 最小高度 */
+  padding-top: 20rpx; /* 文字稍微靠下一点，对齐 label */
+  font-size: 28rpx;
+  line-height: 1.5;
 }

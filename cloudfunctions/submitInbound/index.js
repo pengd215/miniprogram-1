@@ -12,17 +12,13 @@ exports.main = async (event, context) => {
   const currentOpenId = wxContext.OPENID; 
 
   // 2. 接收前端传来的参数
-  // 兼容前端可能传来的 oeCode 或 oe_no
-  const { oe_no, kyb_no, model, quantity, remark } = event;
+  const { productId, model, quantity, remark } = event;
   
-  // 优先取 oe_no，如果没有则取 oeCode
-  const targetOe = oe_no || oeCode;
-
   // 参数校验：将数量转为数字
   const num = parseInt(quantity);
   
-  if (!targetOe && !kyb_no) {
-    return { success: false, message: '请提供 OE码 或 KYB号' };
+  if (!productId) {
+    return { success: false, message: '产品ID缺失，请从首页进入入库流程' };
   }
   if (isNaN(num) || num <= 0) {
     return { success: false, message: '入库数量必须大于0' };
@@ -34,22 +30,15 @@ exports.main = async (event, context) => {
       
       // --- 第一步：查找零件 ---
       // 构建查询条件：只要 OE码匹配 或者 KYB号匹配 都可以
-      const queryCondition = {};
-      if (targetOe) queryCondition.oe_no = targetOe;
-      if (kyb_no) queryCondition.kyb_no = kyb_no;
-
-      const productRes = await transaction.collection('products').where(queryCondition).get();
+      const productDoc = await transaction.collection('products').doc(productId).get();
 
       // --- 第二步：判断是否存在 ---
-      if (productRes.data.length === 0) {
-         throw new Error('零件不存在，请先建立档案');
+      if (!productDoc.data) {
+         throw new Error('产品不存在，请检查ID有效性');
       }
-
-      const product = productRes.data[0];
-      const productId = product._id;
+      const product = productDoc.data;
 
       // --- 第三步：更新库存 (原子操作增加库存) ---
-      // 【修复点】原代码写的是 _.inc(qty)，但变量名是 num
       await transaction.collection('products').doc(productId).update({
         data: {
           stock: _.inc(num) 
@@ -60,15 +49,12 @@ exports.main = async (event, context) => {
       await transaction.collection('transaction_logs').add({
         data: {
           product_id: productId,    
-          
-          // 【修复点】原代码写的是 oe_no，但变量名是 targetOe
-          oe_no: product.oe_no || targetOe,   
-          kyb_no: product.kyb_no || kyb_no,
+          oe_no: product.oe_no || '',   
+          kyb_no: product.kyb_no || '',
           model: product.model || model,
-          
           type: 'inbound',          // 类型：入库
           _openid: currentOpenId,  // 记录是谁操作的
-          quantity: num,            // 【修复点】统一使用 num
+          quantity: num,            // 统一使用 num
           remark: remark || '无备注', 
           create_time: db.serverDate() // 服务器时间
         }

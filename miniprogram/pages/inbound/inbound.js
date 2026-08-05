@@ -1,4 +1,5 @@
 // pages/inbound/inbound.js
+const db = wx.cloud.database();
 Page({
   data: {
     oe_no: '',      // OE码/编号
@@ -6,7 +7,8 @@ Page({
     modelName: '',
     quantity: '',    // 入库数量
     remark: '',      // 备注信息
-    submitting: false // 防止重复点击
+    submitting: false, // 防止重复点击
+    productId:null    //用来存储产品唯一ID
   },
 
   // 1. 监听 OE码 输入
@@ -31,21 +33,61 @@ Page({
 
   // 页面加载：接收扫码或跳转传来的参数
   onLoad(options) {
+    if (options.id) {
+      const productId = options.id;
+      this.setData({ productId }); // 存储唯一ID
+      this.loadProductData(productId); // 用 _id 拉取数据
+      return;
+    }
+
+    // 2. 兼容旧逻辑：处理首页传递的完整对象（临时过渡）
     if (options.data) {
       try {
         const params = JSON.parse(decodeURIComponent(options.data));
-        console.log('接收到的入库数据:', params);
+        console.log('接收到的旧版参数:', params);
         
-        // 自动填入数据
         this.setData({ 
           oe_no: params.oe_no || params.oeCode || '',
-          modelName: params.model || params.modelName || '未知配件',
+          kybNo: params.kyb_no || '',
+          modelName: params.car_model || params.modelName || '未知配件',
+          productId: params._id // 从对象中提取 _id
         });
       } catch (e) {
-        console.error('解析参数失败', e);
+        console.error('解析旧参数失败', e);
       }
     }
   },
+
+          // 【核心】用 _id 替代 OE 号获取产品数据
+  async loadProductData(id) {
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'getProductById', 
+        data: { id }
+      });
+      
+      if (res.result.code === 200 && res.result.data) {
+        const product = res.result.data;
+        // 仅更新显示字段（保持字段名与原逻辑一致）
+        this.setData({
+          oe_no: product.oe_no || '无',  
+          kybNo: product.kyb_no || '',
+          modelName: product.name || '未知配件'
+        });
+      } else {
+        throw new Error(res.result.message || '产品不存在');
+      }
+    } catch (err) {
+      wx.showToast({ 
+        title: `加载失败: ${err.message}`, 
+        icon: 'none' 
+      });
+      // 清空无效ID
+      this.setData({ productId: null });
+    }
+  },
+
+
 
   // 5. 核心功能：点击“扫一扫”
   onScanCode() {
@@ -68,12 +110,11 @@ Page({
 
   // 6. 核心功能：点击“确认入库”
   confirmInbound() {
-    const { oe_no, kybNo, quantity, remark,submitting } = this.data;
+    const { productId, quantity, remark,submitting } = this.data;
 
     // --- 表单校验 ---
-    // 允许只填 OE 或只填 KYB，只要有一个就行
-    if (!oe_no && !kybNo) {
-      return wx.showToast({ title: '请输入OE码或KYB号', icon: 'none' });
+    if (!productId) {
+      return wx.showToast({ title: '产品ID缺失，请从首页进入', icon: 'none' });
     }
     if (!quantity || Number(quantity) <= 0) {
       return wx.showToast({ title: '请输入有效的入库数量', icon: 'none' });
@@ -89,10 +130,9 @@ Page({
     wx.cloud.callFunction({
       name: 'submitInbound', 
       data: {
-        oe_no: oe_no,      
-        kyb_no: kybNo,       // 【关键修改】把 KYB 号传给后端
+        productId:productId,       //_id 定位产品
         quantity: Number(quantity), 
-        remark: remark || '无备注'
+        remark: remark || '暂无备注'
       },
       success: res => {
         wx.hideLoading();

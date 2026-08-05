@@ -52,7 +52,7 @@
                 <block wx:for="{{item.oeList}}" wx:key="index" wx:for-item="oe">
                   <text class="oe-tag" wx:if="{{oe}}">{{oe}}</text>
                 </block>
-                <text class="oe-tag" wx:if="{{!item.oeList || item.oeList.length === 0}}">
+                <text class="oe-tag" selectable="true" user-select="true" wx:if="{{!item.oeList || item.oeList.length === 0}}">
           {{item.order_no || item.oe_code || '无单号'}}
                 </text>
             </view>
@@ -68,7 +68,7 @@
 
         <!-- 第二行：操作人 (左) 与 类型标签 (右) -->
         <view class="row-mid">
-          <text class="_openid">操作人：{{item._openid_name ||item._openid|| '无数据'}}</text>
+          <text class="_openid" selectable="true" user-select="true">操作人：{{item._openid_name ||item._openid|| '无数据'}}</text>
           
           <!-- 动态类名：如果是入库用 tag-in，否则用 tag-out -->
           <!-- 核心修复：通过 wx:if 决定标签样式和文字 -->
@@ -76,19 +76,19 @@
             <text class="tag tag-in">入库</text>
           </block>
           <block wx:else>
-            <text class="tag tag-out">出库</text>
+            <text class="tag tag-out" selectable="true" user-select="true">出库</text>
           </block>
         </view>
 
         <!-- 第三行：时间 (底部通栏) -->
         <view class="row-bottom">
-          <text class="time-text">时间：{{item.formatted_time || item.create_time || '未知时间 '}}</text>
+          <text class="time-text" selectable="true" user-select="true">时间：{{item.formatted_time || item.create_time || '未知时间 '}}</text>
         </view>
         
         <!-- 底部备注区域 -->
         <view class="item-remark" wx:if="{{item.remark}}">
-          <text class="remark-label">备注：</text>
-          <text class="remark-content">{{item.remark|| '无'}}</text>
+          <text class="remark-label" selectable="true" user-select="true">备注：</text>
+          <text class="remark-content" selectable="true" user-select="true">{{item.remark|| '无'}}</text>
         </view>
 
       </view>

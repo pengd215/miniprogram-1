@@ -7,7 +7,6 @@
     <view class="form-item">
       <view class="label">减震器编号 / OE码</view>
       <view class="input-row">
-        <!-- 修正1：只保留 oeCode，删除了多余的 kybNo -->
         <input 
           class="full-input" 
           placeholder="请输入或扫描 OE 编码" 
@@ -15,7 +14,6 @@
           bindinput="onOeCodeInput" 
           placeholder-class="placeholder-style"
         />
-        <!-- 确保 JS 里有 onScanCode 函数 -->
         <button class="scan-btn" bindtap="onScanCode">扫一扫</button>
       </view>
     </view>
@@ -36,7 +34,6 @@
     <!-- 备注行 -->
     <view class="form-item">
       <view class="label">备注信息</view>
-      <!-- 修正2：增加了 bindinput="onRemarkInput" -->
       <textarea 
         class="full-textarea" 
         placeholder="选填，如：供应商名称" 
@@ -49,7 +46,6 @@
 
   <!-- 底部按钮 -->
   <view class="footer-action">
-    <!-- 修正3：改为 confirmInbound -->
     <button class="confirm-btn" bindtap="confirmInbound">确认入库</button>
   </view>
 </view>

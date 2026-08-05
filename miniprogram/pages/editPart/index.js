@@ -13,6 +13,7 @@ Page({
       kyb_no: '',
       stock: 0,
       price: 0,
+      remark:'',
      // isReadOnlyStock: false,//
      images: [],// 初始化图片数组
       brand: ''
@@ -47,7 +48,8 @@ Page({
           stock: data.stock || 0,
           price: data.price || 0,
           brand: data.brand || '',
-          images:data.images|| []
+          images:data.images|| [],
+          remark: res.data.remark || ''
         }
       });
       wx.hideLoading();
@@ -69,7 +71,7 @@ Page({
       }
     })
   },
-  // 2. 上传图片到云存储 (关键步骤)
+  // 2. 上传图片到云存储 
   uploadImages(tempFiles) {
     wx.showLoading({ title: '上传中...' });
     
@@ -114,13 +116,15 @@ Page({
     });
   },
 
-  // 4. 保存补全信息 (核心：合并更新)
+  // 4. 保存补全信息 
   handleSubmit() {
     if (this.data.isSaving) return;
     
     const { id, formData } = this.data;
+    console.log('提交的数据:', JSON.stringify(formData));
+    console.log('记录ID:', id);
 
-    // 【关键校验】OE号和库位是核心标识，补全时不能为空
+    // OE号和库位是核心标识，补全时不能为空
     if (!formData.oe_no || !formData.location) {
       wx.showToast({ title: 'OE号和库位不能为空', icon: 'none' });
       return;
@@ -134,15 +138,18 @@ Page({
     const updateData = {
       status: 'active', // 补全完成，状态改为正常
       update_time: db.serverDate(),
-      images: this.data.formData.images// 【新增】把图片数组一起保存
+      images: this.data.formData.images,// 把图片数组一起保存
+      oe_no: formData.oe_no,         
+      location: formData.location      
     };
 
     // 逐个字段判断：只有当新值不为空字符串时，才加入更新队列
-    if (formData.car_model) updateData.car_model = formData.car_model;
-    if (formData.model_year) updateData.model_year = formData.model_year;
-    if (formData.direction) updateData.direction = formData.direction;
-    if (formData.kyb_no) updateData.kyb_no = formData.kyb_no;
-    if (formData.brand) updateData.brand = formData.brand;
+    if (formData.car_model !== undefined) updateData.car_model = formData.car_model || '';
+    if (formData.model_year !== undefined) updateData.model_year = formData.model_year || '';
+    if (formData.direction !== undefined) updateData.direction = formData.direction || '';
+    if (formData.kyb_no !== undefined) updateData.kyb_no = formData.kyb_no || '';
+    if (formData.brand !== undefined) updateData.brand = formData.brand || '';
+    if (formData.remark !== undefined) updateData.remark = formData.remark || ''; 
     
     // 数字类型特殊处理：0 是有效值，不能简单用 if(formData.stock) 判断
     if (formData.stock !== '' && formData.stock !== null) {
@@ -151,7 +158,7 @@ Page({
     if (formData.price !== '' && formData.price !== null) {
       updateData.price = Number(formData.price) || 0;
     }
-
+    console.log('最终写入数据库的数据:', JSON.stringify(updateData));
     // 执行数据库api更新
     db.collection('products').doc(id).update({
       data: updateData
