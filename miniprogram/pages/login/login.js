@@ -35,46 +35,42 @@ Page({
       },
       success: res => {
         wx.hideLoading()
-        console.log('登录结果:', res)
-        // 缓存角色到本地（关键！后续所有页面用）
-        wx.setStorageSync('userRole', res.result.role)
-        wx.setStorageSync('userName', res.result.name)
-        wx.setStorageSync('userId', res.result._id)
-
-        // 3. 将用户信息存入 app 全局变量
-        app.globalData.userInfo = {
-          _id: res.result._id,
-          role: res.result.role,
-          name: res.result.name,
-          username: res.result.username,
-          openid: res.result.openid
-        };
         
         if (res.result && res.result.success) {
-          // 1. 登录成功，将关键信息保存到本地缓存
-          wx.setStorageSync('userRole', res.result.role)
-          wx.setStorageSync('userName', res.result.name)
-          
-          // 2. 保存到全局变量
-          app.globalData.userInfo = {
-            _id: res.result._id,
-            role: res.result.role,
-            name: res.result.name,
-            openid: res.result.openid
-          };
+          const userInfo = res.result.data || res.result
+
+        // 缓存角色到本地（关键！后续所有页面用）
+        wx.setStorageSync('userRole', userInfo.role)
+        wx.setStorageSync('userName', userInfo.name)
+        wx.setStorageSync('userId', userInfo._id)
+        wx.setStorageSync('userInfo', userInfo)
+        // 3. 将用户信息存入 app 全局变量
+        app.globalData.userInfo = {
+          _id: userInfo._id,
+          role: userInfo.role,
+          name: userInfo.name,
+          username: userInfo.username,
+          _openid: res.result._openid
+        };
 
           wx.hideLoading()
           wx.showToast({ title: '登录成功', icon: 'success' })
           
           // 把用户信息存到本地缓存，方便后面页面使用
-          wx.setStorageSync('userInfo', res.result.data)
+          wx.setStorageSync('userInfo', userInfo)
           
           // 跳转到首页
           setTimeout(() => {
-            wx.reLaunch({ url: '/pages/index/index' }) 
+            if (userInfo.role === 'customer') {
+              // 客户端 → 报价查询页
+              wx.reLaunch({ url: '/pages/client/search' })
+            } else {
+              // 内部员工 → 管理后台首页
+              wx.reLaunch({ url: '/pages/index/index' })
+            }
           }, 1000)
+
         } else {
-          // 登录失败
           wx.showToast({ title: res.result.msg || '登录失败', icon: 'none' })
         }
       },

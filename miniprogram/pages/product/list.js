@@ -1,4 +1,5 @@
 // pages/product/list.js
+const app = getApp();
 const db = wx.cloud.database(); 
 Page({
   data: {
@@ -9,10 +10,19 @@ Page({
     hasMore: true,     // 新增：是否还有更多数据
     isLoading: false // 增加加载锁，防止重复请求
   },
+  onShow(){
+    if (!app.checkLogin()) return;  // 未登录直接回登录页
+    // 页面首次显示时，先加载全局预警阈值，再初始化数据
+    if (!this._loaded) {
+      this._loaded = true;
+      app.loadWarningConfig().then(() => {
+        this.fetchData('', false);
+      });
+    }
+  },
 
   onLoad: function () {
-    // 页面加载时，先获取一次所有数据
-    this.fetchData('');
+    // 数据加载改到 onShow 里，确保先取到数据库里的全局预警阈值
   },
 
   // 监听搜索框输入
@@ -49,7 +59,18 @@ Page({
         isLoading: false 
       });
     }
-  
+    // 首次加载（非加载更多）时，先确保全局预警阈值已刷新
+    if (!isLoadMore) {
+      app.loadWarningConfig().then(() => {
+        this.doQuery(keyword, false);
+      });
+      return;
+    }
+    this.doQuery(keyword, true);
+  },
+
+  // 实际执行数据库查询
+  doQuery: function(keyword, isLoadMore) {
     // 如果正在加载或没有更多数据，直接返回
     if (this.data.isLoading || !this.data.hasMore) return;
     // 🔒 加锁
@@ -90,13 +111,9 @@ Page({
       let statusClass = 'status-normal'; // 默认绿色/正常
       let statusText = '有货';           // 默认文字
 
-      if (count <= 0) {
-        statusClass = 'status-out';      // 缺货红色
-        statusText = '缺货';
-      } else if (count < 10) {
-        statusClass = 'status-low';      // 库存紧张黄色
-        statusText = '紧张';
-      }
+      const s = app.getStockStatus(count, item);
+      statusClass = s.color;
+      statusText = s.text;
 
 
         return {

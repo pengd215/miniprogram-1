@@ -1,4 +1,4 @@
-/* pages/personal/personal.wxss */
+/* pages/profile/profile.wxss */
 page {
   background-color: #f7f8fa; /* 浅灰背景，突出白色卡片 */
 }
@@ -9,8 +9,11 @@ page {
 
 /* --- 顶部名片 --- */
 .profile-section {
+  width: 80%;
+  margin: 0 auto 20rpx;
   border-radius: 20rpx; /* 设置圆角，数值可根据喜好调整 */
-  padding: 30rpx 150rpx;
+  padding: 30rpx 40rpx;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   background: #cecece; 
@@ -35,6 +38,9 @@ page {
 .user-details {
   display: flex;
   flex-direction: column;
+  flex: 1;              /* 新增：自动填充剩余空间 */
+  min-width: 0;         /* 新增：防止flex子项撑开父容器 */
+  word-break: break-all;/* 新增：长文字自动换行 */
 }
 
 .nickname {

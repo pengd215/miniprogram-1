@@ -1,0 +1,46 @@
+<!--pages/warehouse/warehouseArea/index.wxml-->
+<view class="container">
+  <!-- 顶部 -->
+  <view class="header">
+    <text class="title">库区管理</text>
+    <button class="add-btn" bindtap="openAdd">+ 新增库区</button>
+  </view>
+
+  <!-- 库区列表 -->
+  <block wx:if="{{warehouses.length > 0}}">
+    <view class="warehouse-card" wx:for="{{warehouses}}" wx:key="_id">
+      <view class="card-main" bindtap="goToLocations" data-id="{{item._id}}" data-name="{{item.name}}">
+        <view class="code-badge">{{item.code}}</view>
+        <view class="card-info">
+          <text class="name">{{item.name}}</text>
+          <text class="desc">{{item.desc || '暂无描述'}}</text>
+        </view>
+        <text class="arrow">›</text>
+      </view>
+      <view class="card-footer">
+        <text class="hint">点击进入库位管理</text>
+        <text class="delete-link" bindtap="onDeleteWarehouse" data-id="{{item._id}}" data-name="{{item.name}}">删除库区</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 空状态 -->
+  <view wx:else class="empty">
+    <text class="empty-title">暂无库区</text>
+    <text class="empty-desc">点击右上角"新增库区"开始定义仓库结构</text>
+  </view>
+
+  <!-- 添加库区弹窗 -->
+  <view class="mask" wx:if="{{showAdd}}" bindtap="closeAdd">
+    <view class="dialog" catchtap="noop">
+      <view class="dialog-title">新增库区</view>
+      <input class="dlg-input" placeholder="库区名称，如：A区" value="{{form.name}}" bindinput="onNameInput" />
+      <input class="dlg-input" placeholder="库区编码，如：A" value="{{form.code}}" bindinput="onCodeInput" />
+      <input class="dlg-input" placeholder="描述（选填），如：重型货架" value="{{form.desc}}" bindinput="onDescInput" />
+      <view class="dialog-btns">
+        <button class="btn btn-cancel" bindtap="closeAdd">取消</button>
+        <button class="btn btn-ok" bindtap="submitAdd">确定</button>
+      </view>
+    </view>
+  </view>
+</view>

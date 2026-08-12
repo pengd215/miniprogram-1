@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "基础能力",
+  "navigationBarTitleText": "首页工作台",
   "usingComponents": {
     "cloud-tip-modal": "/components/cloudTipModal/index"
   }

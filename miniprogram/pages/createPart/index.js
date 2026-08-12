@@ -6,7 +6,7 @@ Page({
       oe_no: '',
       car_model: '',    // 修正：与WXML和逻辑保持一致
       brand: '',
-      location: '',     // 修正：库位是必填项
+      location: '',    
       model_year: '',   // 修正：年份字段
       kyb_no: '',
       direction:'',//方向
@@ -41,8 +41,8 @@ Page({
     if (this.data.isSubmitting) return; // 防止重复提交
 
     // 1. 基础校验
-    if (!data.oe_no || !data.car_model || !data.location||!data.stock) {
-      wx.showToast({ title: '请填写必填项(OE/车型/库存/库位)', icon: 'none' });
+    if (!data.oe_no || !data.car_model ||!data.stock) {
+      wx.showToast({ title: '请填写必填项(OE/车型/库存)', icon: 'none' });
       return;
     }
 
@@ -76,7 +76,7 @@ Page({
       oe_no: data.oe_no,
       quantity: initialStock, // 变动数量（即初始库存）
       current_stock: initialStock, // 变动后库存
-      _openid: app.globalData.openId,
+      _openid: app.globalData.openid,
       remark: `新建：${data.car_model} `,
       create_time: db.serverDate()
     };
@@ -105,65 +105,4 @@ Page({
     });
   },
 
-  submitCreate() {
-    const { oe_no, car_model, location, model_year, stock, brand,direction } = this.data.formData;
-
-    // 1. 核心字段校验
-    if (!oe_no || !car_model || !location||!stock) {
-      wx.showToast({ title: '请填写所有必填项', icon: 'none' });
-      return;
-    }
-
-    // 2. 数据预处理：格式化年份
-    // 将用户输入的 "12-15" 转换为 "2012-2015" 再存入数据库
-    const formatYear = (yearStr) => {
-      if (!yearStr) return '';
-      let str = String(yearStr).trim();
-      if (str.includes('-')) {
-        const parts = str.split('-');
-        const start = parts[0].length === 2 ? '20' + parts[0] : parts[0];
-        const end = parts[1].length === 2 ? '20' + parts[1] : parts[1];
-        return `${start}-${end}`;
-      }
-      if (str.length === 2) return '20' + str;
-      return str;
-    };
-
-    const finalData = {
-      oe_no,
-      car_model,
-      location,
-      model_year: formatYear(model_year), // 存入格式化后的年份
-      stock: Number(stock) || 0, // 确保库存是数字
-      brand,
-      created_at: new Date().toISOString() // 记录创建时间
-    };
-
-  // 3. 直接写入 products 集合
-    db.collection('products').add({
-      data: {
-        oe_no: oe_no,
-        car_model: car_model,   
-        brand: brand,
-        location: location,
-        model_year: finalYear, // 存入格式化后的年份
-        stock: parseInt(stock) || 0, // 确保库存是数字
-        kyb_no: kyb_no || '',
-        direction:direction||'',//方向
-        create_time: db.serverDate() // 记录创建时间
-      },
-      success: res => {
-        wx.hideLoading();
-        wx.showToast({ title: '建档成功' });
-        setTimeout(() => {
-          wx.navigateBack(); // 成功后返回上一页
-        }, 1500);
-      },
-      fail: err => {
-        wx.hideLoading();
-        console.error('建档失败', err);
-        wx.showToast({ title: '建档失败，请重试', icon: 'none' });
-      }
-    });
-  }
 });

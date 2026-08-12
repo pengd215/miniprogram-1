@@ -9,11 +9,13 @@ exports.main = async (event, context) => {
   if (!keyword) return { code: 400, msg: '请输入查询内容' }
 
   // 优化 彻底清洗数据：去除首尾空格，甚至去除中间空格（防止用户输入 "334 133"）
-  const k = keyword.trim().replace(/\s+/g, '') 
+  const k = keyword.trim().replace(/[\s\-]+/g, '') 
 
   try {
     // 优化 构建查询条件
     const queryCondition = _.or([
+      // 如果是扫码进来的 24 位 _id，通过精准匹配直接命中
+      { _id: k },
       // KYB号：改为模糊匹配，防止数据库有后缀（如 -01）导致搜不到
       { kyb_no: db.RegExp({ regexp: k, options: 'i' }) },
       
@@ -27,7 +29,7 @@ exports.main = async (event, context) => {
     const res = await db.collection('products')
       .where(queryCondition)
       .orderBy('_id', 'desc') // 按 ID 降序，确保优先拿到最新录入/修改的记录
-      .limit(10) // 限制返回数量，防止数据过多
+      .limit(20) // 限制返回数量，防止数据过多
       .get()
 
     if (res.data.length > 0) {
@@ -35,7 +37,7 @@ exports.main = async (event, context) => {
       const targetItem = res.data[0];
       return { 
         code: 200, 
-        data: res.data[0],
+        data: res.data,
         count: res.data.length // 告诉前端找到了几个，如果有多个可以提示用户
       }
     } else {

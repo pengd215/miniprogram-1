@@ -1,0 +1,220 @@
+/* pages/warehouse/locationMgr/index.wxss */
+
+/* 全局容器 */
+.container {
+  padding: 32rpx 24rpx;
+  background: #f8f9fa;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* --- 顶部区域 --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 批量生成按钮 */
+.gen-btn {
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  border-radius: 8rpx;
+  padding: 0 24rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gen-btn:active {
+  opacity: 0.8;
+}
+
+/* --- 库位网格布局 --- */
+.loc-grid {
+  display: flex;
+  flex-wrap: wrap;
+  /* 左右留白自动计算，保证居中或对齐 */
+  justify-content: space-between; 
+}
+
+/* 单个库位方块 */
+.loc-item {
+  width: 22%; /* 一行大概放4个 */
+  aspect-ratio: 1 / 1; /* 保持正方形 */
+  margin-bottom: 24rpx;
+  border-radius: 12rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.05);
+}
+
+.loc-item:active {
+  transform: scale(0.95);
+}
+
+/* 状态：空位 (默认) */
+.loc-item.empty {
+  background-color: #ffffff;
+  border: 2rpx solid #a5d6a7; /* 浅绿边框 */
+}
+
+.loc-item.empty .loc-code {
+  color: #2e7d32;
+}
+
+.loc-item.empty .loc-status {
+  color: #999;
+  font-size: 22rpx;
+}
+
+/* 状态：已绑定 (高亮) */
+.loc-item.bound {
+  background-color: #2e7d32; /* 深绿背景 */
+  border: 2rpx solid #2e7d32;
+}
+
+.loc-item.bound .loc-code {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.loc-item.bound .loc-status {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 22rpx;
+}
+
+/* 库位编码文字 */
+.loc-code {
+  font-size: 30rpx;
+  margin-bottom: 8rpx;
+}
+
+/* --- 空状态 --- */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 150rpx;
+}
+
+.empty-title {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.empty-desc {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* --- 弹窗样式 --- */
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog {
+  width: 80%;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+
+.dialog-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40rpx;
+  color: #333;
+}
+
+/* 生成表单行 */
+.gen-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.gen-label {
+  width: 140rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.gen-input {
+  flex: 1;
+  height: 70rpx;
+  background: #f5f5f5;
+  border-radius: 8rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  text-align: center;
+}
+
+.gen-sep {
+  margin: 0 16rpx;
+  color: #999;
+  font-size: 26rpx;
+}
+
+.gen-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 40rpx;
+  line-height: 1.4;
+  background: #fffbe6; /* 浅黄色提示背景 */
+  padding: 10rpx;
+  border-radius: 8rpx;
+}
+
+/* 弹窗按钮组 */
+.dialog-btns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  width: 46%;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+  margin: 0;
+}
+
+.btn-cancel {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.btn-ok {
+  background: #2e7d32;
+  color: #fff;
+}

@@ -1,0 +1,9 @@
+{
+  "name": "managePermission",
+  "version": "1.0.0",
+  "description": "管理权限：管理员给员工分配角色",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

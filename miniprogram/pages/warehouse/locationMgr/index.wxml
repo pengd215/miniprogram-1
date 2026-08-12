@@ -1,0 +1,52 @@
+<!--pages/warehouse/locationMgr/index.wxml-->
+<view class="container">
+  <!-- 顶部 -->
+  <view class="header">
+    <text class="title">{{warehouseName}} · 库位</text>
+    <button class="gen-btn" bindtap="openGen">批量生成</button>
+  </view>
+
+  <!-- 库位网格 -->
+  <block wx:if="{{locations.length > 0}}">
+    <view class="loc-grid">
+      <view
+        class="loc-item {{item.status === 'bound' ? 'bound' : 'empty'}}"
+        wx:for="{{locations}}" wx:key="_id"
+        bindtap="onTapLocation" data-item="{{item}}"
+      >
+        <text class="loc-code">{{item.location_code}}</text>
+        <text class="loc-status">{{item.status === 'bound' ? '已绑定' : '空位'}}</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 空状态 -->
+  <view wx:else class="empty">
+    <text class="empty-title">暂无库位</text>
+    <text class="empty-desc">点击"批量生成"创建库位号</text>
+  </view>
+
+  <!-- 批量生成弹窗 -->
+  <view class="mask" wx:if="{{showGen}}" bindtap="closeGen">
+    <view class="dialog" catchtap="noop">
+      <view class="dialog-title">批量生成库位</view>
+      <view class="gen-row">
+        <text class="gen-label">行号范围</text>
+        <input class="gen-input" type="number" value="{{genForm.startRow}}" data-key="startRow" bindinput="onGenInput" />
+        <text class="gen-sep">至</text>
+        <input class="gen-input" type="number" value="{{genForm.endRow}}" data-key="endRow" bindinput="onGenInput" />
+      </view>
+      <view class="gen-row">
+        <text class="gen-label">列号范围</text>
+        <input class="gen-input" type="number" value="{{genForm.startCol}}" data-key="startCol" bindinput="onGenInput" />
+        <text class="gen-sep">至</text>
+        <input class="gen-input" type="number" value="{{genForm.endCol}}" data-key="endCol" bindinput="onGenInput" />
+      </view>
+      <text class="gen-desc">将生成如 {{warehouseName}} 编码-01-01 样式的库位号</text>
+      <view class="dialog-btns">
+        <button class="btn btn-cancel" bindtap="closeGen">取消</button>
+        <button class="btn btn-ok" bindtap="submitGen">生成</button>
+      </view>
+    </view>
+  </view>
+</view>

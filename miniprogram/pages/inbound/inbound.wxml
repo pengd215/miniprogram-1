@@ -10,7 +10,7 @@
         <input 
           class="full-input" 
           placeholder="请输入或扫描 OE 编码" 
-          value="{{oeCode}}"
+          value="{{oe_no}}"
           bindinput="onOeCodeInput" 
           placeholder-class="placeholder-style"
         />

@@ -8,7 +8,11 @@ const $ = db.command.aggregate;
 
 exports.main = async (event, context) => {
   const { oe_no, dateStr, type, page = 1, pageSize = 20 } = event;
-  
+
+  // 获取当前操作人身份，用于数据范围控制
+  const wxContext = cloud.getWXContext();
+  const currentOpenId = wxContext.OPENID;
+
   // 1. 构建筛选条件模糊搜索 oe，备注
   let queryCondition = {};
   if (oe_no) {
@@ -26,6 +30,14 @@ exports.main = async (event, context) => {
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + 1); 
     queryCondition.create_time = _.gte(startDate).and(_.lt(endDate));
+  }
+
+  // ----- 数据范围控制 -----
+  // 管理员看所有数据；其他角色只能看自己经手的数据
+  const currentRole = await getUserRole(currentOpenId);
+  if (currentRole !== 'admin') {
+    // 非管理员：只返回自己经手的流水（_openid === 自己）
+    queryCondition._openid = currentOpenId;
   }
 
   try {
@@ -81,3 +93,14 @@ exports.main = async (event, context) => {
     return { success: false, msg: err.message };
   }
 };
+
+// 根据 openid 查员工角色（数据范围控制用）
+async function getUserRole(openid) {
+  if (!openid) return null;
+  const res = await db.collection('employees')
+    .where({ _openid: openid })
+    .limit(1)
+    .get();
+  if (res.data.length === 0) return null;
+  return res.data[0].role || 'guest';
+}

@@ -1,3 +1,4 @@
 {
-  "usingComponents": {}
+  "navigationBarTitleText": "创建档案",
+  "enablePullDownRefresh": true 
 }
