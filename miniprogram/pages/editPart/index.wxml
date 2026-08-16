@@ -74,6 +74,19 @@
     </view>
 
     <view class="form-group">
+      <view class="label">自定义预警值（选填）</view>
+      <input 
+        class="input-full" 
+        type="number" 
+        placeholder="留空则使用全局预警阈值" 
+        value="{{formData.warnStock}}" 
+        data-key="warnStock" 
+        bindinput="onInput" 
+      />
+      <view class="hint">库存低于此值时预警；不填则走个人中心的全局设置</view>
+    </view>
+
+    <view class="form-group">
       <view class="label">备注内容</view>
       <!-- 使用 textarea 支持多行输入，auto-height 随内容自动增高 -->
       <input 

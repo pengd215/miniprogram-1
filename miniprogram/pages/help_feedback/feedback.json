@@ -1,3 +1,4 @@
 {
-  "usingComponents": {}
+  "navigationBarTitleText": "功能吐槽",
+  "enablePullDownRefresh": true 
 }

@@ -1,0 +1,14 @@
+{
+  "name": "warehouseManage",
+  "version": "1.0.0",
+  "description": "仓库管理配置层：库区/库位/扫码绑定商品",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

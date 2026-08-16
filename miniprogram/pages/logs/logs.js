@@ -1,3 +1,4 @@
+const app = getApp();
 //格式化时间的工具函数
 const formatTime = (dateStr) => {
   if (!dateStr) return '';
@@ -27,10 +28,13 @@ Page({
     currentTab: 'all'
   },
 
+  onShow(){
+    if (!app.checkLogin()) return;  // 未登录直接回登录页
+  },
+
   onLoad() {
-    wx.cloud.callFunction({ name: 'userLogin' }).then(res => {
-      this.setData({ myOpenId: res.result.openid });
-    });
+    // 直接用 app.js 缓存的 openid，避免无参调用云函数
+    this.setData({ myOpenId: app.globalData.openid || '' });
     // 页面加载时自动查一次
     this.fetchLogs(); 
   },

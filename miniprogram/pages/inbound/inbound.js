@@ -58,7 +58,7 @@ Page({
     }
   },
 
-          // 【核心】用 _id 替代 OE 号获取产品数据
+          // 用 _id 替代 OE 号获取产品数据
   async loadProductData(id) {
     try {
       const res = await wx.cloud.callFunction({

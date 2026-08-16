@@ -68,17 +68,40 @@
   <view wx:if="{{loading}}" class="loading-tip">
     <text>正在云端检索数据...</text>
   </view>
+<!-- 【新增】多条搜索结果列表 -->
+  <view wx:if="{{searchResults && searchResults.length > 0}}" class="result-card">
+  <view class="card-header">
+    <text class="card-title">找到 {{resultCount}} 条记录，请选择</text>
+  </view>
+  <view class="divider-line"></view>
+  
+  <view 
+    wx:for="{{searchResults}}" 
+    wx:key="_id" 
+    class="result-list-item" 
+    bindtap="handleSelectResult"
+    data-id="{{item._id}}"
+  >
+    <view class="list-item-main">
+      <text class="list-item-kyb">KYB: {{item.kyb_no}}</text>
+      <text class="list-item-model">{{item.car_model}}</text>
+    </view>
+    <view class="list-item-right">
+      <text class="list-item-stock {{item.stock > 0 ? 'stock-in' : 'stock-out'}}">库存:{{item.stock}}</text>
+      <text class="list-item-oe">OE: {{item.oe_no}}</text>
+    </view>
+  </view>
+  </view>
 
   <!-- 5. 结果展示区域-->
   <!-- 只有 productData 有值时才显示整个卡片 -->
   <view wx:if="{{productData}}" class="result-card">
-
     <!-- 卡片头部 -->
     <view class="card-header">
       <text class="card-title">查询结果</text>
         <!-- 根据 stock 数值动态切换样式类名 -->
-      <text class="status-tag {{productData.stock > 10 ? 'status-in' : (productData.stock > 0 ? 'status-low' : 'status-out')}}">
-          {{productData.stock > 10 ? '库存充足' : (productData.stock > 0 ? '需要补货' : '缺货预警')}}
+        <text class="status-tag {{productData.stockStatusClass}}">
+        {{productData.stockStatusText}}
         </text>
     </view>
 
@@ -118,6 +141,12 @@
     </view>
 
     <view class="card-body">
+
+      <view class="info-row">
+        <text class="label">产品编号:</text>
+        <text class="value">{{productData._id || '暂无'}}</text>
+      </view>
+
       <view class="info-row">
         <text class="label">适用车型:</text>
         <text class="value"  selectable="true" user-select="true">{{productData.car_model || '暂无'}}</text>
@@ -187,6 +216,22 @@
           <image src="/images/icons/icon_delete.png" class="btn-icon" mode="aspectFit"></image>
           <text class="btn-text">删除</text>
        </button>
+       <!-- 生成二维码按钮 -->
+       <button class="btn-custom btn-qrcode" bindtap="showQRCode">
+    <image src="/images/icons/business.png" class="btn-icon" mode="aspectFit"></image>
+    <text>二维码</text>
+  </button>
+       <!-- 二维码弹窗 -->
+       <view class="qrcode-mask" wx:if="{{showQrcode}}" bindtap="hideQRCode">
+       <view class="qrcode-box" catchtap="">
+        <image 
+        src="{{qrCodeBase64}}" 
+        class="qrcode-image" 
+        mode="aspectFit"></image>
+    <button class="save-btn" bindtap="saveQRCode">保存到相册</button>
+    <view class="close-btn" bindtap="hideQRCode">✕</view>
+        </view>
+      </view>
       </view>
     </view>
 

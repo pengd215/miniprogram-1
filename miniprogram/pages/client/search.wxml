@@ -1,0 +1,75 @@
+<!--pages/client/search.wxml-->
+<view class="container">
+  <!-- 顶部搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper">
+    <input 
+      class="search-input" 
+      placeholder="输入OE号或配件名称" 
+      bindinput="onInput"
+      confirm-type="search"
+      bindconfirm="doSearch"
+    />
+  </view>
+    <button class="search-btn" size="mini" bindtap="doSearch">查询</button>
+  </view>
+
+<!-- 结果列表 -->
+<view class="results">
+    <view class="card" wx:for="{{results}}" wx:key="_id" bindtap="showDetail" data-item="{{item}}">
+      
+      <!-- 1. 顶部：图片与核心标题区 -->
+      <view class="card-header">
+        <view class="img-list" wx:if="{{item.images && item.images.length > 0}}">
+          <image class="img-item" wx:for="{{item.images}}" wx:key="*this" wx:for-item="img" wx:for-index="idx" wx:if="{{idx < 3}}" src="{{img}}" mode="aspectFill"></image>
+        </view>
+        <image class="img" wx:else src="/images/40404.png" mode="aspectFill"></image>
+        <view class="header-info">
+          <text class="title">{{item.name}}</text>
+        </view>
+      </view>
+
+      <!-- 2. 中部：双列参数网格 (解决OE号撑爆的核心) -->
+      <view class="specs-grid">
+
+        <view class="spec-item full-width">
+         <text class="spec-label">适用车型</text>
+         <text class="spec-value car-text">{{item.car_model}}</text>
+        </view>
+        
+        <!-- OE号 -->
+        <view class="spec-item">
+          <text class="spec-label">OE编号</text>
+          <text class="spec-value highlight">{{item.oe_no}}</text>
+        </view>
+        <!-- KYB号 -->
+        <view class="spec-item">
+          <text class="spec-label">KYB编号</text>
+          <text class="spec-value">{{item.kyb_no}}</text>
+        </view>
+        <!-- 年款 -->
+        <view class="spec-item">
+          <text class="spec-label">适用年款</text>
+          <text class="spec-value">{{item.model_year}}</text>
+        </view>
+        <!-- 方向 -->
+        <view class="spec-item">
+          <text class="spec-label">适用方向</text>
+          <text class="spec-value">{{item.direction}}</text>
+        </view>
+      </view>
+
+      <!-- 3. 底部：价格栏 -->
+      <view class="price-row">
+        <text class="price-label">批发参考价</text>
+        <text class="price-val">¥ {{item.price}}</text>
+      </view>
+
+    </view>
+    
+    <!-- 空状态提示 -->
+    <view class="empty" wx:if="{{results.length === 0 && hasSearched}}">
+      未找到相关配件报价
+    </view>
+  </view>
+</view>

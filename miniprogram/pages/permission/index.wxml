@@ -1,0 +1,48 @@
+<!--pages/permission/index.wxml-->
+<view class="container">
+  <!-- 顶部 -->
+  <view class="header">
+    <text class="title">员工权限管理</text>
+    <text class="subtitle">点击员工可修改其角色</text>
+  </view>
+
+  <!-- 员工列表 -->
+  <block wx:if="{{employees.length > 0}}">
+    <view class="emp-card" wx:for="{{employees}}" wx:key="_id">
+      <view class="card-main" bindtap="onEditRole" data-id="{{item._id}}">
+        <view class="avatar-box">{{item.name ? item.name[0] : '?'}}</view>
+        <view class="card-info">
+          <text class="name">{{item.name || '未命名'}}</text>
+          <text class="username">账号：{{item.username}}</text>
+        </view>
+        <view class="role-badge {{item.role}}">{{item.roleLabel}}</view>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 空状态 -->
+  <view wx:else class="empty">
+    <text class="empty-title">暂无员工</text>
+    <text class="empty-desc">请在云开发控制台先录入员工账号</text>
+  </view>
+
+  <!-- 角色选择弹窗 -->
+  <view class="mask" wx:if="{{pickerVisible}}" bindtap="closePicker">
+    <view class="dialog" catchtap="noop">
+      <view class="dialog-title">选择角色</view>
+      <text class="dialog-desc">为 "{{currentEmployee.name}}" 分配新角色</text>
+      <picker
+        class="role-picker"
+        mode="selector"
+        range="{{pickerRange}}"
+        bindchange="onPickerChange"
+      >
+        <view class="picker-value">请选择角色</view>
+      </picker>
+      <view class="dialog-btns">
+        <button class="btn btn-cancel" bindtap="closePicker">取消</button>
+      </view>
+    </view>
+  </view>
+</view>

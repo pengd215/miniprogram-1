@@ -13,7 +13,7 @@
         <input 
           class="full-input" 
           placeholder="请输入或扫描 OE 编码" 
-          value="{{oeCode}}"
+          value="{{oe_no}}"
           bindinput="onOeInput"
         />
         <button class="scan-btn" size="mini" bindtap="handleScan">

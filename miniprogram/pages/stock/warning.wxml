@@ -1,0 +1,33 @@
+<!--pages/stock/warning.wxml-->
+<view class="container">
+  <view class="card">
+    <view class="card-title">全局库存预警设置</view>
+    <view class="tip">未单独设置的商品，统一按以下阈值判断</view>
+
+    <view class="form-item">
+      <text class="label">最低预警数（件）</text>
+      <input 
+        class="input" 
+        type="number" 
+        value="{{lowStock}}" 
+        bindinput="onLowInput" 
+        placeholder="如 10"
+      />
+      <text class="desc">库存低于该值显示"紧张"</text>
+    </view>
+
+    <view class="form-item">
+      <text class="label">最高积压数（件）</text>
+      <input 
+        class="input" 
+        type="number" 
+        value="{{maxStock}}" 
+        bindinput="onMaxInput" 
+        placeholder="如 100"
+      />
+      <text class="desc">库存高于该值可提示积压（可选）</text>
+    </view>
+
+    <button class="save-btn" bindtap="saveConfig" loading="{{saving}}">保存设置</button>
+  </view>
+</view>

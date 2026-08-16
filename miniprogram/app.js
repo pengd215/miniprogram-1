@@ -1,7 +1,14 @@
 // app.js
 App({
   globalData: {
-    eventChannel: null // ✅ 初始化全局事件通道
+    eventChannel: null, //初始化全局事件通道
+    openid: '' ,// 初始化为空字符串
+    userInfo: null
+  },
+  // 全局预警配置（缓存，避免每次判断都读库）
+  globalWarning: {
+    lowStock: 10,   // 默认低库存阈值
+    maxStock: 100   // 默认最高积压阈值（可选）
   },
 
   onLaunch: function () {
@@ -19,7 +26,16 @@ App({
     this.getOpenId(); 
   },
 
-  // 【新增函数】专门用来获取 OpenID
+  checkLogin(page) {
+    const userInfo = wx.getStorageSync('userInfo')
+    if (!userInfo || !userInfo._id) {
+      wx.reLaunch({ url: '/pages/login/login' })
+      return false
+    }
+    return true
+  },
+
+  // 专门用来获取 OpenID
   getOpenId() {
     const that = this;
     wx.cloud.callFunction({
@@ -34,10 +50,31 @@ App({
       }
     })
   },
+  // 从 settings 集合读取全局预警配置
+  loadWarningConfig() {
+  const db = wx.cloud.database();
+  return db.collection('settings').doc('warning').get()
+    .then(res => {
+      const d = res.data || {};
+      this.globalWarning = {
+        lowStock: d.lowStock || 10,
+        maxStock: d.maxStock || 100
+      };
+      return this.globalWarning;
+    })
+    .catch(() => {
+      // 读取失败用默认值
+      return this.globalWarning;
+    });
+  },
 
-  // 3. 【新增定义】定义全局变量对象
-  globalData: {
-    openid: '' ,// 初始化为空字符串
-    userInfo: null
+// 计算单品的库存状态
+// 返回: 'normal' | 'low' | 'out' ，以及对应文案
+  getStockStatus(stock, product) {
+  // 单品自定义预警值优先
+  const warnStock = (product && product.warnStock) || this.globalWarning.lowStock;
+  if (stock <= 0) return { status: 'out', text: '缺货', color: 'status-out' };
+  if (stock < warnStock) return { status: 'low', text: '紧张', color: 'status-low' };
+  return { status: 'normal', text: '充足', color: 'status-in' };
   }
 })

@@ -12,7 +12,12 @@
     "pages/product/list",
     "pages/employee/profile",
     "pages/account_setting/setting",
-    "pages/help_feedback/feedback"
+    "pages/help_feedback/feedback",
+    "pages/stock/warning",
+    "pages/warehouse/warehouseArea/index",
+    "pages/warehouse/locationMgr/index",
+    "pages/client/search",
+    "pages/permission/index"
   ],
     "tabBar": {
       "color": "#999999",

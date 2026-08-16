@@ -1,4 +1,4 @@
-// pages/personal/personal.js
+// pages/employee/profile.js
 const app = getApp();
 const db = wx.cloud.database();
 Page({
@@ -11,9 +11,21 @@ Page({
     avatarUrl: ''
   },
 
+  onShow(){
+
+    if (!app.checkLogin()) return;  // 未登录直接回登录页
+    this.initUserInfo(); // 每次页面显示时重新加载用户信息（确保切换账号后数据最新）
+  },
+
+  navigateTo(e) {
+    const url = e.currentTarget.dataset.url;
+    if (url) {
+      wx.navigateTo({ url });
+    }
+  },
+
   onLoad() {
     this.initUserInfo();// 首次加载用户信息
-    this.renderMenuByRole();// 初始化菜单
 
        // 监听头像更新事件
     try {
@@ -33,62 +45,26 @@ Page({
       console.log('eventChannel 不支持:', e);
     }
   },
-  // 每次页面显示时检查是否需要刷新
-  onShow() {
-    if (app.globalData.eventChannel) {
-      this.initUserInfo(); // 重新加载用户信息
-      app.globalData.eventChannel = false; // 重置标志
-    }
-  },
 
   // 1. 初始化用户信息
   initUserInfo() {
-    wx.showLoading({ title: '加载中...' });
+    // 直接从登录时存好的全局变量/缓存读取，不再绕云函数
+    const userInfo = app.globalData.userInfo || {};
+    const userRole = userInfo.role || wx.getStorageSync('userRole') || '';
+    const userName = userInfo.name || wx.getStorageSync('userName') || '微信用户';
 
-    wx.cloud.callFunction({
-      name: 'userLogin', // 获取当前用户的 openid
-      success: res => {
-        const openid = res.result.openid;
-        
-        // 实时查询数据库，获取最新资料
-        db.collection('employees')
-          .where({ _openid: openid })
-          .get()
-          .then(dbRes => {
-            wx.hideLoading();
-            if (dbRes.data.length > 0) {
-              const latestUserData = dbRes.data[0];
-              
-              // 1. 同步更新全局缓存（确保其他页面也能拿到最新数据）
-              app.globalData.userInfo = latestUserData;
-              this.setData({
-                userName: latestUserData.name || '微信用户',
-                userId: latestUserData._id || '暂无',
-                userRole: latestUserData.role || 'employee',
-                roleText: this.getRoleText(latestUserData.role),
-                avatarUrl: latestUserData.avatarUrl || '' // 实时拉取最新头像
-              });
-              app.globalData.userInfo = latestUserData;
-              this.renderMenuByRole();
-              // 3. 如果角色发生变化，需要重新渲染菜单
-              if (this.data.userRole !== latestUserData.role) {
-                this.renderMenuByRole();
-              }
-            } else {
-              wx.showToast({ title: '未找到用户信息', icon: 'none' });
-            }
-          })
-          .catch(err => {
-            wx.hideLoading();
-            console.error("拉取用户信息失败", err);
-            wx.showToast({ title: '数据加载失败', icon: 'none' });
-          });
-      },
-      fail: err => {
-        wx.hideLoading();
-        console.error("登录校验失败", err);
-      }
+    console.log('【个人中心】当前用户:', userName, '角色:', userRole);
+
+    this.setData({
+      userName: userName,
+      userId: userInfo._id || '暂无',
+      userRole: userRole,
+      roleText: this.getRoleText(userRole),
+      avatarUrl: userInfo.avatarUrl || ''
     });
+
+    // 根据角色渲染菜单
+    this.renderMenuByRole();
   },
 
   // 2. 根据角色渲染菜单（核心权限控制）
@@ -97,7 +73,7 @@ Page({
   const userName = this.data.userName; 
   const userInfo = app.globalData.userInfo || {};
 
-  console.log('当前用户:', userName, '角色:', role);
+  console.log('当前用户:', userName,'角色:', role);
 
     let groups = [];
 
@@ -109,14 +85,14 @@ Page({
           groupEn: 'ACCOUNT SERVICE',
           items: [
             { name: '账户设置', desc: '个人资料与账户信息', url: '/pages/account_setting/setting' },
-            { name: '管理权限', desc: '管理员权限设置', url: '/pages/employee/permission' }
+            { name: '管理权限', desc: '管理员权限设置', url: '/pages/permission/index' }
           ]
         },
         {
           groupTitle: '仓库管理',
           groupEn: 'WAREHOUSE MANAGEMENT',
           items: [
-            { name: '仓库管理', desc: '仓库资料与成员配置', url: '/pages/employee/list' },
+            { name: '库区库位管理', desc: '库区定义与库位配置', url: '/pages/warehouse/warehouseArea/index' },
             { name: '库存预警', desc: '查看低库存与异常提醒', url: '/pages/stock/warning' }
           ]
         },
@@ -143,7 +119,7 @@ Page({
           groupTitle: '仓库管理',
           groupEn: 'WAREHOUSE MANAGEMENT',
           items: [
-            { name: '仓库管理', desc: '仓库资料与成员配置', url: '/pages/employee/list' }
+            { name: '库区库位管理', desc: '库区定义与库位配置', url: '/pages/warehouse/warehouseArea/index' }
           ]
         },
         {
@@ -169,7 +145,7 @@ Page({
           groupTitle: '仓库管理',
           groupEn: 'WAREHOUSE MANAGEMENT',
           items: [
-            { name: '仓库管理', desc: '仓库资料与成员配置', url: '/pages/employee/list' }
+            { name: '库区库位管理', desc: '库区定义与库位配置', url: '/pages/warehouse/warehouseArea/index' }
           ]
         },
         {
@@ -195,7 +171,7 @@ Page({
           groupTitle: '仓库管理',
           groupEn: 'WAREHOUSE MANAGEMENT',
           items: [
-            { name: '仓库管理', desc: '仓库资料与成员配置', url: '/pages/employee/list' },
+            { name: '库区库位管理', desc: '库区定义与库位配置', url: '/pages/warehouse/warehouseArea/index' },
             { name: '库存预警', desc: '查看低库存与异常提醒', url: '/pages/stock/warning' }
           ]
         },
@@ -223,24 +199,11 @@ Page({
       'admin': '管理员',
       'worker': '普通员工',
       'sales': '业务员',
-      'warehouse_manager': '仓管'
+      'warehouse_manager': '仓管',
+      'customer': '客户'
       };
       return roleMap[role] || '未知角色';
     },
-
-
-   // 通用页面跳转函数
-  navigateTo(e) {
-    const url = e.currentTarget.dataset.url;
-    if (url) {
-      wx.navigateTo({
-        url: url,
-        fail: () => {
-          wx.showToast({ title: '页面正在开发中', icon: 'none' });
-        }
-      });
-    }
-  },
 
   // 退出登录逻辑
   handleLogout() {

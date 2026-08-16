@@ -15,8 +15,9 @@ Page({
       price: 0,
       remark:'',
      // isReadOnlyStock: false,//
-     images: [],// 初始化图片数组
-      brand: ''
+      images: [],// 初始化图片数组
+      brand: '',
+      warnStock: ''
     },
     isSaving: false
   },
@@ -49,7 +50,8 @@ Page({
           price: data.price || 0,
           brand: data.brand || '',
           images:data.images|| [],
-          remark: res.data.remark || ''
+          remark: res.data.remark || '',
+          warnStock: data.warnStock || ''
         }
       });
       wx.hideLoading();
@@ -124,9 +126,9 @@ Page({
     console.log('提交的数据:', JSON.stringify(formData));
     console.log('记录ID:', id);
 
-    // OE号和库位是核心标识，补全时不能为空
-    if (!formData.oe_no || !formData.location) {
-      wx.showToast({ title: 'OE号和库位不能为空', icon: 'none' });
+    // OE号是核心标识，补全时不能为空
+    if (!formData.oe_no ) {
+      wx.showToast({ title: 'OE号不能为空', icon: 'none' });
       return;
     }
 
@@ -157,6 +159,9 @@ Page({
     }
     if (formData.price !== '' && formData.price !== null) {
       updateData.price = Number(formData.price) || 0;
+    }
+    if (formData.warnStock !== '' && formData.warnStock !== null) {
+      updateData.warnStock = Number(formData.warnStock) || 0;
     }
     console.log('最终写入数据库的数据:', JSON.stringify(updateData));
     // 执行数据库api更新

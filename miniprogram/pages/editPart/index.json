@@ -1,3 +1,4 @@
 {
-  "usingComponents": {}
+  "navigationBarTitleText": "修改档案",
+  "enablePullDownRefresh": true 
 }

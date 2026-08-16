@@ -66,6 +66,23 @@ Page({
       wx.hideLoading();
     }
   },
+//监听OE码输入
+  onOeInput(e) {
+    this.setData({ oe_no: e.detail.value });
+  },
+
+  // 扫码功能
+  handleScan() {
+    wx.scanCode({
+      onlyFromCamera: false,
+      success: (res) => {
+        this.setData({ oeCode: res.result });
+      },
+      fail: (err) => {
+        console.log('扫码取消或失败', err);
+      }
+    });
+  },
 
 
   // 监听数量输入
@@ -89,7 +106,7 @@ Page({
       return wx.showToast({ title: '请输入有效数量', icon: 'none' });
     }
     if (Number(quantity) > maxQuantity) {
-      return wx.showToast({ title: '出库数量不能大于库存(${maxQuantity})', icon: 'none' });
+      return wx.showToast({ title: `出库数量不能大于库存(${maxQuantity})`, icon: 'none' });
     }
     if (submitting) return;
 
