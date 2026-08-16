@@ -10,7 +10,7 @@ exports.main = async (event, context) => {
   // 1. 接收参数
   const { productId, quantity, remark } = event;
   // 将数量转为数字，防止计算错误
-  const qty = parseInt(quantity);
+  const qty = parseInt(quantity, 10);
 
   // --- 基础校验 ---
   if (!productId) {

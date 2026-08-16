@@ -1,15 +1,22 @@
 {
-  "name": "miniprogram-1",
+  "name": "zhulu-shock-absorber-inventory",
   "version": "1.0.0",
-  "description": "这是云开发的快速启动指引，其中演示了如何上手使用云开发的三大基础能力：",
+  "description": "逐鹿减震器库存管理系统 —— 基于微信云开发的汽配库存管理小程序（配件建档、出入库、流水追溯、库存预警、库位管理、客户报价）",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --check cloudfunctions/*/index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "微信小程序",
+    "weixin-miniprogram",
+    "云开发",
+    "cloudbase",
+    "库存管理",
+    "inventory-management",
+    "serverless"
+  ],
+  "author": "pengd215",
+  "license": "MIT",
   "type": "commonjs",
-  "dependencies": {
-  }
+  "dependencies": {}
 }

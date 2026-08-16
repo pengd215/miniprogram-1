@@ -6,10 +6,24 @@ Page({
     isLoading: false
   },
 
+    // 点击放大预览图片
+    previewImage(e) {
+      const currentImages = e.currentTarget.dataset.images; // 当前商品的所有图片数组
+      const currentSrc = e.currentTarget.dataset.current;   // 当前点击的图片链接
+      
+      wx.previewImage({
+        current: currentSrc,
+        urls: currentImages,
+        success: function() {
+          console.log('图片预览成功');
+        }
+      });
+    },
+
   onLoad() {
     // 【关键】页面加载时，自动执行一次搜索（默认搜全部或空关键词）
     // 这样用户一进来就能看到最新的列表和图片
-    this.doSearch();
+    // 页面加载时仅启动实时监听，不执行搜索（避免首次空关键词弹提示）
     this.startWatch(); // 启动实时监听，员工端新增/修改后客户端自动更新
   },
 

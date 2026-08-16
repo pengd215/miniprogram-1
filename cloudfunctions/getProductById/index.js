@@ -15,6 +15,8 @@ exports.main = async (event, context) => {
       return { code: 404, message: '未找到该配件' };
     }
   } catch (err) {
-    return { code: 500, message: '查询失败', err };
+    console.error('getProductById 查询失败:', err && (err.errMsg || err));
+    const notFound = (err && (err.errCode === -1 || /not found|does not exist/i.test(err.errMsg || '')));
+    return { code: notFound ? 404 : 500, message: notFound ? '未找到该配件' : '查询失败' };
   }
 };

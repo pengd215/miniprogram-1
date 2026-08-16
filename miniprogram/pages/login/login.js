@@ -50,14 +50,13 @@ Page({
           role: userInfo.role,
           name: userInfo.name,
           username: userInfo.username,
-          _openid: res.result._openid
+          _openid: app.globalData.openid // 从全局获取 openid（userLogin 响应已不含该字段）
         };
 
           wx.hideLoading()
           wx.showToast({ title: '登录成功', icon: 'success' })
           
           // 把用户信息存到本地缓存，方便后面页面使用
-          wx.setStorageSync('userInfo', userInfo)
           
           // 跳转到首页
           setTimeout(() => {

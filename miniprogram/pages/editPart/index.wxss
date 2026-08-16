@@ -193,3 +193,59 @@ page {
   color: #969799;
 }
 
+
+/* --- OE 码数组样式 --- */
+.oe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.oe-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.oe-input {
+  padding-right: 80rpx;
+}
+.oe-del-btn {
+  position: absolute;
+  top: 50%;
+  right: 12rpx;
+  transform: translateY(-50%);
+  width: 48rpx;
+  height: 48rpx;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 32rpx;
+  line-height: 48rpx;
+  text-align: center;
+  border-radius: 50%;
+  z-index: 10;
+}
+.oe-del-btn:active {
+  background-color: #e64340;
+}
+.oe-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  margin-top: 16rpx;
+  padding: 20rpx 0;
+  background-color: #f7f8fa;
+  border: 2rpx dashed #dcdee0;
+  border-radius: 8rpx;
+}
+.oe-add-btn:active {
+  background-color: #e5e5e5;
+}
+.oe-add-icon {
+  font-size: 40rpx;
+  color: #3296fa;
+  line-height: 1;
+}
+.oe-add-tip {
+  font-size: 26rpx;
+  color: #969799;
+}

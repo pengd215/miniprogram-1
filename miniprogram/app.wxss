@@ -1,4 +1,13 @@
 /**app.wxss**/
+
+page {
+  --primary-color: #2e7d32;
+  --primary-light: #449448;
+  --bg-gradient-start: #e8f5e9;
+  --bg-gradient-end: #c8e6c9;
+  --text-main: #333333;
+  --text-sub: #888888;
+}
 .container {
   display: flex;
   flex-direction: column;

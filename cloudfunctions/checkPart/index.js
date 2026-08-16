@@ -10,6 +10,9 @@ exports.main = async (event, context) => {
 
   // 优化 彻底清洗数据：去除首尾空格，甚至去除中间空格（防止用户输入 "334 133"）
   const k = keyword.trim().replace(/[\s\-]+/g, '') 
+  // 正则转义：防止用户输入特殊字符导致 ReDoS / 异常匹配
+  const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const safeK = escapeRegExp(k);
 
   try {
     // 优化 构建查询条件
@@ -17,13 +20,13 @@ exports.main = async (event, context) => {
       // 如果是扫码进来的 24 位 _id，通过精准匹配直接命中
       { _id: k },
       // KYB号：改为模糊匹配，防止数据库有后缀（如 -01）导致搜不到
-      { kyb_no: db.RegExp({ regexp: k, options: 'i' }) },
+      { kyb_no: db.RegExp({ regexp: safeK, options: 'i' }) },
       
       // OE号：模糊匹配
-      { oe_no: db.RegExp({ regexp: k, options: 'i' }) },
+      { oe_no: db.RegExp({ regexp: safeK, options: 'i' }) },
       
       // 车型/适用车型：模糊匹配
-      { car_model: db.RegExp({ regexp: k, options: 'i' }) }, 
+      { car_model: db.RegExp({ regexp: safeK, options: 'i' }) }, 
     ])
 
     const res = await db.collection('products')

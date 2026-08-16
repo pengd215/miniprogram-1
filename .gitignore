@@ -5,8 +5,17 @@ project.private.config.json
 # 排除云开发环境ID
 cloudfunctions/*/config.json
 
+# 排除云开发本地调试目录（CloudBase CLI）
+.cloudbase/
+.cloudbase.json
+.env
+.env.local
+
 # 排除编译产物和缓存
 miniprogram_npm/
 node_modules/
 unpackage/
+dist/
+build/
 *.log
+.DS_Store

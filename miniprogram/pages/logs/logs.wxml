@@ -4,14 +4,14 @@
   <!-- 顶部筛选卡片 -->
   <view class="search-card">
     <view class="input-group">
-      <text class="label">🔍搜索</text>
+      <text class="label">搜索</text>
       <input class="main-input" placeholder="输入OE编码或单号" value="{{searchKey}}" bindinput="onInputSearch" confirm-type="search" />
     </view>
     <view class="divider"></view>
     <view class="action-group">
       <picker mode="date" value="{{selectedDate}}" bindchange="onDateChange">
         <view class="date-picker-box">
-          <text class="label">📅日期</text>
+          <text class="label">日期</text>
           <text class="date-text {{selectedDate ? 'active' : 'placeholder'}}">{{selectedDate ? selectedDate : '不限'}}</text>
           <text class="arrow">▼</text>
         </view>

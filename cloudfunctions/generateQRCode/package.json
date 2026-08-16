@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "qrcode": "^1.5.4",
-    "wx-server-sdk": "latest"
+    "wx-server-sdk": "~4.0.2"
   }
 }

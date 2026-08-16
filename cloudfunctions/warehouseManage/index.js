@@ -129,41 +129,46 @@ async function generateLocations(event) {
   if ((eR - sR + 1) * (eC - sC + 1) > 500) {
     return { success: false, message: '一次最多生成 500 个库位' };
   }
-  // 清空该库区原有库位（重新生成）
+  // 先查旧库位（待新库位写入成功后再删，避免中途失败导致数据丢失）
   const oldRes = await db.collection('locations')
     .where({ warehouse_id: warehouseId })
     .get();
-  if (oldRes.data.length > 0) {
-    const ids = oldRes.data.map(i => i._id);
-    for (let i = 0; i < ids.length; i += 100) {
-      await db.collection('locations')
-        .where({ _id: _.in(ids.slice(i, i + 100)) })
-        .remove();
-    }
-  }
-  // 生成库位
-  const tasks = [];
+  const oldIds = oldRes.data.map(i => i._id);
+
+  // 生成库位（分批串行写入，避免单次并发过多触发限流）
+  const docs = [];
   for (let r = sR; r <= eR; r++) {
     for (let c = sC; c <= eC; c++) {
       const row = String(r).padStart(2, '0');
       const col = String(c).padStart(2, '0');
-      const code = `${prefix}-${row}-${col}`;
-      tasks.push(db.collection('locations').add({
-        data: {
-          warehouse_id: warehouseId,
-          prefix,
-          row: r,
-          col: c,
-          location_code: code,
-          product_id: null,   // 未绑定商品
-          status: 'empty',    // empty=空位 bound=已绑定
-          create_time: db.serverDate()
-        }
-      }));
+      const code = prefix + '-' + row + '-' + col;
+      docs.push({
+        warehouse_id: warehouseId,
+        prefix,
+        row: r,
+        col: c,
+        location_code: code,
+        product_id: null,   // 未绑定商品
+        status: 'empty',    // empty=空位 bound=已绑定
+        create_time: db.serverDate()
+      });
     }
   }
-  await Promise.all(tasks);
-  return { success: true, message: `已生成 ${tasks.length} 个库位` };
+  const BATCH = 50;
+  for (let i = 0; i < docs.length; i += BATCH) {
+    const batch = docs.slice(i, i + BATCH);
+    await db.collection('locations').add({ data: batch });
+  }
+
+  // 新库位写入成功后，再删除旧库位（先建后删，防数据丢失）
+  if (oldIds.length > 0) {
+    for (let i = 0; i < oldIds.length; i += 100) {
+      await db.collection('locations')
+        .where({ _id: _.in(oldIds.slice(i, i + 100)) })
+        .remove();
+    }
+  }
+  return { success: true, message: '已生成 ' + docs.length + ' 个库位' };
 }
 
 // 扫码绑定商品到库位

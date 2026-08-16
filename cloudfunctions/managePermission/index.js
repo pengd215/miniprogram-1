@@ -74,9 +74,26 @@ async function updateRole(event) {
   }
 
   // 校验员工存在
-  const empRes = await db.collection('employees').doc(employeeId).get();
+  let empRes;
+  try {
+    empRes = await db.collection('employees').doc(employeeId).get();
+  } catch (e) {
+    // 文档不存在时 SDK 抛异常，返回员工不存在
+    return { success: false, message: '员工不存在' };
+  }
   if (!empRes.data) {
     return { success: false, message: '员工不存在' };
+  }
+  const oldRole = empRes.data.role || 'guest';
+
+  // 【保护】至少保留一名管理员：若将被降级的员工当前是 admin，先检查其他 admin 是否存在
+  if (oldRole === 'admin' && newRole !== 'admin') {
+    const adminCount = await db.collection('employees')
+      .where({ role: 'admin' })
+      .count();
+    if (adminCount.total <= 1) {
+      return { success: false, message: '系统至少需要保留一名管理员，无法降级' };
+    }
   }
 
   await db.collection('employees').doc(employeeId).update({

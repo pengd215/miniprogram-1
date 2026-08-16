@@ -9,6 +9,14 @@
   <view class="red-dot" wx:if="{{pendingCount > 0}}">{{pendingCount}}</view>
 </view>
 
+<view class="logo-area">
+  <image 
+    src="/images/zhulu-logo.png" 
+    mode="aspectFit" 
+    class="logo-img"
+  ></image>
+</view>
+
 <view class="header-group">
     <text class="main-title">查询库存</text>
     <text class="sub-title">快速查询商品库存与价格</text>
@@ -29,8 +37,9 @@
       bindconfirm="handleSearch"
       maxlength="-1"
     />
-    <!-- 清除按钮 -->
-    <view wx:if="{{oeCode}}" class="clear-btn" bindtap="clearInput">×</view>
+
+     <!-- 清除按钮 -->
+  <view wx:if="{{oeCode}}" class="clear-btn" catchtap="clearInput">×</view>
   </view>
 
   <!-- 按钮组 (垂直排列，间距均匀) -->

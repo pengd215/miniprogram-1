@@ -123,7 +123,6 @@ Page({
 
   // 获取待办数量
   fetchPendingCount() {
-    const db = wx.cloud.database();
     db.collection('products')
       .where({ status: 'pending' })
       .count()
@@ -208,9 +207,14 @@ Page({
             // 2. 如果存在关联流水，则批量删除
             if (logsRes.data.length > 0) {
               const logIds = logsRes.data.map(item => item._id);
-              await db.collection('transaction_logs')
-                .where({ _id: db.command.in(logIds) })
-                .remove();
+              // 云数据库 remove 单次最多操作 100 条，超量时分批删除
+              const BATCH_SIZE = 100;
+              for (let s = 0; s < logIds.length; s += BATCH_SIZE) {
+                const batch = logIds.slice(s, s + BATCH_SIZE);
+                await db.collection('transaction_logs')
+                  .where({ _id: db.command.in(batch) })
+                  .remove();
+              }
               console.log(`已清理 ${logIds.length} 条流水记录`);
             }
 
@@ -245,6 +249,7 @@ Page({
 
   // 清空输入框
   clearInput() {
+    console.log('>>> clearInput 被调用了');
     this.setData({
       oeCode: '',
       productData: null,

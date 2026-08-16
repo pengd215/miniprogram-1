@@ -8,7 +8,15 @@
     
     <view class="form-group">
       <view class="label">OE 编号 <text class="red">*</text></view>
-      <input class="input-full" type="text" value="{{formData.oe_no}}" data-key="oe_no" bindinput="onInput" disabled />
+      <view class="oe-list">
+        <block wx:for="{{formData.oeList}}" wx:key="index">
+          <view class="oe-item">
+            <input class="input-full oe-input" type="text" placeholder="请输入OE号" value="{{item}}" data-index="{{index}}" bindinput="onOeInput" />
+            <view class="oe-del-btn" bindtap="removeOe" data-index="{{index}}">×</view>
+          </view>
+        </block>
+      </view>
+      <view class="oe-add-btn" bindtap="addOe"><text class="oe-add-icon">+</text><text class="oe-add-tip">添加 OE 码</text></view>
     </view>
 
     <view class="form-group">

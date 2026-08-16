@@ -91,7 +91,7 @@ Page({
                   });
 
                   // 🔑 通知个人中心：头像已更新，返回时自动刷新
-                  app.globalData.eventChannel = true;
+                  // 通知个人中心：头像已更新，返回时自动刷新
 
                   wx.showToast({
                     title: '头像更新成功',
@@ -205,13 +205,6 @@ Page({
                 title: '保存成功',
                 icon: 'success'
               });
-              const eventChannel = app.globalData.eventChannel;
-              if (eventChannel && typeof eventChannel.emit === 'function') {
-                eventChannel.emit('avatarUpdated', {
-                  avatarUrl: avatarUrl,
-                  nickName: this.data.nickName
-                });
-              }
 
               // 延迟返回上一页
               setTimeout(() => {

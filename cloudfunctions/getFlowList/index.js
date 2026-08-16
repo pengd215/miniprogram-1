@@ -13,32 +13,31 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   const currentOpenId = wxContext.OPENID;
 
-  // 1. 构建筛选条件模糊搜索 oe，备注
-  let queryCondition = {};
+// 1. 构建筛选条件：收集各子条件后用 _.and() 组合，避免条件互相覆盖
+  const conditions = [];
+  // 正则转义工具：防止用户输入注入正则元字符（ReDoS）
+  const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   if (oe_no) {
-    queryCondition = _.or([
-      { oe_no: new RegExp(oe_no, 'i') },
-      { remark: new RegExp(oe_no, 'i') } 
-    ]); 
+    const re = new RegExp(escapeRegExp(oe_no), 'i');
+    conditions.push(_.or([{ oe_no: re }, { remark: re }]));
   }
   if (type && type !== 'all') {
-    queryCondition.type = type;
+    conditions.push({ type: type });
   }
-  // 日期筛选逻辑
   if (dateStr) {
-    const startDate = new Date(dateStr); 
+    const startDate = new Date(dateStr);
     const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 1); 
-    queryCondition.create_time = _.gte(startDate).and(_.lt(endDate));
+    endDate.setDate(startDate.getDate() + 1);
+    conditions.push({ create_time: _.gte(startDate).and(_.lt(endDate)) });
   }
-
   // ----- 数据范围控制 -----
   // 管理员看所有数据；其他角色只能看自己经手的数据
   const currentRole = await getUserRole(currentOpenId);
   if (currentRole !== 'admin') {
     // 非管理员：只返回自己经手的流水（_openid === 自己）
-    queryCondition._openid = currentOpenId;
+    conditions.push({ _openid: currentOpenId });
   }
+  const queryCondition = conditions.length > 0 ? _.and(conditions) : {};
 
   try {
     // --- 第一步：获取总数  ---
