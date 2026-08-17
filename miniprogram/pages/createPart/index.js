@@ -78,7 +78,6 @@ Page({
       oe_no: data.oe_no,
       quantity: initialStock, // 变动数量（即初始库存）
       current_stock: initialStock, // 变动后库存
-      _openid: app.globalData.openid,
       remark: `新建：${data.car_model} `,
       create_time: db.serverDate()
     };

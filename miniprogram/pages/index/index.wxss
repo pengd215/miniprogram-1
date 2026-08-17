@@ -242,26 +242,21 @@ page-container {
 
 /* --- 3. 状态胶囊标签  --- */
 .status-tag {
-  display: inline-flex;       /* 保持行内块特性 */
-  margin-left: auto;             
-  
+  display: inline-flex;       /* 保持行内块特性 */             
   /* 内部对齐：确保文字在标签内部居中 */
   align-items: center;        
   justify-content: center;    
-  
   /* --- 尺寸与外观 --- */
   min-width: 160rpx;          /* 最小宽度 */
   height: 56rpx;              /* 固定高度 */
   padding: 0 24rpx;           /* 左右内边距 */
   box-sizing: border-box;     /* 确保 padding不会撑大高度 */
-  
   /* --- 胶囊形状 --- */
   border-radius: 999rpx;      /* 【推荐】使用大数值实现完美半圆胶囊效果 */
-  
   /* --- 字体样式 --- */
   font-size: 24rpx;           /* 稍微调小一点字体，显得更精致 */
   font-weight: bold;
-  line-height: 1;             /* 消除行高干扰，确保垂直绝对居中 */
+  line-height: 56rpx;         /* 行高等于高度，中文文字可靠垂直居中 */
   white-space: nowrap;        /* 防止文字换行 */
 }
 
@@ -295,8 +290,12 @@ page-container {
 }
 
 /* 额外的库存状态类 (可能用于其他地方) */
-.in-stock { background-color: #17a55c; }
-.out-stock { background-color: #fa5151; }
+.in-stock { 
+  background-color: #17a55c; 
+}
+.out-stock { 
+  background-color: #fa5151; 
+}
 
 /* 卡片主体内容区 */
 .card-body {
@@ -322,6 +321,11 @@ page-container {
   width: 140rpx;           /* 固定宽度，确保冒号上下对齐 */
   flex-shrink: 0;          /* 防止被挤压 */
   color: #666;             /* 稍微浅一点的颜色，更有层次感 */
+}
+
+.value {
+  flex: 1;
+  text-align: right;
 }
 
 /*年款和库存的样式*/
@@ -351,26 +355,6 @@ page-container {
   margin: 20rpx auto; /* 上下间距，左右自动居中 */
 }
 
-/* ================= 流水日志按钮样式 (幽灵按钮) ================= */
-.ghost-btn {
-  width: 100%; /* 全宽 */
-  height: 88rpx; /* 高度 */
-  line-height: 88rpx; /* 行高 */
-  
-  background-color: #2E7D32; /* 深绿色背景 (原注释说是透明，但代码是深色) */
-  border: 2rpx solid #d1df11; /* 黄绿色边框 */
-  border-radius: 48rpx; /* 圆角 */
-  
-  color: #f4f5ef; /* 米白色文字 */
-  font-size: 30rpx;
-  font-weight: 500;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0; /* 清除默认padding */
-}
-
 .ghost-btn::after {
   border: none; /* 去除小程序按钮默认边框 */
 }
@@ -378,8 +362,6 @@ page-container {
 .ghost-btn:active {
   background-color: rgba(7, 193, 96, 0.1); /* 点击出现淡绿色背景 */
 }
-/* --- 补充样式：用于修复卡片内部布局 --- */
-
 /* 1. 状态行的特殊处理 */
 .status-row {
   align-items: center; /* 让文字和标签垂直居中 */
@@ -401,11 +383,6 @@ page-container {
   height: 80rpx !important; /* 卡片内的按钮稍微矮一点更精致 */
   line-height: 80rpx !important;
   font-size: 28rpx !important;
-}
-
-/* 4. 确保状态标签文字不换行 */
-.status-tag {
-  white-space: nowrap; 
 }
 
 /* 2. 按钮基础样式：强制覆盖微信默认样式 */
