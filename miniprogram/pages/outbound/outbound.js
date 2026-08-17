@@ -39,7 +39,7 @@ Page({
         this.setData({
           oe_no: product.oe_no || '无',
           kybNo: product.kyb_no || '',
-          modelName: product.name || '未知配件',
+          modelName: product.car_model || product.name || '未知配件',
           maxQuantity: product.stock || 0 // 关键：记录当前库存
         });
         
@@ -76,7 +76,7 @@ Page({
     wx.scanCode({
       onlyFromCamera: false,
       success: (res) => {
-        this.setData({ oeCode: res.result });
+        this.setData({ oe_no: res.result });
       },
       fail: (err) => {
         console.log('扫码取消或失败', err);

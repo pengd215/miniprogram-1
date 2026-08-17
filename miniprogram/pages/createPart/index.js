@@ -11,6 +11,8 @@ Page({
       kyb_no: '',
       direction:'',//方向
       stock: '',
+      price: '',       // 参考价格（选填）
+      remark: '',      // 备注内容（选填）
       images: [] // 添加 images 字段，默认为空数组
     },
     isSubmitting: false // 防止重复点击
@@ -41,7 +43,7 @@ Page({
     if (this.data.isSubmitting) return; // 防止重复提交
 
     // 1. 基础校验
-    if (!data.oe_no || !data.car_model ||!data.stock) {
+    if (!data.oe_no || !data.car_model || data.stock === '' || data.stock === null || data.stock === undefined) {
       wx.showToast({ title: '请填写必填项(OE/车型/库存)', icon: 'none' });
       return;
     }
@@ -76,7 +78,6 @@ Page({
       oe_no: data.oe_no,
       quantity: initialStock, // 变动数量（即初始库存）
       current_stock: initialStock, // 变动后库存
-      _openid: app.globalData.openid,
       remark: `新建：${data.car_model} `,
       create_time: db.serverDate()
     };

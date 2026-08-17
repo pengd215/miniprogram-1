@@ -6,6 +6,7 @@ Page({
     id: '', // 数据库记录的唯一ID
     formData: {
       oe_no: '',
+      oeList: [], // OE 码数组（增删交互用，保存时合并回字符串）
       car_model: '',
       model_year: '',
       direction: '',
@@ -38,9 +39,14 @@ Page({
     wx.showLoading({ title: '加载中...' });
     db.collection('products').doc(id).get().then(res => {
       const data = res.data;
+      const rawOe = data.oe_no;
+      const oeList = Array.isArray(rawOe)
+        ? rawOe.map(v => String(v).trim()).filter(Boolean)
+        : (rawOe ? String(rawOe).split(/[,，\s]+/).filter(Boolean) : []);
       this.setData({
         formData: {
           oe_no: data.oe_no || '',
+          oeList: oeList,
           car_model: data.car_model || '',
           model_year: data.model_year || '',
           direction: data.direction || '',
@@ -110,6 +116,31 @@ Page({
     this.setData({ 'formData.images': images });
   },
 
+  // —— OE 码数组操作 ——
+
+  // 添加一行空的 OE 码
+  addOe() {
+    const list = [...this.data.formData.oeList, ''];
+    this.setData({ 'formData.oeList': list });
+  },
+
+  // 修改某一行的 OE 码内容
+  onOeInput(e) {
+    const index = e.currentTarget.dataset.index;
+    const value = e.detail.value;
+    const list = [...this.data.formData.oeList];
+    list[index] = value;
+    this.setData({ 'formData.oeList': list });
+  },
+
+  // 删除某一行的 OE 码（右上角删除按钮）
+  removeOe(e) {
+    const index = e.currentTarget.dataset.index;
+    const list = [...this.data.formData.oeList];
+    list.splice(index, 1);
+    this.setData({ 'formData.oeList': list });
+  },
+
   // 3. 通用输入处理
   onInput(e) {
     const key = e.currentTarget.dataset.key;
@@ -127,7 +158,9 @@ Page({
     console.log('记录ID:', id);
 
     // OE号是核心标识，补全时不能为空
-    if (!formData.oe_no ) {
+    const oeListTrimmed = (formData.oeList || []).map(v => String(v).trim()).filter(Boolean);
+    const oeNoStr = [...new Set(oeListTrimmed)].join(' ');
+    if (!oeNoStr) {
       wx.showToast({ title: 'OE号不能为空', icon: 'none' });
       return;
     }
@@ -141,17 +174,17 @@ Page({
       status: 'active', // 补全完成，状态改为正常
       update_time: db.serverDate(),
       images: this.data.formData.images,// 把图片数组一起保存
-      oe_no: formData.oe_no,         
+      oe_no: oeNoStr,         
       location: formData.location      
     };
 
     // 逐个字段判断：只有当新值不为空字符串时，才加入更新队列
-    if (formData.car_model !== undefined) updateData.car_model = formData.car_model || '';
-    if (formData.model_year !== undefined) updateData.model_year = formData.model_year || '';
-    if (formData.direction !== undefined) updateData.direction = formData.direction || '';
-    if (formData.kyb_no !== undefined) updateData.kyb_no = formData.kyb_no || '';
-    if (formData.brand !== undefined) updateData.brand = formData.brand || '';
-    if (formData.remark !== undefined) updateData.remark = formData.remark || ''; 
+    if (formData.car_model !== '' && formData.car_model !== null && formData.car_model !== undefined) updateData.car_model = formData.car_model || '';
+    if (formData.model_year !== '' && formData.model_year !== null && formData.model_year !== undefined) updateData.model_year = formData.model_year || '';
+    if (formData.direction !== '' && formData.direction !== null && formData.direction !== undefined) updateData.direction = formData.direction || '';
+    if (formData.kyb_no !== '' && formData.kyb_no !== null && formData.kyb_no !== undefined) updateData.kyb_no = formData.kyb_no || '';
+    if (formData.brand !== '' && formData.brand !== null && formData.brand !== undefined) updateData.brand = formData.brand || '';
+    if (formData.remark !== '' && formData.remark !== null && formData.remark !== undefined) updateData.remark = formData.remark || ''; 
     
     // 数字类型特殊处理：0 是有效值，不能简单用 if(formData.stock) 判断
     if (formData.stock !== '' && formData.stock !== null) {

@@ -25,7 +25,8 @@ Page({
     page: 1,           // 当前页码
     isLoading: false,  // 是否正在加载
     hasMore: true,      // 是否还有更多数据
-    currentTab: 'all'
+    currentTab: 'all',
+    myOpenId: ''
   },
 
   onShow(){
@@ -167,7 +168,6 @@ Page({
         FlowList: isLoadMore ? [...this.data.FlowList, ...processedList] : processedList,
         isLoading: false,
         hasMore: newList.length === 20,
-        list: res.result.data
       });
 
     }).catch(err => {

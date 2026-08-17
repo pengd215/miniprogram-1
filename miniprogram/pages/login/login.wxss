@@ -1,14 +1,6 @@
 /* pages/login/login.wxss */
 
-/* 定义全局绿色主题变量 */
-page {
-  --primary-color: #2e7d32; /* 深绿，主色调 */
-  --primary-light: #4caf50; /* 亮绿，用于高亮 */
-  --bg-gradient-start: #e8f5e9; /* 极浅绿背景起始 */
-  --bg-gradient-end: #c8e6c9;   /* 浅绿背景结束 */
-  --text-main: #333333;
-  --text-sub: #888888;
-}
+
 
 .login-container {
   min-height: 100vh;
@@ -29,16 +21,17 @@ page {
 }
 
 .logo-box {
-  width: 80px;
-  height: 80px;
-  background-color: var(--primary-color);
-  border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3); /* 绿色投影 */
-  margin-bottom: 20px;
-  transform: rotate(-10deg); /* 稍微倾斜一点，增加活泼感 */
+  width: 300rpx;
+  height: 300rpx;
+  margin-bottom: 2rpx;
+}
+
+.logo-image {
+  width: 100%;
+  height: 100%;
 }
 
 .title {

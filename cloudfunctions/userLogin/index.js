@@ -1,9 +1,34 @@
 // cloudfunctions/userLogin/index.js
+// 登录：员工账号密码校验，密码以 sha256(盐+密码) 哈希存储
+// 兼容处理：存量账号若为明文密码，登录成功时自动迁移为哈希存储
+const crypto = require('crypto')
 const cloud = require('wx-server-sdk')
 
 // 初始化云开发环境
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV }) 
 const db = cloud.database()
+
+// 生成密码哈希：格式 "salt:hash"
+function hashPassword(password, salt) {
+  const s = salt || crypto.randomBytes(16).toString('hex')
+  const hash = crypto.createHash('sha256').update(s + password).digest('hex')
+  return s + ':' + hash
+}
+
+// 校验密码：支持哈希格式与存量明文格式
+// 返回 { ok, needsMigrate }，needsMigrate 表示是明文匹配成功需要迁移
+function verifyPassword(stored, inputPassword) {
+  if (!stored) return { ok: false }
+  const idx = stored.indexOf(':')
+  if (idx > 0 && stored.length - idx === 65) { // 形如 "32位salt:64位hash"
+    const salt = stored.slice(0, idx)
+    const storedHash = stored.slice(idx + 1)
+    const calcHash = crypto.createHash('sha256').update(salt + inputPassword).digest('hex')
+    return { ok: calcHash === storedHash, needsMigrate: false }
+  }
+  // 存量明文
+  return { ok: stored === inputPassword, needsMigrate: true }
+}
 
 exports.main = async (event, context) => {
   // 获取当前用户的 OpenID (微信自动注入)
@@ -13,21 +38,39 @@ exports.main = async (event, context) => {
   try {
     const { username, password } = event
 
-    // 1. 去数据库查询员工表
+    // 兼容模式：无账号密码参数时，仅返回当前微信 OpenID（供个人信息页查询用）
+    if (!username && !password) {
+      return { success: true, openid: currentOpenId }
+    }
+
+    // 参数校验
+    if (!username || typeof username !== 'string' || !password) {
+      return { success: false, msg: '请输入账号和密码' }
+    }
+
+    // 1. 按用户名 + 密码去查询员工表（先按用户名查，再比对密码，避免明文密码做查询条件）
     const res = await db.collection('employees')
     .where({
-      username: username,
-      password: password 
+      username: username
     }).get()
 
-    // 2. 判断是否查到数据
     if (res.data.length > 0) {
-      // ！！res 是数据库查询结果对象，用户数据在 res.data[0]
-      const userData = res.data[0]//提取用户数据对象
-      // 登录成功
+      const userData = res.data[0]
+      const userStored = userData.password || ''
+
+      // 校验密码
+      const verify = verifyPassword(userStored, password)
+      if (!verify.ok) return { success: false, msg: '账号或密码错误' }
+
+      // 存量明文账号：登录成功后自动迁移为哈希存储
+      if (verify.needsMigrate) {
+        await db.collection('employees').doc(userData._id).update({
+          data: { password: hashPassword(password), pwd_updated_at: db.serverDate() }
+        })
+      }
+
       // 2. 检查该账号是否已经绑定了 OpenID
       if (userData._openid) {
-        // 已绑定：对比当前微信的 OpenID 是否和数据库里存的一致
         if (userData._openid !== currentOpenId) {
           return {
             success: false,
@@ -45,26 +88,18 @@ exports.main = async (event, context) => {
       return {
         success: true,
         msg: '登录成功',
-        data: { // 返回查到的用户信息
-        _id: userData._id, 
-        role: userData.role|| 'guest',
-        name: userData.name|| '未知用户',  
-        username: userData.username, 
-        _openid: wxContext.OPENID // 把 OpenID 也一起返回给前端，方便前端存入 globalData
+        data: {
+          _id: userData._id,
+          role: userData.role || 'guest',
+          name: userData.name || '未知用户',
+          username: userData.username
+        }
       }
-    }
     } else {
-      // 登录失败
-      return {
-        success: false,
-        msg: '账号或密码错误'
-      }
+      return { success: false, msg: '账号或密码错误' }
     }
   } catch (err) {
     console.error('数据库查询出错:', err)
-    return {
-      success: false,
-      msg: '服务器内部错误: ' + err.message
-    }
+    return { success: false, msg: '服务器内部错误: ' + err.message }
   }
 }

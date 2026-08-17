@@ -72,7 +72,7 @@ Page({
         this.setData({
           oe_no: product.oe_no || '无',  
           kybNo: product.kyb_no || '',
-          modelName: product.name || '未知配件'
+          modelName: product.car_model || product.name || '未知配件'
         });
       } else {
         throw new Error(res.result.message || '产品不存在');

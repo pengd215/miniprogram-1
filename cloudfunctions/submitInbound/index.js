@@ -15,7 +15,7 @@ exports.main = async (event, context) => {
   const { productId, model, quantity, remark } = event;
   
   // 参数校验：将数量转为数字
-  const num = parseInt(quantity);
+  const num = parseInt(quantity, 10);
   
   if (!productId) {
     return { success: false, message: '产品ID缺失，请从首页进入入库流程' };
@@ -51,7 +51,7 @@ exports.main = async (event, context) => {
           product_id: productId,    
           oe_no: product.oe_no || '',   
           kyb_no: product.kyb_no || '',
-          model: product.model || model,
+          model: product.model || '', // 只取数据库字段，不信任前端传入
           type: 'inbound',          // 类型：入库
           _openid: currentOpenId,  // 记录是谁操作的
           quantity: num,            // 统一使用 num

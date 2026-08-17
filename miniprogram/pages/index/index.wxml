@@ -9,6 +9,14 @@
   <view class="red-dot" wx:if="{{pendingCount > 0}}">{{pendingCount}}</view>
 </view>
 
+<view class="logo-area">
+  <image 
+    src="/images/zhulu-logo.png" 
+    mode="aspectFit" 
+    class="logo-img"
+  ></image>
+</view>
+
 <view class="header-group">
     <text class="main-title">查询库存</text>
     <text class="sub-title">快速查询商品库存与价格</text>
@@ -29,8 +37,9 @@
       bindconfirm="handleSearch"
       maxlength="-1"
     />
-    <!-- 清除按钮 -->
-    <view wx:if="{{oeCode}}" class="clear-btn" bindtap="clearInput">×</view>
+
+     <!-- 清除按钮 -->
+  <view wx:if="{{oeCode}}" class="clear-btn" catchtap="clearInput">×</view>
   </view>
 
   <!-- 按钮组 (垂直排列，间距均匀) -->
@@ -66,7 +75,7 @@
 
   <!-- 4. 加载状态提示 -->
   <view wx:if="{{loading}}" class="loading-tip">
-    <text>正在云端检索数据...</text>
+    <text>正在努力检索数据...</text>
   </view>
 <!-- 【新增】多条搜索结果列表 -->
   <view wx:if="{{searchResults && searchResults.length > 0}}" class="result-card">
@@ -100,9 +109,7 @@
     <view class="card-header">
       <text class="card-title">查询结果</text>
         <!-- 根据 stock 数值动态切换样式类名 -->
-        <text class="status-tag {{productData.stockStatusClass}}">
-        {{productData.stockStatusText}}
-        </text>
+        <text class="status-tag {{productData.stockStatusClass}}">{{productData.stockStatusText}}</text>
     </view>
 
     <!-- 2. 分割线：贯穿整个卡片宽度 -->

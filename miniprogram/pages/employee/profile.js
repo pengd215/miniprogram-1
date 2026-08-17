@@ -25,7 +25,6 @@ Page({
   },
 
   onLoad() {
-    this.initUserInfo();// 首次加载用户信息
 
        // 监听头像更新事件
     try {

@@ -5,7 +5,7 @@
     <view class="card-content">
       <view class="avatar-wrapper" bindtap="chooseAvatar">
         <image class="avatar" src="{{avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
-        <view class="camera-icon">📷</view>
+        <view class="camera-icon"></view>
       </view>
       <view class="user-info">
         <text class="nickname">{{nickName || '微信用户'}}</text>
@@ -14,7 +14,7 @@
     </view>
     <!-- 底部提示条 -->
     <view class="tip-bar">
-      <text class="icon">ℹ️</text>
+      <text class="icon">！</text>
       <text class="tip-text">保持资料准确，团队成员更容易识别你的操作记录</text>
     </view>
   </view>
@@ -25,7 +25,7 @@
     <!-- 姓名输入行 -->
     <view class="form-item">
       <view class="item-left">
-        <view class="icon-box name-icon">👤</view>
+        <view class="icon-box name-icon"></view>
         <text class="label">姓名</text>
       </view>
       <input class="input" placeholder="请输入姓名" value="{{name}}" bindinput="onNameInput" />
@@ -34,7 +34,7 @@
     <!-- 性别选择行 -->
     <view class="form-item" bindtap="showGenderPicker">
       <view class="item-left">
-        <view class="icon-box gender-icon">⚥</view>
+        <view class="icon-box gender-icon"></view>
         <text class="label">性别</text>
       </view>
       <view class="picker-value">

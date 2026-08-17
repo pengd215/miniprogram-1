@@ -9,13 +9,16 @@ exports.main = async (event, context) => {
 // 加日志：查看前端传了什么参数
   console.log('[clientSearchQuote] 收到请求, keyword:', keyword)
   
+  // 正则转义工具：防止用户输入注入正则元字符（ReDoS）
+  const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  
   if (!keyword|| keyword.trim() === '') {
     return { code: 400, msg: '请输入查询关键词' }
   }
 
   try {
     // 1. 构建正则搜索条件 (支持模糊匹配 OE号或名称)
-    const searchRegex = new RegExp(keyword, 'i') 
+    const searchRegex = new RegExp(escapeRegExp(keyword.trim()), 'i') 
     
 
      // 加日志：查看构建的查询条件
@@ -44,7 +47,6 @@ exports.main = async (event, context) => {
 
       // 加日志：查看查到了多少条
     console.log('[clientSearchQuote] 查询结果数量:', res.data.length)
-    console.log('[clientSearchQuote] 第一条数据:', res.data[0])
 
     return {
       code: 200,

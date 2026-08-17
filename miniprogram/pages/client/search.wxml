@@ -21,7 +21,18 @@
       <!-- 1. 顶部：图片与核心标题区 -->
       <view class="card-header">
         <view class="img-list" wx:if="{{item.images && item.images.length > 0}}">
-          <image class="img-item" wx:for="{{item.images}}" wx:key="*this" wx:for-item="img" wx:for-index="idx" wx:if="{{idx < 3}}" src="{{img}}" mode="aspectFill"></image>
+          <image 
+          class="img-item" 
+          wx:for="{{item.images}}" 
+          wx:for-item="img"
+          wx:key="*this" 
+          wx:if="{{index < 3}}"
+          src="{{img}}" 
+          mode="aspectFill"
+          catchtap="previewImage" 
+          data-images="{{item.images}}" 
+          data-current="{{img}}"
+        ></image>
         </view>
         <image class="img" wx:else src="/images/40404.png" mode="aspectFill"></image>
         <view class="header-info">
@@ -38,14 +49,14 @@
         </view>
         
         <!-- OE号 -->
-        <view class="spec-item">
+        <view class="spec-item full-width">
           <text class="spec-label">OE编号</text>
-          <text class="spec-value highlight">{{item.oe_no}}</text>
+          <text class="spec-value highlight oe-text">{{item.oe_no}}</text>
         </view>
         <!-- KYB号 -->
-        <view class="spec-item">
+        <view class="spec-item full-width">
           <text class="spec-label">KYB编号</text>
-          <text class="spec-value">{{item.kyb_no}}</text>
+          <text class="spec-value oe-text">{{item.kyb_no}}</text>
         </view>
         <!-- 年款 -->
         <view class="spec-item">

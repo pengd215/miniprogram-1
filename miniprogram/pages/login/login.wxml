@@ -3,14 +3,12 @@
   <!-- 顶部 Logo 区域 -->
   <view class="header">
     <view class="logo-box">
-      <!-- 一个简单的箱子/库存图标 SVG -->
-      <svg width="60" height="60" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <path d="M853.333333 298.666667L512 128 170.666667 298.666667v426.666666L512 896l341.333333-170.666667V298.666667z m-64 387.413333L512 824.746667 234.666667 686.08V337.92L512 199.253333l277.333333 138.666667v348.16z" fill="#ffffff"></path>
-        <path d="M512 554.666667l-170.666667-85.333334v-56.96L512 497.706667l170.666667-85.333334v56.96L512 554.666667z" fill="#ffffff"></path>
-        <path d="M512 725.333333l-170.666667-85.333333v-56.96L512 668.373333l170.666667-85.333333v56.96L512 725.333333z" fill="#ffffff"></path>
-      </svg>
+      <view class="logo-box">
+        <image src="/images/zhulu-logo.png" mode="aspectFit" class="logo-image"></image>
+      </view>   
+      
     </view>
-    <text class="title">减震器库存系统</text>
+    <text class="title">减振器库存系统</text>
     <text class="subtitle">专业 · 高效 · 安全</text>
   </view>
 

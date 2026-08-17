@@ -2,7 +2,6 @@
   "pages": [
     "pages/login/login",
     "pages/index/index",
-    "pages/example/index",
     "pages/inbound/inbound",
     "pages/outbound/outbound",
     "pages/createPart/index",
@@ -54,7 +53,7 @@
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
+    "navigationBarTitleText": "逐鹿减震器库存系统",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json",
