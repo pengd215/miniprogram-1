@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-WeChat%20MiniProgram-green)
 ![Backend](https://img.shields.io/badge/backend-CloudBase%20(Serverless)-ff69b4)
-![Version](https://img.shields.io/badge/version-1.0.0-orange)
+![Version](https://img.shields.io/badge/version-1.01.02-orange)
 
 面向企业内部员工提供配件建档、出入库、流水追踪、库存预警、仓库库位管理等功能，同时为下游客户提供独立的报价查询入口。**已上线运行**，代码即实际生产可用版本。
 
@@ -112,7 +112,7 @@
 
 1. **导入项目**：打开微信开发者工具，导入本目录，替换 `project.config.json` 中的 `appid` 为你自己的小程序 AppID
 2. **开通云开发**：点击"云开发"开通环境，在 `miniprogram/app.js` 中将 `env` 改为你的云环境 ID
-3. **部署云函数**：在开发者工具中对 `cloudfunctions/` 下的每个云函数目录右键选择"上传并部署（云端安装依赖）"；或参考 `uploadCloudFunction.sh` 的命令行部署方式（该脚本为示例占位，需按实际环境 ID 与项目路径修改后使用）
+3. **部署云函数**：在开发者工具中对 `cloudfunctions/` 下的每个云函数目录右键选择"上传并部署（云端安装依赖）"，共 11 个云函数，需逐一部署
 4. **创建数据库集合**：手动创建 `products`、`employees`、`transaction_logs`、`warehouses`、`locations`、`settings` 六个集合
 5. **初始化数据**：在 `employees` 集合中手动添加一名员工（`role` 设为 `admin`），初始密码可为明文，首次登录成功后会由云函数自动迁移为哈希存储
 6. **初始化预警配置（可选）**：在 `settings` 集合中添加 `_id` 为 `warning` 的文档，包含 `lowStock`（默认低库存阈值）与 `maxStock`（默认积压阈值），缺省时使用代码内置的 10 / 100
@@ -130,7 +130,6 @@ miniprogram-1/
 │   └── app.js            # 全局逻辑（云初始化、登录检查、库存状态计算）
 ├── cloudfunctions/       # 云函数（每个目录一个独立云函数）
 ├── docs/                 # 项目文档（含代码检查与修复变更清单）
-├── uploadCloudFunction.sh# 云函数批量上传脚本
 └── project.config.json   # 小程序项目配置（本地，不入库）
 ```
 

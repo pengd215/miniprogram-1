@@ -1,6 +1,6 @@
 {
   "name": "zhulu-shock-absorber-inventory",
-  "version": "1.0.0",
+  "version": "1.01.02",
   "description": "逐鹿减震器库存管理系统 —— 基于微信云开发的汽配库存管理小程序（配件建档、出入库、流水追溯、库存预警、库位管理、客户报价）",
   "main": "index.js",
   "scripts": {
