@@ -1,7 +1,5 @@
 # 逐鹿减震器库存管理系统 · 微信小程序
-
 > 一个基于微信云开发的减震器配件库存管理小程序，从配件建档到出入库、流水追溯、库存预警、库位管理、客户报价，覆盖汽配门店库存全流程。
-
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-WeChat%20MiniProgram-green)
 ![Backend](https://img.shields.io/badge/backend-CloudBase%20(Serverless)-ff69b4)
@@ -168,5 +166,4 @@ miniprogram-1/
 3. 在 PR 描述中说明改动内容与测试情况
 
 ## License
-
 [MIT](./LICENSE) © [pengd215](https://github.com/pengd215)
