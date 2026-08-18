@@ -33,6 +33,10 @@
       data-type="outbound">
       出库</view>
    </view>
+   <!-- 批量导出入口：独立一行，不占用 Tab 行空间 -->
+   <view class="export-bar">
+     <view class="export-btn" bindtap="onOpenExport">批量导出</view>
+   </view>
   </view>
 
   <!-- 列表区域 -->
@@ -98,6 +102,50 @@
     <view wx:else class="empty-state">
       <text class="empty-icon">📭</text>
       <text class="empty-text">暂无流水记录</text>
+    </view>
+  </view>
+
+  <!-- 批量导出弹窗 -->
+  <view class="export-mask" wx:if="{{showExportModal}}" bindtap="onCloseExport">
+    <view class="export-modal" catchtap="noop">
+      <view class="export-title">批量导出流水</view>
+
+      <view class="export-row">
+        <text class="export-label">开始日期</text>
+        <picker mode="date" value="{{exportStartDate}}" bindchange="onExportStartChange">
+          <view class="export-date-box">
+            <text class="{{exportStartDate ? 'active' : 'placeholder'}}">{{exportStartDate || '请选择'}}</text>
+            <text class="arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="export-row">
+        <text class="export-label">结束日期</text>
+        <picker mode="date" value="{{exportEndDate}}" start="{{exportStartDate}}" bindchange="onExportEndChange">
+          <view class="export-date-box">
+            <text class="{{exportEndDate ? 'active' : 'placeholder'}}">{{exportEndDate || '同开始日期'}}</text>
+            <text class="arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="export-row">
+        <text class="export-label">导出类型</text>
+        <picker range="{{exportTypeOptions}}" value="{{exportTypeIndex}}" bindchange="onExportTypeChange">
+          <view class="export-date-box">
+            <text class="active">{{exportTypeOptions[exportTypeIndex]}}</text>
+            <text class="arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="export-tip">导出为 CSV 文件，包含 OE编码、车型、时间、操作人、数量、参考价格</view>
+
+      <view class="export-btns">
+        <button class="export-cancel-btn" bindtap="onCloseExport" disabled="{{isExporting}}">取消</button>
+        <button class="export-confirm-btn" bindtap="confirmExport" disabled="{{isExporting}}">{{isExporting ? '导出中...' : '确认导出'}}</button>
+      </view>
     </view>
   </view>
 </view>
