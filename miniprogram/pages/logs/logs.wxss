@@ -278,3 +278,128 @@ page {
 .tab-item:last-child {
   margin-right: 0;
 }
+
+/* 批量导出独立行：靠右放置，不占用 Tab 行空间 */
+.export-bar {
+  display: flex;
+  justify-content: flex-end; /* 靠右对齐 */
+  padding: 0 30rpx 20rpx;   /* 底部留出间距 */
+}
+
+.export-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 60rpx;
+  padding: 0 28rpx;
+  font-size: 28rpx;
+  border-radius: 30rpx;
+  background-color: #e9e9e9;
+  color: #696868;
+  border: 1rpx solid #f7faf9;
+  white-space: nowrap;
+}
+
+/* --- 批量导出弹窗 --- */
+.export-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.export-modal {
+  width: 620rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx 36rpx;
+  box-sizing: border-box;
+}
+
+.export-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 36rpx;
+}
+
+.export-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28rpx;
+}
+
+.export-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: bold;
+  width: 160rpx;
+  flex-shrink: 0;
+}
+
+.export-date-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f7f8fa;
+  border: 1rpx solid #e1e4e8;
+  border-radius: 10rpx;
+  padding: 16rpx 20rpx;
+  font-size: 28rpx;
+}
+
+.export-date-box text.placeholder {
+  color: #999;
+}
+
+.export-date-box text.active {
+  color: #333;
+}
+
+.export-tip {
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.6;
+  margin-bottom: 32rpx;
+}
+
+.export-btns {
+  display: flex;
+  gap: 20rpx;
+}
+
+.export-btns button {
+  flex: 1;
+  margin: 0;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.export-btns button::after {
+  border: none;
+}
+
+.export-cancel-btn {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.export-confirm-btn {
+  background: #30c578;
+  color: #fff;
+}
+
+.export-confirm-btn[disabled] {
+  background: #a8dcbf;
+  color: #fff;
+}
