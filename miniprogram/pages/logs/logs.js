@@ -1,4 +1,15 @@
 const app = getApp();
+// 导出类型映射：与导出弹窗类型选择器的下标一一对应
+const EXPORT_TYPES = ['all', 'inbound', 'outbound'];
+
+// CSV 单元格转义：含逗号/引号/换行时用双引号包裹，内部引号翻倍
+const escapeCsv = (val) => {
+  let s = String(val == null ? '' : val);
+  if (/[",\r\n]/.test(s)) {
+    s = '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
+};
 //格式化时间的工具函数
 const formatTime = (dateStr) => {
   if (!dateStr) return '';
@@ -26,7 +37,14 @@ Page({
     isLoading: false,  // 是否正在加载
     hasMore: true,      // 是否还有更多数据
     currentTab: 'all',
-    myOpenId: ''
+    myOpenId: '',
+    // --- 批量导出相关 ---
+    showExportModal: false,   // 是否显示导出弹窗
+    exportStartDate: '',      // 导出开始日期
+    exportEndDate: '',        // 导出结束日期
+    exportTypeIndex: 0,       // 导出类型下标：0全部 1入库 2出库
+    isExporting: false,       // 是否正在导出中
+    exportTypeOptions: ['全部', '入库', '出库'] // 导出类型选项（与 EXPORT_TYPES 一一对应）
   },
 
   onShow(){
@@ -128,7 +146,6 @@ Page({
         const empInfo = item.employee_detail && item.employee_detail.length > 0 ? item.employee_detail[0] : null;
 
 // 1. 获取名字：如果有员工信息，就取 name；否则显示 '未知人员'
-// 注意：这里假设你员工表里的名字字段叫 'name'，如果是 'username' 请自行替换
         const realName = empInfo ? empInfo.name : '未知人员'; 
 
 // 2. 判断是否是我自己
@@ -174,6 +191,164 @@ Page({
       console.error("查流水失败", err);
       wx.showToast({ title: '网络开小差了', icon: 'none' });
       this.setData({ isLoading: false });
+    });
+  },
+
+  // ==================== 批量导出 ====================
+
+  // 打开导出弹窗：默认按当前 Tab 预选导出类型，默认导出当天
+  onOpenExport() {
+    const today = formatTime(new Date()).slice(0, 10);
+    const tabIndex = Math.max(EXPORT_TYPES.indexOf(this.data.currentTab), 0);
+    this.setData({
+      showExportModal: true,
+      exportStartDate: today,
+      exportEndDate: today,
+      exportTypeIndex: tabIndex
+    });
+  },
+
+  // 关闭导出弹窗
+  onCloseExport() {
+    if (this.data.isExporting) return; // 导出进行中禁止关闭
+    this.setData({ showExportModal: false });
+  },
+
+  // 阻止弹窗内容区的点击冒泡到遮罩
+  noop() {},
+
+  // 导出弹窗：开始日期变化
+  onExportStartChange(e) {
+    this.setData({ exportStartDate: e.detail.value });
+  },
+
+  // 导出弹窗：结束日期变化
+  onExportEndChange(e) {
+    this.setData({ exportEndDate: e.detail.value });
+  },
+
+  // 导出弹窗：类型选择变化
+  onExportTypeChange(e) {
+    this.setData({ exportTypeIndex: Number(e.detail.value) });
+  },
+
+  // 确认导出：调云函数取数 -> 生成 CSV 文件 -> 提供打开/分享/保存
+  confirmExport() {
+    const { exportStartDate, exportEndDate, exportTypeIndex, isExporting } = this.data;
+    if (isExporting) return;
+
+    if (!exportStartDate) {
+      return wx.showToast({ title: '请选择开始日期', icon: 'none' });
+    }
+    if (exportEndDate && exportEndDate < exportStartDate) {
+      return wx.showToast({ title: '结束日期不能早于开始日期', icon: 'none' });
+    }
+
+    this.setData({ isExporting: true });
+    wx.showLoading({ title: '导出中...', mask: true });
+
+    wx.cloud.callFunction({
+      name: 'exportFlowData',
+      data: {
+        startDate: exportStartDate,
+        endDate: exportEndDate || exportStartDate,
+        type: EXPORT_TYPES[exportTypeIndex]
+      }
+    }).then(res => {
+      wx.hideLoading();
+      if (!res.result || !res.result.success) {
+        throw new Error(res.result ? res.result.msg : '云函数返回异常');
+      }
+      const rows = res.result.data || [];
+      if (rows.length === 0) {
+        this.setData({ isExporting: false, showExportModal: false });
+        return wx.showToast({ title: '该时间段暂无数据', icon: 'none' });
+      }
+
+      const csv = this.buildCsv(rows);
+      const fileName = this.buildFileName();
+
+      // 写入用户文件目录（BOM 头确保 Excel 打开不乱码）
+      const fs = wx.getFileSystemManager();
+      const dirPath = `${wx.env.USER_DATA_PATH}/flow_export`;
+      const filePath = `${dirPath}/${fileName}`;
+      try { fs.mkdirSync(dirPath, true); } catch (e) { /* 目录已存在 */ }
+      fs.writeFileSync(filePath, '\ufeff' + csv, 'utf8');
+
+      this.setData({ isExporting: false, showExportModal: false });
+      wx.showToast({ title: `已导出 ${rows.length} 条`, icon: 'success' });
+      this.offerCsvActions(filePath, fileName, res.result.exported, res.result.total);
+    }).catch(err => {
+      wx.hideLoading();
+      console.error('导出失败', err);
+      this.setData({ isExporting: false });
+      wx.showToast({ title: '导出失败，请重试', icon: 'none' });
+    });
+  },
+
+  // 拼接 CSV 内容：OE编码,车型,时间,操作人,数量,参考价格
+  buildCsv(rows) {
+    const header = ['OE编码', '车型', '时间', '操作人', '数量', '参考价格'];
+    const lines = [header.join(',')];
+    rows.forEach(r => {
+      // oe_no 兼容数组格式（多码用分号连接）
+      let oe = '';
+      if (Array.isArray(r.oe_no)) {
+        oe = r.oe_no.filter(Boolean).join(';');
+      } else {
+        oe = r.oe_no || r.oe_key || '';
+      }
+      lines.push([
+        escapeCsv(oe),
+        escapeCsv(r.car_model || ''),
+        escapeCsv(r.formatted_time || ''),
+        escapeCsv(r.operator_name || ''),
+        escapeCsv(r.quantity == null ? '' : r.quantity),
+        escapeCsv(r.price == null ? '' : r.price)
+      ].join(','));
+    });
+    return lines.join('\r\n');
+  },
+
+  // 生成文件名，如：流水导出_入库_20260801-20260818.csv
+  buildFileName() {
+    const { exportStartDate, exportEndDate, exportTypeIndex } = this.data;
+    const typeLabel = this.data.exportTypeOptions[exportTypeIndex] || '全部';
+    const s = (exportStartDate || '').replace(/-/g, '');
+    const e = (exportEndDate || exportStartDate || '').replace(/-/g, '');
+    return `流水导出_${typeLabel}_${s}${e !== s ? '-' + e : ''}.csv`;
+  },
+
+  // 导出成功后的处理：CSV 无法被小程序直接打开（openDocument 不支持该格式），
+  // 唯一可行路径是通过微信把文件发到聊天（如"文件传输助手"），再用 Excel/WPS 打开
+  offerCsvActions(filePath, fileName, exported, total) {
+    // 达到导出上限时提醒用户缩小时间范围
+    if (exported >= 2000 && total > exported) {
+      wx.showModal({
+        title: '提示',
+        content: `该时间段共有 ${total} 条记录，本次仅导出前 ${exported} 条。如需全部数据，请缩小时间范围分批导出。`,
+        showCancel: false
+      });
+      return;
+    }
+
+    wx.showModal({
+      title: '导出成功',
+      content: `已导出 ${exported} 条记录。CSV 文件需要发送到微信聊天（建议选"文件传输助手"），然后在聊天里点开文件，用 Excel 或 WPS 打开。`,
+      confirmText: '发送文件',
+      cancelText: '稍后处理',
+      success: (r) => {
+        if (!r.confirm) return;
+        wx.shareFileMessage({
+          filePath,
+          fileName,
+          success: () => wx.showToast({ title: '已发起发送', icon: 'success' }),
+          fail: (err) => {
+            console.error('发送文件失败', err);
+            wx.showToast({ title: '发送取消或失败', icon: 'none' });
+          }
+        });
+      }
     });
   }
 })
