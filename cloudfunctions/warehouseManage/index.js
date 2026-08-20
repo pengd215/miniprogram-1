@@ -7,7 +7,7 @@ const db = cloud.database();
 const _ = db.command;
 
 // 允许操作仓库配置的角色
-const ALLOWED_ROLES = ['admin', 'warehouse_manager'];
+const ALLOWED_ROLES = ['admin', 'warehouse_manager' ,'worker'];
 
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();

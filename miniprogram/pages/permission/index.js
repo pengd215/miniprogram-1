@@ -11,9 +11,33 @@ const ROLE_MAP = {
   'customer': '客户'
 };
 
+// 角色级别顺序：数组下标越小权限越高，分组时按此顺序排列
+const ROLE_ORDER = ['admin', 'warehouse_manager', 'sales', 'worker', 'customer'];
+
+// 按角色把员工列表归组：返回 [{ role, label, members }]，空组不保留，未知角色归入"其他"
+function groupByRole(list) {
+  const buckets = {};
+  list.forEach(item => {
+    const role = ROLE_ORDER.indexOf(item.role) !== -1 ? item.role : 'other';
+    if (!buckets[role]) buckets[role] = [];
+    buckets[role].push(item);
+  });
+  const groups = [];
+  ROLE_ORDER.forEach(role => {
+    if (buckets[role] && buckets[role].length > 0) {
+      groups.push({ role, label: ROLE_MAP[role], members: buckets[role] });
+    }
+  });
+  if (buckets.other && buckets.other.length > 0) {
+    groups.push({ role: 'other', label: '其他/未知角色', members: buckets.other });
+  }
+  return groups;
+}
+
 Page({
   data: {
     employees: [],
+    roleGroups: [],   // 按角色归类后的分组列表，供 WXML 渲染
     loading: false,
     roleOptions: [
       { name: 'admin', label: '管理员' },
@@ -62,7 +86,10 @@ Page({
             ...item,
             roleLabel: ROLE_MAP[item.role] || '未知'
           }));
-          this.setData({ employees: list });
+          this.setData({
+            employees: list,
+            roleGroups: groupByRole(list)
+          });
         } else {
           wx.showToast({ title: r.message || '加载失败', icon: 'none' });
           if (r.code === 403) {

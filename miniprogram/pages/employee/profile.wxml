@@ -7,7 +7,7 @@
     <!-- 微信头像占位 -->
     <image 
       class="avatar" 
-      src="{{avatarUrl || '/images/icons/avatar.png'}}" 
+      src="{{avatarUrl || '/images/avatar.png'}}" 
       mode="aspectFill"
     ></image>
   </view>

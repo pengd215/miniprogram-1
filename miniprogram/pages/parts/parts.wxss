@@ -1,0 +1,43 @@
+/* pages/parts/parts.wxss */
+page {
+  /* 灰黑米配色变量 */
+  --c-black: #1F1F1F;
+  --c-deep-gray: #4A4A4A;
+  --c-mid-gray: #9A9A9A;
+  --c-light-gray: #F5F5F4;
+  --c-border: #E8E5E0;
+  --c-cream: #F7F3EB;
+  --c-cream-dark: #D9C7A0;
+}
+
+.page-container {
+  min-height: 100vh;
+  background: var(--c-light-gray);
+  padding: 24rpx;
+  /* 底部预留导航高度 + 安全区，避免内容被遮挡 */
+  padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+/* 一期占位卡片 */
+.placeholder-card {
+  background: var(--c-cream);
+  border: 1rpx solid var(--c-border);
+  border-radius: 20rpx;
+  padding: 80rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.placeholder-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: var(--c-black);
+  margin-bottom: 16rpx;
+}
+
+.placeholder-desc {
+  font-size: 26rpx;
+  color: var(--c-mid-gray);
+}

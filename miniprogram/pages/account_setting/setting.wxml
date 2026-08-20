@@ -3,13 +3,12 @@
   <!-- 顶部绿色卡片区域 -->
   <view class="header-card">
     <view class="card-content">
-      <view class="avatar-wrapper" bindtap="chooseAvatar">
+      <view class="avatar-wrapper" >
         <image class="avatar" src="{{avatarUrl || '/images/avatar.png'}}" mode="aspectFill"></image>
-        <view class="camera-icon"></view>
       </view>
       <view class="user-info">
         <text class="nickname">{{nickName || '微信用户'}}</text>
-        <text class="sub-text">完善头像、姓名和个人简介</text>
+        <text class="sub-text">完善姓名和个人简介</text>
       </view>
     </view>
     <!-- 底部提示条 -->

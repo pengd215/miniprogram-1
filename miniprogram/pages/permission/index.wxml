@@ -6,17 +6,25 @@
     <text class="subtitle">点击员工可修改其角色</text>
   </view>
 
-  <!-- 员工列表 -->
+  <!-- 员工列表：按角色级别分组展示 -->
   <block wx:if="{{employees.length > 0}}">
-    <view class="emp-card" wx:for="{{employees}}" wx:key="_id">
-      <view class="card-main" bindtap="onEditRole" data-id="{{item._id}}">
-        <view class="avatar-box">{{item.name ? item.name[0] : '?'}}</view>
-        <view class="card-info">
-          <text class="name">{{item.name || '未命名'}}</text>
-          <text class="username">账号：{{item.username}}</text>
+    <view class="role-group" wx:for="{{roleGroups}}" wx:key="role" wx:for-item="group">
+      <!-- 组标题：角色名 + 人数 -->
+      <view class="group-header">
+        <text class="group-title">{{group.label}}</text>
+        <text class="group-count">{{group.members.length}}人</text>
+      </view>
+      <!-- 组内员工卡片 -->
+      <view class="emp-card" wx:for="{{group.members}}" wx:key="_id">
+        <view class="card-main" bindtap="onEditRole" data-id="{{item._id}}">
+          <view class="avatar-box">{{item.name ? item.name[0] : '?'}}</view>
+          <view class="card-info">
+            <text class="name">{{item.name || '未命名'}}</text>
+            <text class="username">账号：{{item.username}}</text>
+          </view>
+          <view class="role-badge {{item.role}}">{{item.roleLabel}}</view>
+          <text class="arrow">›</text>
         </view>
-        <view class="role-badge {{item.role}}">{{item.roleLabel}}</view>
-        <text class="arrow">›</text>
       </view>
     </view>
   </block>

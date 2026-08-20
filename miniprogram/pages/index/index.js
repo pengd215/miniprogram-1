@@ -10,9 +10,11 @@ Page({
     searchResults: [],    // 多条搜索结果
     resultCount: 0,       // 结果数量
     pendingCount: 0,       // 待办数量
+    stock:'',
     showQrcode: false,
     productId:'',
-    qrCodeBase64: ''
+    qrCodeBase64: '',
+    showList: true
   },
 
   onLoad(options) {
@@ -162,6 +164,7 @@ Page({
 
     const rawOeStr = item.oe_no || '';
     const oeArray = rawOeStr ? rawOeStr.trim().split(/\s+/) : [];
+    const stock = Number(item.stock) || 0;
     const formattedProduct = {
       _id: item._id,
       kyb_no: item.kyb_no || '无',
@@ -170,7 +173,7 @@ Page({
       car_model: item.car_model || '暂无车型',
       model_year: item.model_year || 0,
       direction: item.direction || '',
-      stock: item.stock || 0,
+      stock: stock || 0,
       location: item.location || '-',
       price: item.price || 0,
       images: item.images || [],
@@ -179,7 +182,15 @@ Page({
     this.setData({
       productId:id,
       productData: formattedProduct,
-      searchResults: []
+      showList: false
+    });
+    // 【新增】点选后滚动到详情卡片
+      wx.pageScrollTo({ selector: '#detailCard', duration: 300 });
+  },
+  backToList() {
+    this.setData({
+      productData: null,
+      showList: true
     });
   },
 
@@ -331,7 +342,9 @@ Page({
             this.setData({
               productData: formattedProduct,
               searchResults: [],
+              showList: false
             });
+            wx.pageScrollTo({ selector: '#detailCard', duration: 300 });
           } else {
             // 多条结果，展示列表让用户选择
             const resultList = list.map(item => {
@@ -355,8 +368,10 @@ Page({
             this.setData({
               productData: null,
               searchResults: resultList,
-              resultCount: resultList.length
+              resultCount: resultList.length,
+              showList: true
             });
+            wx.pageScrollTo({ selector: '#resultList', duration: 300 });
           }
         } else {
           // 云函数返回未找到

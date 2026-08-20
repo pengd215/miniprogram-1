@@ -136,13 +136,12 @@ Page({
 
       const newList = res.result.data || []; 
 
-      // 【修复】定义处理函数（你之前写的 processItem）
+      // 定义处理函数
       const processItem = (item) => {
         // 1. 处理时间
         const formattedTime = formatTime(item.create_time);
 
         // 2. 处理操作人显示
-        // ✅ 正确写法：先从 employee_detail 数组里取出第一个员工对象
         const empInfo = item.employee_detail && item.employee_detail.length > 0 ? item.employee_detail[0] : null;
 
 // 1. 获取名字：如果有员工信息，就取 name；否则显示 '未知人员'
@@ -151,7 +150,7 @@ Page({
 // 2. 判断是否是我自己
         const displayName = item._openid === this.data.myOpenId ? '我' : realName;
         
-        // 3. 处理 OE 码拆分（这里是你原本写的复杂逻辑，我们保留它）
+        // 3. 处理 OE 码拆分
         let oeArr = [];
         if (Array.isArray(item.oe_no)) {
             oeArr = item.oe_no;
@@ -180,7 +179,7 @@ Page({
       // 【关键】使用 map 调用上面的函数，生成最终列表
       const processedList = newList.map(item => processItem(item));
 
-      // 【修复】只保留这一个 setData，且变量名必须与 data 中的 FlowList 一致
+      // 只保留这一个 setData，且变量名必须与 data 中的 FlowList 一致
       this.setData({
         FlowList: isLoadMore ? [...this.data.FlowList, ...processedList] : processedList,
         isLoading: false,
@@ -286,9 +285,9 @@ Page({
     });
   },
 
-  // 拼接 CSV 内容：OE编码,车型,时间,操作人,数量,参考价格
+  // 拼接 CSV 内容：OE编码,车型,时间,操作人,数量,参考价格，方向，库位
   buildCsv(rows) {
-    const header = ['OE编码', '车型', '时间', '操作人', '数量', '参考价格'];
+    const header = ['时间','操作人','OE编码', '车型', '方向', '库存位置', '数量', '参考价格'];
     const lines = [header.join(',')];
     rows.forEach(r => {
       // oe_no 兼容数组格式（多码用分号连接）
@@ -299,10 +298,12 @@ Page({
         oe = r.oe_no || r.oe_key || '';
       }
       lines.push([
-        escapeCsv(oe),
-        escapeCsv(r.car_model || ''),
         escapeCsv(r.formatted_time || ''),
         escapeCsv(r.operator_name || ''),
+        escapeCsv(oe),
+        escapeCsv(r.car_model || ''),
+        escapeCsv(r.direction || ''),
+        escapeCsv(r.location || ''),
         escapeCsv(r.quantity == null ? '' : r.quantity),
         escapeCsv(r.price == null ? '' : r.price)
       ].join(','));

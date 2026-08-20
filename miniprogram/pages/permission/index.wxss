@@ -4,6 +4,9 @@
   background: #f6f6f6;
   padding: 24rpx;
   box-sizing: border-box;
+  /* 覆盖全局 app.wxss 中 .container 的 flex + align-items:center：
+     该规则会让分组容器收缩为内容宽度，导致卡片长短不一、撑不满屏幕 */
+  display: block;
 }
 
 /* 顶部标题 */
@@ -18,6 +21,28 @@
 .subtitle {
   display: block;
   margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 角色分组 */
+.role-group {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12rpx;
+}
+.group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 8rpx 12rpx;
+}
+.group-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #555;
+}
+.group-count {
   font-size: 24rpx;
   color: #999;
 }

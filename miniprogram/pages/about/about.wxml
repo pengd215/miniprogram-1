@@ -1,0 +1,10 @@
+<!-- pages/about/about.wxml -->
+<view class="page-container">
+  <view class="placeholder-card">
+    <text class="placeholder-title">关于我们</text>
+    <text class="placeholder-desc">公司介绍与产品图片即将上线，敬请期待</text>
+  </view>
+
+  <!-- 客户端底部导航：当前页签为 about -->
+  <client-tabbar active="about"></client-tabbar>
+</view>

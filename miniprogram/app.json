@@ -16,6 +16,9 @@
     "pages/warehouse/warehouseArea/index",
     "pages/warehouse/locationMgr/index",
     "pages/client/search",
+    "pages/parts/parts",
+    "pages/about/about",
+    "pages/profile/profile",
     "pages/permission/index"
   ],
     "tabBar": {
@@ -53,7 +56,7 @@
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "逐鹿减震器库存系统",
+    "navigationBarTitleText": "逐鹿减振器库存系统",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json",

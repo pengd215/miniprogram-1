@@ -83,4 +83,7 @@
       未找到相关配件报价
     </view>
   </view>
+
+  <!-- 客户端底部导航：当前页签为 home -->
+  <client-tabbar active="home"></client-tabbar>
 </view>
