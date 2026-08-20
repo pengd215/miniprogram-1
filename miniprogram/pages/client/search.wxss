@@ -1,46 +1,78 @@
 /* pages/client/search/search.wxss */
-
-page {
-  --primary-color: #2e7d32; 
-  --primary-light: #4caf50; 
-  --bg-gradient-start: #e8f5e9; 
-  --bg-gradient-end: #c8e6c9;   
-  --text-main: #333333;
-  --text-sub: #888888;
-}
-
 .container {
+  background-color: #f2f4f8; 
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-  padding: 20rpx;
-  /* 底部预留导航高度 + 安全区，避免内容被底部导航遮挡 */
-  padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
-  box-sizing: border-box; /* 【重要】防止padding导致页面出现横向滚动条 */
+  padding: 24rpx 24rpx calc(48rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box; /* 防止padding导致页面出现横向滚动条 */
+}
+/* 标题卡片 */
+.search-card {
+  background-color: #ffffff; /* 纯白背景 */
+  margin: 0 30rpx 30rpx;     /* 左右留白，下方留白 */
+  padding: 60rpx 40rpx 80rpx;      /* 内部padding，让内容不贴边 */
+  border-radius: 30rpx;      /* 大圆角，显得圆润 */
+  
+  /* 关键：添加柔和的阴影，制造“大气”的悬浮感 */
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.05); 
+  
+  display: flex;
+  flex-direction: column; /* 垂直排列：上标题，下搜索框 */
+  align-items: center;    /* 内容水平居中 */
 }
 
-/* --- 1. 顶部搜索栏修复 --- */
+/* --- 0. 顶部品牌区 --- */
+.brand-bar {
+  padding: 16rpx 8rpx 28rpx;
+}
+
+.brand-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: 2rpx;
+}
+
+.brand-sub {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: var(--text-sub);
+  letter-spacing: 1rpx;
+}
+
+/* --- 1. 顶部搜索栏 --- */
 .search-bar {
-  width: 100%; /* 防止在大屏或某些机型上偏左 */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
   padding: 10rpx;
   border-radius: 50rpx;
-  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.05);
-  margin-bottom: 30rpx;
+  box-shadow: 0 4px 12px rgba(78, 80, 78, 0.08);
+  margin-bottom: 32rpx;
   box-sizing: border-box;
+  justify-content: space-between;
 }
 
 .search-input-wrapper {
   flex: 1;
-  background-color: #f5f9f5;
-  border-radius: 50rpx;
-  padding: 0 30rpx;
-  height: 72rpx;
   display: flex;
   align-items: center;
-  margin-right: 20rpx;
+  background-color: #f0f0f0;
+  border-radius: 50rpx;
+  padding: 0 24rpx;
+  height: 72rpx;
+  margin-right: 16rpx;
+}
+
+.search-icon {
+  font-size: 46rpx;
+  color: #999999;
+  margin-right: 10rpx;
+  margin-top: -18rpx;
 }
 
 .search-input {
@@ -49,54 +81,103 @@ page {
   color: var(--text-main);
 }
 
+.search-placeholder {
+  color: #999999;
+}
+
 .search-btn {
-  background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-  color: white;
-  border-radius: 50rpx;
+  /* 1. 基础外观 */
+  background-color: var(--primary-color); /* 使用主题色（绿色） */
+  color: #e2edf7;                         /* 白色文字 */
+  border-radius: 36rpx;                   /* 圆角（高度的一半即为全圆角，或者改小一点变方角） */
+  
+  /* 2. 尺寸与布局 */
+  height: 72rpx;                          /* 保持与输入框同高 */
+  min-width: 140rpx;                      /* 给一个最小宽度，防止文字太挤 */
+  padding: 0 30rpx;                       /* 左右内边距 */
+  
+  /* 3. 文字样式 */
   font-size: 28rpx;
-  font-weight: bold;
-  padding: 0 40rpx;
-  height: 72rpx;
-  line-height: 72rpx;
-  box-shadow: 0 6px 12px rgba(46, 125, 50, 0.3);
-  border: none;
+  font-weight: 500;                       /* 字体粗细适中，不要太粗 */
+  line-height: 1;                         /* 修正行高，防止文字偏下 */
+  
+  /* 4. Flex布局居中 */
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  /* 5. 去除多余装饰 */
+  box-shadow: none;                       /* 【关键】去掉阴影 */
+  background-image: none;                 /* 【关键】去掉渐变 */
+  margin: 0;                              /* 去除默认外边距 */
+}
+
+.search-btn::after {
+  border: none;
+}
+.card-footer {
+  margin-top: auto;       /* 利用 Flex 布局推到最底部 */
+  padding-top: 60rpx;     /* 距离上方内容的间距 */
+  text-align: center;
+  width: 100%;
+  border-top: 1rpx solid #f0f0f0; /* 可选：加一条极淡的分割线 */
+}
+
+.card-footer text {
+  display: block;
+  color: #cccccc;         /* 非常浅的灰色，低调 */
+  font-size: 20rpx;       /* 字号很小 */
+  letter-spacing: 3rpx;   /* 关键：字间距拉大，显得精致 */
+  font-family: Arial, sans-serif; /* 英文用无衬线字体 */
+  transform: scale(0.9);  /* 稍微缩小一点点 */
+}
+
+.card-footer .copyright {
+  margin-top: 8rpx;
+  font-size: 18rpx;
+  color: #e0e0e0;
 }
 
 /* --- 2. 结果卡片 --- */
 .card {
-  width: 90%;
-  background: #fff;
+  width: 100%;
+  background: #ffffff;
   border-radius: 24rpx;
-  padding: 24rpx;
-  margin-bottom: 24rpx;
-  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.04);
-  overflow: hidden; /* 【重要】防止内容溢出卡片圆角 */
+  padding: 28rpx;
+  margin-bottom: 28rpx;
+  box-shadow: 0 8rpx 24rpx rgba(46, 125, 50, 0.08);
+  overflow: hidden; /* 防止内容溢出卡片圆角 */
+  box-sizing: border-box;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card-hover {
+  transform: scale(0.985);
+  box-shadow: 0 4rpx 12rpx rgba(46, 125, 50, 0.12);
 }
 
 .card-header {
   display: flex;
   align-items: flex-start;
   margin-bottom: 20rpx;
-  border-bottom: 1rpx solid #f0f0f0;
   padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
 }
 
 .img {
   width: 100%;
   height: 240rpx;
-  display:block;
+  display: block;
   background-color: #f0f0f0;
   margin-bottom: 20rpx;
+  border-radius: 12rpx;
   border-bottom: 1rpx solid #f0f0f0;
 }
 
 /* 多图横排展示（最多三张） */
 .img-list {
   display: flex;
-  gap: 16rpx; /* 图片之间的间距 */
+  gap: 16rpx;
   margin-bottom: 20rpx;
   padding-bottom: 20rpx;
   border-bottom: 1rpx solid #f0f0f0;
@@ -107,12 +188,7 @@ page {
   height: 160rpx;
   border-radius: 12rpx;
   background-color: #f0f0f0;
-  margin-right: 12rpx;
   flex-shrink: 0;
-}
-
-.img-item:last-child {
-  margin-right: 0;
 }
 
 .header-info {
@@ -120,7 +196,7 @@ page {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 0; /* 【重要】允许文字区域收缩，防止被图片挤压 */
+  min-width: 0; /* 允许文字区域收缩，防止被图片挤压 */
 }
 
 .title {
@@ -134,44 +210,28 @@ page {
   overflow: hidden;
 }
 
-.car-model {
-  font-size: 24rpx;
-  color: var(--primary-color);
-  background: rgba(46, 125, 50, 0.1);
-  padding: 4rpx 10rpx;
-  border-radius: 6rpx;
-  align-self: flex-start;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-/* --- 3. 核心修复：使用 Grid 布局替代 Flex --- */
+/* --- 3. 参数网格：两列等宽 --- */
 .specs-grid {
-  display: grid; /* 【核心】启用网格布局 */
-  grid-template-columns: 1fr 1fr; /* 【核心】严格分为两列，每列等宽 */
-  column-gap: 20rpx; /* 列间距 */
-  row-gap: 24rpx;    /* 行间距 */
-  
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20rpx;
+  row-gap: 24rpx;
   padding-top: 20rpx;
   border-top: 1rpx solid #f0f0f0;
   width: 100%;
-  /* 移除之前的 border-top，如果需要分割线可以用伪元素或保留 padding */
 }
 
 .spec-item {
   display: flex;
   flex-direction: column;
-  /* 不需要设置 width: 50%，Grid 会自动处理 */
   min-width: 0; /* 允许子元素在 Grid 单元格内收缩 */
 }
 
 .spec-item.full-width {
-  grid-column: span 2; 
-  background-color: #f9fbf9; /* 给车型加个浅色背景突出显示 */
-  padding: 10rpx;
-  border-radius: 8rpx;
+  grid-column: span 2;
+  background-color: #f6faf6;
+  padding: 12rpx 16rpx;
+  border-radius: 10rpx;
 }
 
 .spec-label {
@@ -185,9 +245,9 @@ page {
   color: #333;
   font-weight: 500;
   line-height: 1.4;
-  word-break: break-all; /* 允许在任意字符间断行 */
-  white-space: normal;   /* 允许换行 */
-  overflow-wrap: break-word; /* 兼容旧版浏览器 */
+  word-break: break-all;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 /* 车型文字特别样式 */
@@ -205,10 +265,10 @@ page {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  background: linear-gradient(90deg, #f1f8e9 0%, #fff 100%);
-  padding: 16rpx 20rpx;
-  border-radius: 12rpx;
-  margin-top: 20rpx; /* 增加一点上间距 */
+  background: linear-gradient(90deg, #f1f8e9 0%, #ffffff 100%);
+  padding: 18rpx 24rpx;
+  border-radius: 14rpx;
+  margin-top: 24rpx;
 }
 
 .price-label {
@@ -217,14 +277,48 @@ page {
 }
 
 .price-val {
-  font-size: 36rpx;
+  font-size: 38rpx;
   font-weight: bold;
   color: #e53935;
 }
 
+/* --- 5. 空状态 --- */
 .empty {
-  text-align: center;
-  padding-top: 100rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 120rpx;
   color: var(--text-sub);
   font-size: 28rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.6;
+}
+
+.empty-text {
+  color: #666;
+  font-size: 28rpx;
+}
+
+.empty-tip {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #aaa;
+}
+
+/* Logo 容器样式 */
+.logo-container {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;     /* 垂直居中 */
+  padding: 40rpx 0;        /* 上下留白，避免太挤 */
+}
+
+/* Logo 图片样式 */
+.logo {
+  width: 400rpx;           /* 设置宽度，高度会自动适应 */
+  height: auto;            
 }

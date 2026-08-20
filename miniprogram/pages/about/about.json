@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "关于我们",
-  "usingComponents": {
-    "client-tabbar": "/components/client-tabbar/index"
-  }
-}

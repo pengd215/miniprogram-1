@@ -21,9 +21,7 @@ Page({
     },
 
   onLoad() {
-    // 【关键】页面加载时，自动执行一次搜索（默认搜全部或空关键词）
     // 这样用户一进来就能看到最新的列表和图片
-    // 页面加载时仅启动实时监听，不执行搜索（避免首次空关键词弹提示）
     this.startWatch(); // 启动实时监听，员工端新增/修改后客户端自动更新
   },
 
@@ -82,8 +80,17 @@ Page({
       if (res.result.code === 200) {
         this.setData({
           results: res.result.data || []
-        })
-
+        },() => {
+          // 【核心修改】setData 的回调函数中执行滚动
+          // 确保 DOM 渲染完成后再滚动，避免位置跳动
+          if (this.data.results.length > 0) {
+            wx.pageScrollTo({
+              selector: '#result-list', // 对应 WXML 中列表容器的 id
+              duration: 300,            // 滚动动画时长（毫秒）
+              offsetTop: -20            // 可选：多留一点顶部边距，视觉更舒适
+            });
+          }
+        });
         if (res.result.data.length === 0) {
           wx.showToast({ title: '未找到相关配件', icon: 'none' })
         }

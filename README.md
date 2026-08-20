@@ -53,6 +53,11 @@
 | :---: | :---: | :---: |
 | <img src="docs/screenshots/stock_location.png" width="200"> | <img src="docs/screenshots/todo_list.png" width="200"> | |
 
+**客户报价**
+| 客户端首页 | 报价信息页 | |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/client_page.png" width="200"> | <img src="docs/screenshots/quotation_details.png" width="200"> | |
+
 
 ## 功能特性
 

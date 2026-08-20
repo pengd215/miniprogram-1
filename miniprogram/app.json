@@ -16,9 +16,6 @@
     "pages/warehouse/warehouseArea/index",
     "pages/warehouse/locationMgr/index",
     "pages/client/search",
-    "pages/parts/parts",
-    "pages/about/about",
-    "pages/profile/profile",
     "pages/permission/index"
   ],
     "tabBar": {
