@@ -13,6 +13,8 @@ page {
   min-height: 100vh;
   background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
   padding: 20rpx;
+  /* 底部预留导航高度 + 安全区，避免内容被底部导航遮挡 */
+  padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
   box-sizing: border-box; /* 【重要】防止padding导致页面出现横向滚动条 */
 }
 

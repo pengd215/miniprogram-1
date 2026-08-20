@@ -78,7 +78,7 @@
     <text>正在努力检索数据...</text>
   </view>
 <!-- 【新增】多条搜索结果列表 -->
-  <view wx:if="{{searchResults && searchResults.length > 0}}" class="result-card">
+  <view id="resultList" wx:if="{{searchResults && searchResults.length > 0}}" class="result-card">
   <view class="card-header">
     <text class="card-title">找到 {{resultCount}} 条记录，请选择</text>
   </view>
@@ -97,17 +97,22 @@
     </view>
     <view class="list-item-right">
       <text class="list-item-stock {{item.stock > 0 ? 'stock-in' : 'stock-out'}}">库存:{{item.stock}}</text>
-      <text class="list-item-oe">OE: {{item.oe_no}}</text>
+      <text class="list-item-direction">方向: {{item.direction}}</text>
     </view>
   </view>
   </view>
 
   <!-- 5. 结果展示区域-->
   <!-- 只有 productData 有值时才显示整个卡片 -->
-  <view wx:if="{{productData}}" class="result-card">
+  <view id="detailCard" wx:if="{{productData}}" class="result-card">
+    <view class="back-bar" bindtap="backToList">
+    <image src="/images/icons/return.png" class="back-icon" mode="aspectFit"></image>
+  </view>
+
+      
     <!-- 卡片头部 -->
     <view class="card-header">
-      <text class="card-title">查询结果</text>
+      <text class="card-title">库存详情</text>
         <!-- 根据 stock 数值动态切换样式类名 -->
         <text class="status-tag {{productData.stockStatusClass}}">{{productData.stockStatusText}}</text>
     </view>
@@ -148,53 +153,54 @@
     </view>
 
     <view class="card-body">
+      <view class="divider-line"></view>
 
       <view class="info-row">
         <text class="label">产品编号:</text>
         <text class="value">{{productData._id || '暂无'}}</text>
       </view>
-
+      <view class="divider-line"></view>
       <view class="info-row">
         <text class="label">适用车型:</text>
         <text class="value"  selectable="true" user-select="true">{{productData.car_model || '暂无'}}</text>
       </view>
-
+      <view class="divider-line"></view>
       <view class="info-row">
         <text class="label">KYB编号:</text>
         <text class="value">{{productData.kyb_no || '暂无'}}</text>
       </view>
-
+      <view class="divider-line"></view>
       <view class="info-row oe-container">
         <text class="label">OE编号:</text>
     <!-- value 类名保留，但内容放 item.oe_no -->
         <text class="value oe-grid-text"  selectable="true" user-select="true">{{productData.oe_no}}</text> 
       </view>
-
+      <view class="divider-line"></view>
       <view class="info-row">
         <text class="label">适用方向:</text>
         <text class="value">{{productData.direction || '暂无'}}</text>
       </view>
-
+      <view class="divider-line"></view>
       <view class="info-row">
         <text class="label">适用年款:</text>
         <text class="value highlight">{{productData.model_year}}</text>
       </view>
-
+      <view class="divider-line"></view>
       <view class="info-row">
         <text class="label">当前库存:</text>
         <text class="value highlight">{{productData.stock}}</text>
       </view>
-
+      <view class="divider-line"></view>
       <view class="info-row">
         <text class="label">库存位置:</text>
         <text class="value">{{productData.location || '未分配'}}</text>
       </view>
-
+      <view class="divider-line"></view>
       <view class="info-row">
         <text class="label">参考价格:</text>
         <text class="value price">￥{{productData.price || '0'}}</text>
       </view>
-
+      <view class="divider-line"></view>
       <view class="info-row" >
         <text class="label">备注内容:</text>
   <!-- 使用 text 标签包裹，防止长文本破坏 flex 布局，同时保留换行符 -->

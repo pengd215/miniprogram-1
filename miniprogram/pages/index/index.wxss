@@ -664,3 +664,15 @@ page-container {
   background: linear-gradient(135deg, #e67e22, #d35400) !important;
   transform: scale(0.97);
 }
+/* 返回列表按钮样式 */
+.back-bar {
+  padding: 10rpx 20rpx;
+  margin-bottom: 10rpx;
+  display: flex;
+  align-items: center;
+}
+.back-icon {
+  width: 40rpx;
+  height: 40rpx;
+  display: block;
+}

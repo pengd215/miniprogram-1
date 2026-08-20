@@ -1,0 +1,10 @@
+<!-- pages/parts/parts.wxml -->
+<view class="page-container">
+  <view class="placeholder-card">
+    <text class="placeholder-title">改装配件</text>
+    <text class="placeholder-desc">改装类型介绍与改装产品即将上线，敬请期待</text>
+  </view>
+
+  <!-- 客户端底部导航：当前页签为 parts -->
+  <client-tabbar active="parts"></client-tabbar>
+</view>

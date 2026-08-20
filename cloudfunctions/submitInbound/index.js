@@ -38,10 +38,18 @@ exports.main = async (event, context) => {
       }
       const product = productDoc.data;
 
-      // --- 第三步：更新库存 (原子操作增加库存) ---
+      // --- 第三步：更新库存 (兼容字符串/数字类型) ---
+      // 1. 获取数据库中原有的 stock，强制转为数字（如果是 NaN 则默认为 0）
+      const oldStock = Number(productDoc.data.stock);
+      const safeOldStock = isNaN(oldStock) ? 0 : oldStock;
+      
+      // 2. 计算新库存
+      const newStock = safeOldStock + num;
+
+      // 3. 使用新值直接覆盖写入（绕过 _.inc 的类型限制，并顺带把数据库里的脏数据修正为数字）
       await transaction.collection('products').doc(productId).update({
         data: {
-          stock: _.inc(num) 
+          stock: newStock 
         }
       });
 

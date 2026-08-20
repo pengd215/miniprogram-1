@@ -1,6 +1,5 @@
 {
-  "navigationBarTitleText": "查询",
-  "enablePullDownRefresh": true,
+  "navigationBarTitleText": "个人中心",
   "usingComponents": {
     "client-tabbar": "/components/client-tabbar/index"
   }

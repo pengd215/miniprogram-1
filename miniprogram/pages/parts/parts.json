@@ -1,6 +1,5 @@
 {
-  "navigationBarTitleText": "查询",
-  "enablePullDownRefresh": true,
+  "navigationBarTitleText": "改装配件",
   "usingComponents": {
     "client-tabbar": "/components/client-tabbar/index"
   }
