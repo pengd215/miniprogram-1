@@ -73,8 +73,8 @@ App({
   getStockStatus(stock, product) {
   // 单品自定义预警值优先
   const warnStock = (product && product.warnStock) || this.globalWarning.lowStock;
-  if (stock <= 0) return { status: 'out', text: '缺货', color: 'status-out' };
-  if (stock < warnStock) return { status: 'low', text: '紧张', color: 'status-low' };
-  return { status: 'normal', text: '充足', color: 'status-in' };
+  if (stock <= 0) return { status: 'out', text: '缺货', color: 'status-out', listClass: 'stock-out' };
+  if (stock < warnStock) return { status: 'low', text: '紧张', color: 'status-low', listClass: 'stock-low' };
+  return { status: 'normal', text: '充足', color: 'status-in', listClass: 'stock-in' };
   }
 })

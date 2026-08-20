@@ -165,6 +165,7 @@ Page({
     const rawOeStr = item.oe_no || '';
     const oeArray = rawOeStr ? rawOeStr.trim().split(/\s+/) : [];
     const stock = Number(item.stock) || 0;
+    const stockStatus = app.getStockStatus(stock, item);
     const formattedProduct = {
       _id: item._id,
       kyb_no: item.kyb_no || '无',
@@ -174,6 +175,8 @@ Page({
       model_year: item.model_year || 0,
       direction: item.direction || '',
       stock: stock || 0,
+      stockStatusText: stockStatus.text,
+      stockStatusClass: stockStatus.color,
       location: item.location || '-',
       price: item.price || 0,
       images: item.images || [],
@@ -347,7 +350,7 @@ Page({
             wx.pageScrollTo({ selector: '#detailCard', duration: 300 });
           } else {
             // 多条结果，展示列表让用户选择
-            const resultList = list.map(item => {
+            const resultList = list.map(item => { const stockStatus = app.getStockStatus(item.stock || 0, item);
               const rawOeStr = item.oe_no || '';
               const oeArray = rawOeStr ? rawOeStr.trim().split(/\s+/) : [];
             return {  
@@ -361,7 +364,8 @@ Page({
               stock: item.stock || 0,
               location: item.location || '-',
               price: item.price || 0,
-              images: item.images || []   // 【新增】带图片，保证点选后详情能显示
+              images: item.images || [],   // 【新增】带图片，保证点选后详情能显示
+              stockStatusListClass: stockStatus.listClass
               };
             });
 

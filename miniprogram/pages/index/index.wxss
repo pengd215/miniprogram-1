@@ -581,16 +581,19 @@ page-container {
   background: #f7f8fa;
 }
 .list-item-main {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 .list-item-kyb {
+  word-break: break-all;
   font-size: 32rpx;
   font-weight: bold;
   color: #333;
 }
 .list-item-model {
+  word-break: break-all;
   font-size: 26rpx;
   color: #666;
   margin-top: 8rpx;
@@ -606,6 +609,7 @@ page-container {
   font-weight: bold;
 }
 .stock-in { color: #07c160; }
+.stock-low { color: #faad14; }
 .stock-out { color: #e64340; }
 .list-item-oe {
   font-size: 24rpx;
