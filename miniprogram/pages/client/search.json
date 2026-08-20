@@ -1,7 +1,5 @@
 {
-  "navigationBarTitleText": "查询",
+  "navigationBarTitleText": "配件报价查询",
   "enablePullDownRefresh": true,
-  "usingComponents": {
-    "client-tabbar": "/components/client-tabbar/index"
-  }
+  "usingComponents": {}
 }

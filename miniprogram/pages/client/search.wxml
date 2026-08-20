@@ -1,38 +1,57 @@
 <!--pages/client/search.wxml-->
 <view class="container">
+<view class="logo-container">
+    <image class="logo" src="/images/zhulu-logo.png" mode="widthFix"></image>
+  </view>
+  <view class="search-card">
+  <!-- 顶部品牌区 -->
+  <view class="brand-bar">
+    <view class="brand-title">逐鹿减振器</view>
+    <view class="brand-sub">配件 批发 报价 查询</view>
+  </view>
+
   <!-- 顶部搜索栏 -->
   <view class="search-bar">
     <view class="search-input-wrapper">
-    <input 
-      class="search-input" 
-      placeholder="输入OE号或配件名称" 
-      bindinput="onInput"
-      confirm-type="search"
-      bindconfirm="doSearch"
-    />
-  </view>
+      <text class="search-icon">⌕</text>
+      <input
+        class="search-input"
+        placeholder="输入OE号或配件名称"
+        placeholder-class="search-placeholder"
+        bindinput="onInput"
+        confirm-type="search"
+        bindconfirm="doSearch"
+      />
+    </view>
     <button class="search-btn" size="mini" bindtap="doSearch">查询</button>
   </view>
+  <!-- 【新增】底部专业感小字 -->
+  <view class="card-footer">
+    <text>ZHULU AUTO PARTS SYSTEM V2.0</text>
+    <text class="copyright">© 2026 逐鹿汽配技术支持</text>
+  </view>
 
-<!-- 结果列表 -->
-<view class="results">
-    <view class="card" wx:for="{{results}}" wx:key="_id" bindtap="showDetail" data-item="{{item}}">
-      
+ </view>
+
+  <!-- 结果列表 -->
+  <view id="result-list" class="results">
+    <view class="card" wx:for="{{results}}" wx:key="_id" bindtap="showDetail" data-item="{{item}}" hover-class="card-hover">
+
       <!-- 1. 顶部：图片与核心标题区 -->
       <view class="card-header">
         <view class="img-list" wx:if="{{item.images && item.images.length > 0}}">
-          <image 
-          class="img-item" 
-          wx:for="{{item.images}}" 
-          wx:for-item="img"
-          wx:key="*this" 
-          wx:if="{{index < 3}}"
-          src="{{img}}" 
-          mode="aspectFill"
-          catchtap="previewImage" 
-          data-images="{{item.images}}" 
-          data-current="{{img}}"
-        ></image>
+          <image
+            class="img-item"
+            wx:for="{{item.images}}"
+            wx:for-item="img"
+            wx:key="*this"
+            wx:if="{{index < 3}}"
+            src="{{img}}"
+            mode="aspectFill"
+            catchtap="previewImage"
+            data-images="{{item.images}}"
+            data-current="{{img}}"
+          ></image>
         </view>
         <image class="img" wx:else src="/images/40404.png" mode="aspectFill"></image>
         <view class="header-info">
@@ -40,14 +59,13 @@
         </view>
       </view>
 
-      <!-- 2. 中部：双列参数网格 (解决OE号撑爆的核心) -->
+      <!-- 2. 中部：双列参数网格 -->
       <view class="specs-grid">
-
         <view class="spec-item full-width">
-         <text class="spec-label">适用车型</text>
-         <text class="spec-value car-text">{{item.car_model}}</text>
+          <text class="spec-label">适用车型</text>
+          <text class="spec-value car-text">{{item.car_model}}</text>
         </view>
-        
+
         <!-- OE号 -->
         <view class="spec-item full-width">
           <text class="spec-label">OE编号</text>
@@ -77,13 +95,12 @@
       </view>
 
     </view>
-    
+
     <!-- 空状态提示 -->
     <view class="empty" wx:if="{{results.length === 0 && hasSearched}}">
-      未找到相关配件报价
+      <text class="empty-icon">📦</text>
+      <text class="empty-text">未找到相关配件报价</text>
+      <text class="empty-tip">请检查 OE 号或名称后重试</text>
     </view>
   </view>
-
-  <!-- 客户端底部导航：当前页签为 home -->
-  <client-tabbar active="home"></client-tabbar>
 </view>
