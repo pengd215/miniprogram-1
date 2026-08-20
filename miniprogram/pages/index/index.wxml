@@ -96,7 +96,7 @@
       <text class="list-item-model">{{item.car_model}}</text>
     </view>
     <view class="list-item-right">
-      <text class="list-item-stock {{item.stock > 0 ? 'stock-in' : 'stock-out'}}">库存:{{item.stock}}</text>
+      <text class="list-item-stock {{item.stockStatusListClass || (item.stock > 0 ? 'stock-in' : 'stock-out')}}">库存:{{item.stock}}</text>
       <text class="list-item-direction">方向: {{item.direction}}</text>
     </view>
   </view>

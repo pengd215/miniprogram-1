@@ -11,7 +11,48 @@
 - 后端：微信云开发（云函数 + 云数据库 + 文件存储），无需自建服务器
 - 数据一致性：库存扣减与流水记录使用数据库事务，保证原子性
 
-> 📷 **功能截图**：仓库程序为纯代码仓库，建议部署后在微信开发者工具内自行截图补充到 `docs/screenshots/`，并在下方占位处替换为截图链接。
+> 📷 **功能截图**：
+
+**账号与权限**
+
+| 登录页 | 个人中心 | 员工权限管理 |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/login.png" width="200"> | <img src="docs/screenshots/my_account.png" width="200"> | <img src="docs/screenshots/staff_management.jpg" width="200"> |
+
+**配件查询**
+
+| 工作台 | 查询结果列表 | 库存详情 |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/workbench.png" width="200"> | <img src="docs/screenshots/query_list.png" width="200"> | <img src="docs/screenshots/product_details.png" width="200"> |
+
+**配件建档与维护**
+
+| 配件建档 | 档案编辑 | 配件二维码 |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/registration.png" width="200"> | <img src="docs/screenshots/edit.png" width="200"> | <img src="docs/screenshots/QR_code.png" width="200"> |
+
+**产品与出入库**
+
+| 产品列表 | 产品库存查询 | 出入库完成 |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/product-list.png" width="200"> | <img src="docs/screenshots/product_features.png" width="200"> | <img src="docs/screenshots/complete.png" width="200"> |
+
+**流水追踪与提醒**
+
+| 流水日志 | 流水筛选 | 出库提醒 |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/flow-logs.png" width="200"> | <img src="docs/screenshots/flow-logs2.png" width="200"> | <img src="docs/screenshots/outbound_reminder.png" width="200"> |
+
+**库存预警与仓库**
+
+| 库存预警 | 全局预警阈值 | 库区管理 |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/stock_alert.png" width="200"> | <img src="docs/screenshots/global_stock_alert.png" width="200"> | <img src="docs/screenshots/warehouse.png" width="200"> |
+
+| 库位管理 | 待办列表 | |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/stock_location.png" width="200"> | <img src="docs/screenshots/todo_list.png" width="200"> | |
+
 
 ## 功能特性
 

@@ -163,6 +163,9 @@ page {
   border-radius: 6rpx; /* 圆角 */
   border: 1rpx solid #e1e4e8; 
   word-break: break-all;
+  /* 固定为容器一半宽度（扣除列间距），保证入库/出库统一两个一排 */
+  flex: 0 0 calc((100% - 12rpx) / 2);
+  box-sizing: border-box;
 }
 
 .qty-text {

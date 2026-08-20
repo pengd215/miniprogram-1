@@ -13,14 +13,6 @@ Page({
     submitting: false
   },
 
-  onLoad() {
-    // 自动填入用户信息作为联系方式
-    const userInfo = app.globalData.userInfo || {};
-    if (userInfo.username) {
-      this.setData({ contact: userInfo.username });
-    }
-  },
-
   onTypeChange(e) {
     this.setData({ currentType: e.detail.value });
   },

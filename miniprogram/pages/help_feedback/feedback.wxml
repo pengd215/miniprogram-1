@@ -61,17 +61,6 @@
     </view>
   </view>
 
-  <!-- 联系方式 -->
-  <view class="form-item">
-    <view class="label">联系方式 (选填)</view>
-    <input 
-      class="input-field" 
-      placeholder="手机号或微信，方便我们联系您" 
-      value="{{contact}}"
-      bindinput="onContactInput"
-    />
-  </view>
-
   <!-- 提交按钮 -->
   <button class="submit-btn" bindtap="submitFeedback" disabled="{{submitting}}">
     {{submitting ? '提交中...' : '提交反馈'}}
