@@ -58,6 +58,11 @@ exports.main = async (event, context) => {
       const userData = res.data[0]
       const userStored = userData.password || ''
 
+      // 账号状态校验：离职/停用的账号禁止登录（兼容存量数据：无 status 字段视为启用）
+      if (userData.status === 'disabled') {
+        return { success: false, msg: '该账号已停用，请联系管理员' }
+      }
+
       // 校验密码
       const verify = verifyPassword(userStored, password)
       if (!verify.ok) return { success: false, msg: '账号或密码错误' }

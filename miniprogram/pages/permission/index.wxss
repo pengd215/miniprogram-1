@@ -25,6 +25,81 @@
   color: #999;
 }
 
+/* 搜索区 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.search-input-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 40rpx;
+  padding: 12rpx 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+.search-icon {
+  font-size: 26rpx;
+  margin-right: 12rpx;
+}
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+.search-placeholder {
+  color: #bbb;
+  font-size: 26rpx;
+}
+.search-clear {
+  margin-left: 12rpx;
+  color: #999;
+  font-size: 26rpx;
+  padding: 8rpx;
+}
+.role-filter {
+  margin-left: 16rpx;
+  flex-shrink: 0;
+}
+.role-filter-value {
+  background: #fff;
+  border-radius: 40rpx;
+  padding: 14rpx 24rpx;
+  font-size: 26rpx;
+  color: #666;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+.role-filter-value.active {
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+/* 操作栏 */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+.result-count {
+  font-size: 24rpx;
+  color: #999;
+}
+.btn-add {
+  margin: 0;
+  background: #2e7d32;
+  color: #fff;
+  font-size: 26rpx;
+  border-radius: 40rpx;
+  padding: 0 32rpx;
+  line-height: 64rpx;
+}
+.btn-add::after {
+  border: none;
+}
+
 /* 角色分组 */
 .role-group {
   width: 100%;
@@ -75,16 +150,38 @@
   flex-shrink: 0;
   margin-right: 20rpx;
 }
+.avatar-box.gray {
+  background: linear-gradient(135deg, #bdbdbd, #757575);
+}
 .card-info {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
 }
+.name-line {
+  display: flex;
+  align-items: center;
+}
 .name {
   font-size: 30rpx;
   font-weight: bold;
   color: #333;
+}
+.status-tag {
+  margin-left: 12rpx;
+  font-size: 20rpx;
+  padding: 2rpx 12rpx;
+  border-radius: 16rpx;
+  flex-shrink: 0;
+}
+.status-tag.on {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.status-tag.off {
+  background: #f0f0f0;
+  color: #999;
 }
 .username {
   margin-top: 8rpx;
@@ -106,6 +203,54 @@
 .arrow {
   color: #ccc;
   font-size: 32rpx;
+}
+
+/* 停用状态卡片置灰 */
+.emp-card.disabled {
+  opacity: 0.75;
+}
+.emp-card.disabled .name,
+.emp-card.disabled .username {
+  color: #999;
+}
+
+/* 卡片内嵌操作区 */
+.card-actions {
+  display: flex;
+  align-items: center;
+  border-top: 1rpx solid #f0f0f0;
+  padding: 16rpx 0;
+}
+.action-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rpx 0;
+}
+.action-text {
+  font-size: 26rpx;
+  color: #555;
+}
+.action-item.danger .action-text {
+  color: #d32f2f;
+}
+.action-divider {
+  width: 1rpx;
+  height: 32rpx;
+  background: #eee;
+}
+.switch-item {
+  display: flex;
+  align-items: center;
+}
+.switch-item .action-text {
+  margin-right: 8rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+.status-switch {
+  transform: scale(0.8);
 }
 
 /* 空状态 */
@@ -181,7 +326,49 @@
   padding: 0 48rpx;
   line-height: 72rpx;
 }
+.btn::after {
+  border: none;
+}
 .btn-cancel {
   background: #f0f0f0;
   color: #666;
+}
+.btn-confirm {
+  background: #2e7d32;
+  color: #fff;
+}
+.btn-confirm.disabled {
+  opacity: 0.6;
+}
+
+/* 新增员工表单弹窗 */
+.form {
+  margin-top: 32rpx;
+}
+.form-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  padding: 8rpx 20rpx;
+}
+.form-label {
+  width: 100rpx;
+  font-size: 26rpx;
+  color: #666;
+  flex-shrink: 0;
+}
+.form-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  line-height: 64rpx;
+}
+.form-picker {
+  flex: 1;
+  padding: 12rpx 0;
+}
+.form-picker .picker-value {
+  text-align: left;
 }
