@@ -3,11 +3,43 @@
   <!-- 顶部 -->
   <view class="header">
     <text class="title">员工权限管理</text>
-    <text class="subtitle">点击员工可修改其角色</text>
+    <text class="subtitle">可搜索、新增员工，修改角色，启用/停用或删除账号</text>
+  </view>
+
+  <!-- 搜索区：关键词输入（姓名/账号） + 角色下拉筛选 -->
+  <view class="search-bar">
+    <view class="search-input-box">
+      <input
+        class="search-input"
+        placeholder="搜索姓名 / 账号"
+        placeholder-class="search-placeholder"
+        value="{{keyword}}"
+        confirm-type="search"
+        bindinput="onSearchInput"
+      />
+      <text class="search-clear" wx:if="{{keyword}}" bindtap="clearSearch">✕</text>
+    </view>
+    <picker
+      class="role-filter"
+      mode="selector"
+      range="{{roleFilterOptions}}"
+      value="{{roleFilterIndex}}"
+      bindchange="onRoleFilterChange"
+    >
+      <view class="role-filter-value {{roleFilterIndex > 0 ? 'active' : ''}}">
+        {{roleFilterOptions[roleFilterIndex]}} ▾
+      </view>
+    </picker>
+  </view>
+
+  <!-- 操作栏：新增员工按钮 + 筛选结果计数 -->
+  <view class="toolbar">
+    <text class="result-count">共 {{filteredCount}} 名员工</text>
+    <button class="btn-add" bindtap="openCreateDialog">＋ 新增员工</button>
   </view>
 
   <!-- 员工列表：按角色级别分组展示 -->
-  <block wx:if="{{employees.length > 0}}">
+  <block wx:if="{{filteredCount > 0}}">
     <view class="role-group" wx:for="{{roleGroups}}" wx:key="role" wx:for-item="group">
       <!-- 组标题：角色名 + 人数 -->
       <view class="group-header">
@@ -15,24 +47,54 @@
         <text class="group-count">{{group.members.length}}人</text>
       </view>
       <!-- 组内员工卡片 -->
-      <view class="emp-card" wx:for="{{group.members}}" wx:key="_id">
+      <view class="emp-card {{item.status === 'disabled' ? 'disabled' : ''}}" wx:for="{{group.members}}" wx:key="_id">
         <view class="card-main" bindtap="onEditRole" data-id="{{item._id}}">
-          <view class="avatar-box">{{item.name ? item.name[0] : '?'}}</view>
+          <view class="avatar-box {{item.status === 'disabled' ? 'gray' : ''}}">{{item.name ? item.name[0] : '?'}}</view>
           <view class="card-info">
-            <text class="name">{{item.name || '未命名'}}</text>
+            <view class="name-line">
+              <text class="name">{{item.name || '未命名'}}</text>
+              <text class="status-tag {{item.status === 'disabled' ? 'off' : 'on'}}">{{item.status === 'disabled' ? '离职' : '在职'}}</text>
+            </view>
             <text class="username">账号：{{item.username}}</text>
           </view>
           <view class="role-badge {{item.role}}">{{item.roleLabel}}</view>
           <text class="arrow">›</text>
+        </view>
+        <!-- 卡片内嵌操作区 -->
+        <view class="card-actions">
+          <view class="action-item" bindtap="onEditRole" data-id="{{item._id}}">
+            <text class="action-text">修改</text>
+          </view>
+          <view class="action-divider"></view>
+          <view class="action-item switch-item">
+            <text class="action-text">{{item.status === 'disabled' ? '离职' : '在职'}}</text>
+            <switch
+              class="status-switch"
+              checked="{{item.status !== 'disabled'}}"
+              color="#4caf50"
+              data-id="{{item._id}}"
+              bindchange="onToggleStatus"
+            />
+          </view>
+          <view class="action-divider"></view>
+          <view class="action-item danger" bindtap="onDeleteEmployee" data-id="{{item._id}}">
+            <text class="action-text">删除</text>
+          </view>
         </view>
       </view>
     </view>
   </block>
 
   <!-- 空状态 -->
-  <view wx:else class="empty">
+  <view wx:elif="{{employees.length === 0}}" class="empty">
     <text class="empty-title">暂无员工</text>
-    <text class="empty-desc">请在云开发控制台先录入员工账号</text>
+    <text class="empty-desc">点击右上角「新增员工」创建档案</text>
+  </view>
+
+  <!-- 搜索无结果 -->
+  <view wx:else class="empty">
+    <text class="empty-title">未找到匹配的员工</text>
+    <text class="empty-desc">试试更换关键词或角色筛选条件</text>
   </view>
 
   <!-- 角色选择弹窗 -->
@@ -50,6 +112,65 @@
       </picker>
       <view class="dialog-btns">
         <button class="btn btn-cancel" bindtap="closePicker">取消</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新增员工弹窗 -->
+  <view class="mask" wx:if="{{createVisible}}" bindtap="closeCreateDialog">
+    <view class="dialog" catchtap="noop">
+      <view class="dialog-title">新增员工</view>
+      <text class="dialog-desc">创建新员工档案，账号密码用于登录本系统</text>
+      <view class="form">
+        <view class="form-item">
+          <text class="form-label">姓名</text>
+          <input
+            class="form-input"
+            placeholder="请输入姓名"
+            value="{{createForm.name}}"
+            data-field="name"
+            bindinput="onCreateInput"
+          />
+        </view>
+        <view class="form-item">
+          <text class="form-label">账号</text>
+          <input
+            class="form-input"
+            placeholder="3-20位字母、数字或下划线"
+            value="{{createForm.username}}"
+            data-field="username"
+            bindinput="onCreateInput"
+          />
+        </view>
+        <view class="form-item">
+          <text class="form-label">密码</text>
+          <input
+            class="form-input"
+            placeholder="至少6位"
+            password="{{true}}"
+            value="{{createForm.password}}"
+            data-field="password"
+            bindinput="onCreateInput"
+          />
+        </view>
+        <view class="form-item">
+          <text class="form-label">角色</text>
+          <picker
+            class="form-picker"
+            mode="selector"
+            range="{{roleLabels}}"
+            value="{{createForm.roleIndex}}"
+            bindchange="onCreateRoleChange"
+          >
+            <view class="picker-value">{{roleLabels[createForm.roleIndex]}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="dialog-btns">
+        <button class="btn btn-cancel" bindtap="closeCreateDialog">取消</button>
+        <button class="btn btn-confirm {{submitting ? 'disabled' : ''}}" bindtap="submitCreate">
+          {{submitting ? '创建中...' : '确认创建'}}
+        </button>
       </view>
     </view>
   </view>
