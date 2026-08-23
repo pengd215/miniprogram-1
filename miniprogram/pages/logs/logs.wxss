@@ -406,3 +406,51 @@ page {
   background: #a8dcbf;
   color: #fff;
 }
+
+/* ==================== 操作回退按钮样式 ==================== */
+
+.action-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 16rpx 0 8rpx;
+  margin-top: 12rpx;
+  border-top: 1rpx dashed #f0f0f0;
+}
+
+.undo-btn {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 10rpx 24rpx;
+  background-color: #ece2e2;
+  border: 1rpx solid #ac6464;
+  border-radius: 8rpx;
+  color: #ac5454;
+  font-size: 24rpx;
+  transition: all 0.15s ease;
+}
+
+.undo-btn:active {
+  background-color: #fee2e2;
+  transform: scale(0.97);
+}
+
+.undo-icon {
+  font-size: 32rpx;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.reverted-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6rpx 16rpx;
+  background-color: #fffbeb;
+  border: 1rpx solid #fde68a;
+  border-radius: 6rpx;
+  color: #d97706;
+  font-size: 22rpx;
+  margin-left: 16rpx;
+  margin-top: 8rpx;
+}

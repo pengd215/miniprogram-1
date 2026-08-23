@@ -38,6 +38,7 @@ Page({
     hasMore: true,      // 是否还有更多数据
     currentTab: 'all',
     myOpenId: '',
+    myRole: '',        // 【新增】当前用户角色（用于控制撤销按钮显示）
     // --- 批量导出相关 ---
     showExportModal: false,   // 是否显示导出弹窗
     exportStartDate: '',      // 导出开始日期
@@ -54,8 +55,20 @@ Page({
   onLoad() {
     // 直接用 app.js 缓存的 openid，避免无参调用云函数
     this.setData({ myOpenId: app.globalData.openid || '' });
+    
+    // 【新增】获取当前角色信息，用于控制撤销按钮权限
+    this.loadMyRole();
+    
     // 页面加载时自动查一次
     this.fetchLogs(); 
+  },
+
+  // 【新增】加载当前用户角色
+  loadMyRole() {
+    const userInfo = wx.getStorageSync('userInfo');
+    if (userInfo && userInfo.role) {
+      this.setData({ myRole: userInfo.role });
+    }
   },
 
   // 输入框变化时更新 searchKey
@@ -86,7 +99,7 @@ Page({
     this.fetchLogs(); // 重新拉取数据
   },
 
-  // 点击“查询”按钮
+  // 点击"查询"按钮
   onSearch() {
     // 点击查询时，重置页码为1，并重新加载
     this.setData({ page: 1, FlowList: [] });
@@ -156,7 +169,7 @@ Page({
             oeArr = item.oe_no;
         } else if (typeof item.oe_no === 'string') {
             // 兼容逗号、空格分隔
-            oeArr = item.oe_no.split(/[,，\s]+/).filter(Boolean); 
+            oeArr = item.oe_no.split(/[,，\s]+/).filter(Boolean);
         }
 
         // 4. 处理备注截断
@@ -165,6 +178,11 @@ Page({
             remarkPreview = remarkPreview.substring(0, 15) + '...';
         }
 
+        // 5. 【新增】判断是否可回退
+        const canUndo = !!item.snapshot_id && item.type !== 'undo' && item.type !== 'system';
+        // 管理员/主管才显示撤销按钮
+        const showUndoBtn = canUndo && ['admin', 'warehouse_manager'].includes(this.data.myRole);
+
         return {
           ...item, 
           formattedTime,
@@ -172,7 +190,9 @@ Page({
           oeDisplay: oeArr[0] || '无OE码', // 页面显示的第一个码
           oeCount: oeArr.length,           // 用于显示 +N
           oeList: oeArr,                   // 完整的数组，给 WXML 循环用
-          remarkPreview 
+          remarkPreview,
+          canUndo,
+          showUndoBtn
         };
       };
 
@@ -321,7 +341,7 @@ Page({
   },
 
   // 导出成功后的处理：CSV 无法被小程序直接打开（openDocument 不支持该格式），
-  // 唯一可行路径是通过微信把文件发到聊天（如"文件传输助手"），再用 Excel/WPS 打开
+  // 唯一可行路径是通过微信把文件发到聊天（如"文件传输助手"），然后在聊天里点开文件，用 Excel 或 WPS 打开
   offerCsvActions(filePath, fileName, exported, total) {
     // 达到导出上限时提醒用户缩小时间范围
     if (exported >= 2000 && total > exported) {
@@ -351,5 +371,117 @@ Page({
         });
       }
     });
-  }
+  },
+
+  // ==================== 操作回退功能 ====================
+
+  /**
+   * 点击某条流水的"撤销"按钮
+   * @param {Object} e - 事件对象，包含 dataset 中的 id/type/oe/qty
+   */
+  onUndoTap(e) {
+    const { id, type, oe, qty } = e.currentTarget.dataset;
+    
+    // 不支持回退的类型直接返回
+    const unsupportedTypes = ['undo', 'system'];
+    if (unsupportedTypes.includes(type)) {
+      return wx.showToast({ title: '该操作不支持回退', icon: 'none' });
+    }
+
+    const typeName = this.getTypeName(type);
+    
+    wx.showModal({
+      title: '确认回退此操作？',
+      content: `即将回退: ${typeName} | ${oe || '-'} | 数量: ${qty || 0}\n\n⚠️ 回退后数据将恢复到操作前的状态`,
+      confirmText: '确认回退',
+      confirmColor: '#e74c3c',
+      success: (res) => {
+        if (res.confirm) {
+          this.showUndoReasonInput(id, typeName);
+        }
+      }
+    });
+  },
+
+  /**
+   * 弹出回退原因输入框（使用微信原生可编辑弹窗）
+   */
+  showUndoReasonInput(snapshotId, opTypeName) {
+    wx.showModal({
+      title: `请填写"${opTypeName}"的回退原因`,
+      editable: true,
+      placeholderText: '例如：数量填错 / 误操作 / 测试数据等',
+      success: (res) => {
+        if (res.confirm && res.content && res.content.trim()) {
+          this.executeUndo(snapshotId, res.content.trim());
+        } else if (res.confirm) {
+          wx.showToast({ title: '请输入回退原因', icon: 'none' });
+        }
+      }
+    });
+  },
+
+  /**
+   * 执行回退操作 —— 调用 undoOperation 云函数
+   */
+  executeUndo(snapshotId, reason) {
+    wx.showLoading({ title: '正在回退...', mask: true });
+
+    wx.cloud.callFunction({
+      name: 'undoOperation',
+      data: {
+        snapshotId: snapshotId,
+        remark: reason
+      },
+      success: (res) => {
+        wx.hideLoading();
+        if (res.result && res.result.success) {
+          wx.showToast({ 
+            title: `✓ ${res.result.message}`, 
+            icon: 'success',
+            duration: 2000 
+          });
+          // 延迟刷新列表以更新状态
+          setTimeout(() => {
+            this.setData({ page: 1, FlowList: [] });
+            this.fetchLogs();
+          }, 1500);
+        } else {
+          // 业务逻辑错误
+          const errMsg = res.result.message || '回退失败';
+          wx.showToast({ 
+            title: errMsg, 
+            icon: 'none',
+            duration: 3000 
+          });
+          
+          // 特殊错误码提示
+          if (res.result.code === 409) {
+            console.warn('[undo] 该操作已被回过');
+          } else if (res.result.code === 403) {
+            console.warn('[undo] 权限不足');
+          }
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading();
+        console.error('回退请求失败:', err);
+        wx.showToast({ title: '网络异常，请重试', icon: 'none' });
+      }
+    });
+  },
+
+  /**
+   * 辅助：获取操作类型的中文名
+   */
+  getTypeName(type) {
+    const map = {
+      'inbound': '入库',
+      'outbound': '出库',
+      'product_update': '编辑产品',
+      'product_create': '新建产品',
+      'undo': '回退操作'
+    };
+    return map[type] || type;
+  },
 })
