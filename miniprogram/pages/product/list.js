@@ -1,148 +1,157 @@
 // pages/product/list.js
 const app = getApp();
-const db = wx.cloud.database(); 
+const db = wx.cloud.database();
 Page({
   data: {
     keyword: '', // 搜索框输入的关键词
-    productList: [], // 存放从数据库查出来的列表数据
-    page: 1,          // 当前页码
-    pageSize: 20,     // 新增：每页条数
-    hasMore: true,     // 新增：是否还有更多数据
-    isLoading: false // 增加加载锁，防止重复请求
+    productList: [], // 存放当前页展示的列表数据
+    page: 1,          // 下一页要加载的页码
+    pageSize: 20,     // 每页条数
+    hasMore: true,     // 是否还有更多数据
+    isLoading: false, // 加载锁，防止重复请求
+    statusFilter: ''  // 库存状态筛选：''全部 | out缺货 | low紧张 | normal充足
   },
-  onShow(){
+  onShow() {
     if (!app.checkLogin()) return;  // 未登录直接回登录页
-    // 页面首次显示时，先加载全局预警阈值，再初始化数据
     if (!this._loaded) {
       this._loaded = true;
-      app.loadWarningConfig().then(() => {
-        this.fetchData('', false);
-      });
+      this.loadPage(1, false);
     }
   },
 
   onLoad: function () {
-    // 数据加载改到 onShow 里，确保先取到数据库里的全局预警阈值
+    // 数据加载在 onShow 里做，保证登录态检查先行
   },
 
   // 监听搜索框输入
-  onInputChange: function(e) {
+  onInputChange: function (e) {
     this.setData({
       keyword: e.detail.value
     });
   },
 
   // 点击搜索按钮
-  onSearch: function() {
-    const keyword = this.data.keyword;
-    this.fetchData(keyword,false);
+  onSearch: function () {
+    this.loadPage(1, false);
   },
 
-  onReachBottom: function() {
+  // 点击库存状态筛选（全部/缺货/紧张/充足）
+  onFilterChange: function (e) {
+    const status = e.currentTarget.dataset.status;
+    if (status === this.data.statusFilter) return;
+    this.setData({ statusFilter: status });
+    this.loadPage(1, false);
+  },
+
+  onReachBottom: function () {
     if (this.data.hasMore && !this.data.isLoading) {
-      this.fetchData(this.data.keyword, true); // 传入 true 表示加载更多
+      this.loadPage(this.data.page, true); // 加载下一页
     }
   },
 
-  onPullDownRefresh: function() {
-    this.fetchData(this.data.keyword, false); // 下拉刷新时重置分页
+  onPullDownRefresh: function () {
+    this.loadPage(1, false); // 下拉刷新时重置分页
     wx.stopPullDownRefresh();
   },
 
-  // 核心函数：从数据库获取数据
-  fetchData: function(keyword, isLoadMore = false) {
-    if (!isLoadMore) {
-      this.setData({ 
-        page: 1, 
-        productList: [], 
-        hasMore: true,
-        isLoading: false 
-      });
-    }
-    // 首次加载（非加载更多）时，先确保全局预警阈值已刷新
-    if (!isLoadMore) {
-      app.loadWarningConfig().then(() => {
-        this.doQuery(keyword, false);
-      });
-      return;
-    }
-    this.doQuery(keyword, true);
-  },
-
-  // 实际执行数据库查询
-  doQuery: function(keyword, isLoadMore) {
-    // 如果正在加载或没有更多数据，直接返回
-    if (this.data.isLoading || !this.data.hasMore) return;
-    // 🔒 加锁
+  // 优先调用云函数取一页数据：状态计算、筛选、排序、分页全部在服务器完成
+  loadPage: function (page, isLoadMore) {
+    if (this.data.isLoading) return;
     this.setData({ isLoading: true });
-    wx.showLoading({ title: isLoadMore ? '加载中...' : '搜索中...' });
-
-    let query = db.collection('products');
-
-    // 如果有关键词，就添加模糊搜索条件
-    if (keyword && keyword.trim() !== '') {
-      query = query.where(
-        db.command.or([
-          {kyb_no: db.RegExp({ regexp:keyword,options:'i',  })},
-          {car_model: db.RegExp({ regexp: keyword,options: 'i',})}
-        ])
-      );
+    if (!isLoadMore) {
+      this.setData({ productList: [], hasMore: true });
     }
-    //排序逻辑
-  // 'asc': 升序（从小到大，即库存少的在最上面）
-  const skipCount = (this.data.page - 1)* this.data.pageSize;
-    query.orderBy('stock', 'asc')
-    .skip(skipCount)
-    .limit(this.data.pageSize)
-    .get()
-    .then(res => {
-      // 处理数据，适配你页面的显示需求
-      const list = res.data.map(item => {
+    wx.showLoading({ title: isLoadMore ? '加载中...' : '搜索中...', mask: true });
 
-        console.log('当前条目数据:', item);
-        let rawStock = item.stock;
-        if (rawStock === undefined || rawStock === null) {
-          console.warn('警告：数据库里这条数据没有 stock 字段！', item._id);
-          rawStock = 0; // 给个默认值
+    wx.cloud.callFunction({
+      name: 'listProducts',
+      data: {
+        keyword: this.data.keyword,
+        status: this.data.statusFilter,
+        page: page,
+        pageSize: this.data.pageSize
       }
-    
-      const count = Number(rawStock);
-      // 根据数量动态生成样式类名
-      let statusClass = 'status-normal'; // 默认绿色/正常
-      let statusText = '有货';           // 默认文字
-
-      const s = app.getStockStatus(count, item);
-      statusClass = s.color;
-      statusText = s.text;
-
-
-        return {
-          _id: item._id,
-          kyb_no: item.kyb_no,
-          car_model: item.car_model,
-          stockCount: count,
-          images: item.images,
-          statusClass: statusClass,
-          statusText: statusText
-        };
-      });
-
-       // 追加数据而非覆盖
-      const newList = isLoadMore
-      ? [...this.data.productList, ...list]
-      : list;
-
+    }).then(res => {
+      wx.hideLoading();
+      const r = res.result || {};
+      if (!r.success) {
+        this.setData({ isLoading: false });
+        wx.showToast({ title: r.message || '加载失败', icon: 'none' });
+        return;
+      }
+      const list = r.list || [];
       this.setData({
-        productList: newList,
-        page: this.data.page + 1,
-        hasMore: list.length === this.data.pageSize,  // 返回条数等于pageSize说明还有下一页
+        productList: isLoadMore ? [...this.data.productList, ...list] : list,
+        page: page + 1,
+        hasMore: !!r.hasMore,
         isLoading: false
       });
-      wx.hideLoading();
     }).catch(err => {
-      console.error('查询失败:', err);
+      // 云函数未部署或网络异常时，退回本地查询，保证基础功能可用
+      console.warn('listProducts 云函数不可用，切换本地查询：', err);
+      this.localQuery(page, isLoadMore);
+    });
+  },
+
+  // 本地兜底查询（仅"全部/缺货"支持；紧张/充足依赖服务器精确计算）
+  localQuery: function (page, isLoadMore) {
+    const statusFilter = this.data.statusFilter;
+    if (statusFilter === 'low' || statusFilter === 'normal') {
       wx.hideLoading();
-      wx.showToast({ title: '加载失败', icon: 'none' });
+      this.setData({ isLoading: false, hasMore: false });
+      wx.showToast({ title: '该筛选需先部署 listProducts 云函数', icon: 'none', duration: 2500 });
+      return;
+    }
+    app.loadWarningConfig().then(() => {
+      const conditions = [];
+      const k = (this.data.keyword || '').trim();
+      if (k) {
+        conditions.push(db.command.or([
+          { kyb_no: db.RegExp({ regexp: k, options: 'i' }) },
+          { car_model: db.RegExp({ regexp: k, options: 'i' }) }
+        ]));
+      }
+      if (statusFilter === 'out') {
+        conditions.push({ stock: db.command.lte(0) });
+      }
+      let query = db.collection('products');
+      if (conditions.length > 0) {
+        query = query.where(conditions.length === 1 ? conditions[0] : db.command.and(conditions));
+      }
+      query.orderBy('stock', 'asc')
+        .skip((page - 1) * this.data.pageSize)
+        .limit(this.data.pageSize)
+        .get()
+        .then(res => {
+          wx.hideLoading();
+          const list = res.data.map(item => {
+            let raw = item.stock;
+            if (raw === undefined || raw === null) raw = 0;
+            const count = Number(raw);
+            const s = app.getStockStatus(count, item);
+            return {
+              _id: item._id,
+              kyb_no: item.kyb_no,
+              car_model: item.car_model,
+              stockCount: count,
+              images: item.images,
+              statusClass: s.color,
+              statusText: s.text
+            };
+          });
+          this.setData({
+            productList: isLoadMore ? [...this.data.productList, ...list] : list,
+            page: page + 1,
+            hasMore: list.length === this.data.pageSize,
+            isLoading: false
+          });
+        })
+        .catch(err => {
+          console.error('查询失败:', err);
+          wx.hideLoading();
+          this.setData({ isLoading: false });
+          wx.showToast({ title: '加载失败，请稍后重试', icon: 'none' });
+        });
     });
   }
 })

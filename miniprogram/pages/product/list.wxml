@@ -15,6 +15,14 @@
   <button class="btn-search" bindtap="onSearch">搜索</button>
 </view>
 
+<!-- 库存状态筛选栏 -->
+<view class="filter-bar">
+  <view class="filter-item {{statusFilter === '' ? 'active' : ''}}" bindtap="onFilterChange" data-status="">全部</view>
+  <view class="filter-item {{statusFilter === 'out' ? 'active' : ''}}" bindtap="onFilterChange" data-status="out">缺货</view>
+  <view class="filter-item {{statusFilter === 'low' ? 'active' : ''}}" bindtap="onFilterChange" data-status="low">紧张</view>
+  <view class="filter-item {{statusFilter === 'normal' ? 'active' : ''}}" bindtap="onFilterChange" data-status="normal">充足</view>
+</view>
+
 <!-- 列表区域 -->
 <view class="list-container">
   <block wx:if="{{productList.length > 0}}">
@@ -47,8 +55,13 @@
   <!-- 空状态提示 -->
   <view wx:else class="empty-state">
     <image src="/images/404.png" class="empty-img" mode="aspectFit"></image> <!-- 请替换为你的空状态图片路径 -->
-    <text class="empty-title">暂无库存商品</text>
-    <text class="empty-desc">当前仓库还没有商品，添加后会展示在这里。</text>
+    <text class="empty-title">没有找到相关商品</text>
+    <text class="empty-desc">试试调整关键词或筛选条件；新配件请先建档。</text>
+  </view>
+
+  <!-- 列表底部加载提示 -->
+  <view class="list-footer" wx:if="{{productList.length > 0}}">
+    <text class="footer-text">{{hasMore ? '下拉到底部加载更多' : '已经全部加载完成'}}</text>
   </view>
 </view>
 
