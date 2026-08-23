@@ -1,0 +1,14 @@
+{
+  "name": "listProducts",
+  "version": "1.0.0",
+  "description": "产品列表：按关键词与库存状态（缺货/紧张/充足）筛选并分页返回",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "~4.0.2"
+  }
+}

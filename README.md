@@ -19,7 +19,7 @@
 
 | 登录页 | 个人中心 | 员工权限管理 |
 | :---: | :---: | :---: |
-| <img src="docs/screenshots/login.png" width="200"> | <img src="docs/screenshots/my_account.png" width="200"> | <img src="docs/screenshots/employees-managent.png" width="200"> |
+| <img src="docs/screenshots/login.png" width="200"> | <img src="docs/screenshots/my_account.png" width="200"> | <img src="docs/screenshots/employees-management.png" width="200"> |
 
 **配件查询**
 
