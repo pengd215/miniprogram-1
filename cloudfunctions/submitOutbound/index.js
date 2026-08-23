@@ -1,4 +1,5 @@
 // cloudfunctions/submitOutbound/index.js
+// 【已改造】支持操作前快照，可回退
 const cloud = require('wx-server-sdk');
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV }); 
 const db = cloud.database();
@@ -21,7 +22,7 @@ exports.main = async (event, context) => {
   }
 
   try {
-    // 开启事务：保证“扣库存”和“记流水”原子性操作
+    // 开启事务：保证"快照→扣库存→记流水"原子性操作
     await db.runTransaction(async transaction => {
       
       // --- 步骤 A: 查找该零件的库存信息 ---
@@ -39,27 +40,65 @@ exports.main = async (event, context) => {
         throw new Error(`库存不足！当前库存: ${currentStock}，申请出库: ${qty}`);
       }
 
-      // --- 步骤 C: 扣减库存 (更新 products 表) ---
-      // 使用 _.inc(-qty) 进行原子扣减
+      // --- 步骤 C: 【新增】创建操作前快照 ---
+      // 查询原操作人姓名（用于回退日志显示）
+      let operatorName = '';
+      try {
+        const empRes = await transaction.collection('employees')
+          .where({ _openid: wxContext.OPENID })
+          .limit(1)
+          .get();
+        if (empRes.data.length > 0) {
+          operatorName = empRes.data[0].name || '';
+        }
+      } catch (e) {
+        console.warn('[submitOutbound] 查询操作人姓名失败:', e);
+      }
+
+      const snapshotResult = await transaction.collection('operation_snapshots').add({
+        data: {
+          operation_type: 'outbound',
+          target_collection: 'products',
+          target_doc_id: productId,
+          snapshot_data: { ...product },            // 深拷贝出库前完整数据
+          operation_payload: { quantity: -qty, remark: remark || '暂无备注' },
+          related_log_id: '',
+          operator_openid: wxContext.OPENID,
+          operator_name: operatorName,               // 🆕 操作人姓名
+          status: 'active',
+          create_time: new Date(),
+          revert_time: null,
+          reverted_by: null,
+          revert_remark: ''
+        }
+      });
+      const snapshotId = snapshotResult._id;
+
+      // --- 步骤 D: 扣减库存 (更新 products 表) ---
       await transaction.collection('products').doc(productId).update({
         data: {
           stock: _.inc(-qty) 
         }
       });
 
-      // --- 步骤 D: 记录流水 (写入 transaction_logs 表) ---
-      await transaction.collection('transaction_logs').add({
+      // --- 步骤 E: 记录流水（含snapshot_id）---
+      const logResult = await transaction.collection('transaction_logs').add({
         data: {
           product_id: productId, 
-          // 冗余存储 OE码 和 KYB号，方便以后搜索流水
-          oe_no: product.oe_no ||'',
-          kyb_no: product.kyb_no ||'', 
-          quantity: -qty, // 出库记为负数，方便统计总账
+          oe_no: product.oe_no || '',
+          kyb_no: product.kyb_no || '', 
+          quantity: -qty, // 出库记为负数
           type: 'outbound',
-          _openid: wxContext.OPENID, // 记录操作人
+          _openid: wxContext.OPENID,
           remark: remark || '暂无备注',
-          create_time: db.serverDate() // 使用服务器时间
+          snapshot_id: snapshotId,                  // 【新增】关联快照
+          create_time: db.serverDate()
         }
+      });
+
+      // --- 步骤 F: 【新增】回填流水ID到快照 ---
+      await transaction.collection('operation_snapshots').doc(snapshotId).update({
+        data: { related_log_id: logResult._id }
       });
     });
 

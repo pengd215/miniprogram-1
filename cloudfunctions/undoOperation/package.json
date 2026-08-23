@@ -1,0 +1,1 @@
+{"name": "undoOperation", "version": "1.0.0", "description": "操作回退/撤销核心云函数 — 支持出入库/编辑/创建的逆向回滚", "main": "index.js", "scripts": {"test": "node --check index.js"}, "dependencies": {"wx-server-sdk": "~2.6.3"}}
