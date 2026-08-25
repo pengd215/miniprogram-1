@@ -364,6 +364,7 @@ Page({
               stock: item.stock || 0,
               location: item.location || '-',
               price: item.price || 0,
+              remark: item.remark || '',
               images: item.images || [],   // 【新增】带图片，保证点选后详情能显示
               stockStatusListClass: stockStatus.listClass
               };

@@ -445,17 +445,22 @@ page-container {
 
 /* 2. 图片列表容器 */
 .img-list {
-  display: inline-block; /* 配合 white-space: nowrap 使用 */
+  display: flex;
+  align-items: center;
+  min-width: 100%;
+  justify-content: space-evenly;  /* 图片之间等间距 */
+  padding: 20rpx;
 }
 
 /* 3. 图片样式调整 */
 .preview-img {
   width: 200rpx;     /* 根据你的设计稿调整宽度 */
   height: 200rpx;    /* 高度通常与宽度一致 */
-  margin-right: 15rpx; /* 图片之间的间距 */
   border-radius: 8rpx; /* 可选：圆角 */
   display: inline-block; /* 确保图片横向排列 */
   vertical-align: top;
+  flex-shrink: 0;
+  margin-right: 0;  /* 交给 space-evenly 自动分配间距 */
 }
 
 /* 4. 单张默认图的样式（可选） */
