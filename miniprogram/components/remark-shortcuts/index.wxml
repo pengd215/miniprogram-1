@@ -1,0 +1,20 @@
+<!-- components/remark-shortcuts/index.wxml -->
+<!-- 常用备注快捷输入栏：固定在备注输入框下方，点按填入，长按删除 -->
+<view class="shortcuts-wrap">
+  <scroll-view scroll-y class="shortcuts-scroll" enhanced show-scrollbar="{{false}}">
+    <view class="shortcuts-tags">
+      <view
+        class="tag"
+        style="color: {{accent}};"
+        wx:for="{{list}}"
+        wx:key="*this"
+        data-text="{{item}}"
+        data-index="{{index}}"
+        bindtap="onTapTag"
+        bindlongpress="onLongPressTag"
+      >{{item}}</view>
+      <view class="tag add-tag" bindtap="onAddTap">＋ 添加</view>
+    </view>
+  </scroll-view>
+  <view class="shortcuts-hint">点按标签快速填入 · 长按删除 · 最多20条</view>
+</view>

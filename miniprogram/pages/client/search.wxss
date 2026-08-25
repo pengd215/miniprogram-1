@@ -260,6 +260,34 @@
   color: var(--primary-color);
 }
 
+/* --- OE编号：固定宽度单元格，每行三个 --- */
+.oe-cell-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.oe-cell {
+  width: 32%;              /* 固定宽度，不足三个时也保持同样大小 */
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1rpx solid #d7e8d8;
+  border-radius: 8rpx;
+  padding: 8rpx 6rpx;
+  margin-right: 2%;
+  margin-bottom: 10rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  color: var(--primary-color);
+  text-align: center;
+  white-space: nowrap;     /* 单码不换行 */
+  overflow: hidden;
+  text-overflow: ellipsis; /* 超长时省略号 */
+}
+
+.oe-cell:nth-child(3n) {
+  margin-right: 0;         /* 每行第三个去掉右边距，保证对齐 */
+}
+
 /* --- 4. 底部价格区 --- */
 .price-row {
   display: flex;

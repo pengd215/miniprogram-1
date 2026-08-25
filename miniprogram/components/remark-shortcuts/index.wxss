@@ -1,0 +1,42 @@
+/* components/remark-shortcuts/index.wxss */
+
+.shortcuts-wrap {
+  margin-top: 16rpx;
+}
+
+/* 标签滚动区：限高约3行，超出内部滚动，避免20条撑爆页面 */
+.shortcuts-scroll {
+  max-height: 196rpx;
+}
+
+.shortcuts-tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: #f5f6f7;
+  border-radius: 24rpx;
+  padding: 10rpx 22rpx;
+  font-size: 24rpx;
+  line-height: 1.4;
+  margin: 0 16rpx 16rpx 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 添加按钮：虚线边框，与内容标签区分 */
+.add-tag {
+  color: #999;
+  border: 1rpx dashed #c8c9cc;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+.shortcuts-hint {
+  font-size: 22rpx;
+  color: #b0b3b8;
+  margin-top: 4rpx;
+}

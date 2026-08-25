@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-WeChat%20MiniProgram-green)
 ![Backend](https://img.shields.io/badge/backend-CloudBase%20(Serverless)-ff69b4)
-![Version](https://img.shields.io/badge/version-1.1.0-orange)
+![Version](https://img.shields.io/badge/version-1.1.1-orange)
 
 面向企业内部员工提供配件建档、出入库、流水追踪、库存预警、仓库库位管理等功能，同时为下游客户提供独立的报价查询入口。**已上线运行**，代码即实际生产可用版本。
 
@@ -19,7 +19,7 @@
 
 | 登录页 | 个人中心 | 员工权限管理 |
 | :---: | :---: | :---: |
-| <img src="docs/screenshots/login.png" width="200"> | <img src="docs/screenshots/my_account.png" width="200"> | <img src="docs/screenshots/employees-management.png" width="200"> |
+| <img src="docs/screenshots/login.png" width="200"> | <img src="docs/screenshots/my_account.png" width="200"> | <img src="docs/screenshots/employees-management.jpg" width="200"> |
 
 **配件查询**
 
@@ -59,7 +59,7 @@
 
 | 客户端首页 | 报价信息页 | |
 | :---: | :---: | :---: |
-| <img src="docs/screenshots/client_page.png" width="200"> | <img src="docs/screenshots/quotation_details.png" width="200"> | |
+| <img src="docs/screenshots/client_page.png" width="200"> | <img src="docs/screenshots/client_return.png" width="200"> | |
 
 
 ## 功能特性
@@ -72,6 +72,8 @@
 - **扫码管理**：为每个配件生成二维码（Base64，可保存到相册），扫码可定位库位、绑定商品
 - **库存出入库**：入库/出库操作采用数据库事务，确保"库存变动 + 流水记录"同时成功或同时失败；出库自动校验库存是否充足
 - **流水日志追踪**：按 OE 编码 / 日期 / 出入库类型筛选，聚合联表展示操作人姓名；管理员可查看全部流水，其他角色只能查看本人经手记录；支持按时间范围与类型批量导出流水为 CSV 文件（可用 Excel 打开，单次最多 2000 条），可打开、分享或保存
+- **常用备注快捷输入**（v1.1.1）：入库 / 出库页备注框下方固定展示常用备注标签栏，点按即填入备注，支持添加与长按删除常用语（最多 20 条，本机存储，两页共用）
+- **客户报价页 OE 编号美化**（v1.1.1）：查询结果中的多个 OE 编号拆分为固定宽度单元格，每行三个整齐排布，超长自动省略号
 - **库存预警**：支持全局预警阈值（可在设置中调整）与单品自定义预警值，库存状态自动标记为"缺货 / 紧张 / 充足"
 - **仓库库位管理**：库区增删、库位批量生成（行列号自动编码，单次最多 500 个）、扫码绑定 / 解绑商品
 - **员工权限管理**：管理员可新增员工、分配角色、切换在职/离职（停用）状态、删除员工（二次确认防误删），内置"至少保留一名管理员"保护防止系统锁死；员工列表支持按姓名/账号关键词与角色分类筛选
@@ -81,13 +83,13 @@
 
 > **核心价值**：防止员工偶尔出错误删影响后续使用，所有关键操作均可追溯和撤销。
 
-- **全页面覆盖**：入库、出库、产品编辑、产品创建四大核心操作均支持回退
+- **覆盖入库、出库、产品创建三类核心操作**（编辑页修改不记录流水、不参与回退）
 - **操作前快照**：每次提交操作前自动保存完整数据快照至 `operation_snapshots` 集合
 - **一键回退**：在流水日志页面点击"↩ 撤销此操作"按钮，输入回退原因即可恢复数据
 - **权限控制**：仅 `admin`（管理员）和 `warehouse_manager`（仓库主管）可执行回退操作，普通员工仅可查看
 - **防重复回退**：同一操作不可重复回退，已回退的操作会显示明确标记
 - **审计追踪**：回退操作本身也会产生一条 `type: 'undo'` 的流水记录，保证操作链路完整
-- **事务安全**：入库/出库回退使用数据库事务，保证数据一致性；编辑回退采用字段级覆盖，创建回退采用软删除
+- **事务安全**：入库/出库回退使用数据库事务，保证数据一致性；创建回退采用软删除
 
 #### 支持回退的操作类型
 
@@ -95,7 +97,6 @@
 |----------|----------|----------|----------|
 | `inbound` 入库 | 入库页面提交 | 扣减等量库存 | 库存恢复到入库前的值 |
 | `outbound` 出库 | 出库页面提交 | 增加等量库存 | 库存恢复到出库前的值 |
-| `product_update` 产品编辑 | 编辑配件页面保存 | 用快照覆盖当前数据 | OE 码、库存、车型等 12 个字段恢复到编辑前 |
 | `product_create` 产品创建 | 新建配件页面提交 | 软删除（标记 deleted） | 产品标记为已删除，关联流水作废 |
 
 > ⚠️ **注意**：只有部署新版本云函数后产生的操作才会带有快照 ID 并支持回退，旧历史数据无法回退。
@@ -131,12 +132,12 @@
 | 新建配件 | `pages/createPart/index` | 配件建档（支持图片上传） |
 | 编辑配件 | `pages/editPart/index` | 档案编辑、状态完善、单品预警值设置 |
 | 待办列表 | `pages/pending/index` | 待完善配件档案清单 |
-| 入库 / 出库 | `pages/inbound/inbound`、`pages/outbound/outbound` | 数量录入、备注、提交 |
+| 入库 / 出库 | `pages/inbound/inbound`、`pages/outbound/outbound` | 数量录入、备注（🆕含常用备注快捷标签栏）、提交 |
 | 库存预警 | `pages/stock/warning` | 全局预警阈值配置（管理员 / 仓库管理员） |
 | 库区管理 | `pages/warehouse/warehouseArea/index` | 库区增删 |
 | 库位管理 | `pages/warehouse/locationMgr/index` | 库位批量生成、扫码绑定商品 |
 | 员工权限 | `pages/permission/index` | 员工新增/角色分配/在职离职切换/删除（仅管理员） |
-| 客户报价 | `pages/client/search` | 客户报价查询入口 |
+| 客户报价 | `pages/client/search` | 客户报价查询入口（🆕 OE 编号三列固定排布） |
 | 账号设置 | `pages/account_setting/setting` | 账号信息设置 |
 | 帮助反馈 | `pages/help_feedback/feedback` | 功能反馈提交 |
 
@@ -157,8 +158,8 @@
 | `exportFlowData` | 流水批量导出：按时间范围与出入库类型查询，联表补齐车型/参考价格/操作人，按角色控制导出范围 | v1.0 |
 | `clientSearchQuote` | 客户报价查询（字段投影，只返回报价所需信息） | v1.0 |
 | `generateQRCode` | 基于 `qrcode` 库生成配件二维码（Base64） | v1.0 |
-| **`createSnapshot`** | **🆕 创建操作前快照**（供产品编辑等非事务场景调用） | v1.1 新增 |
-| **`undoOperation`** | **🆕 操作回退核心引擎**：支持入库/出库/编辑/创建的逆向回滚，含权限控制与审计日志 | v1.1 新增 |
+| **`undoOperation`** | **🆕 操作回退核心引擎**：支持入库 / 出库 / 产品创建的逆向回滚，含权限控制与审计日志 | v1.1 新增 |
+| **`cleanEditSnapshots`** | **🆕 一次性数据清理**：删除编辑页误接入回退期间产生的快照与编辑流水（预览 + 确认两步执行，用完即删） | v1.1.1 新增 |
 
 
 ## 数据库集合
@@ -178,7 +179,7 @@
 | 字段名 | 类型 | 说明 |
 |--------|------|------|
 | `_id` | string | 自动生成的快照唯一标识 |
-| `operation_type` | string | 操作类型：`inbound` / `outbound` / `product_update` / `product_create` |
+| `operation_type` | string | 操作类型：`inbound` / `outbound` / `product_create` |
 | `target_collection` | string | 受影响的集合名：`products` 等 |
 | `target_doc_id` | string | 受影响文档的 `_id` |
 | `snapshot_data` | object | 操作前的完整数据快照（JSON 深拷贝） |
@@ -217,10 +218,9 @@
 1. **导入项目**：打开微信开发者工具，导入本目录，替换 `project.config.json` 中的 `appid` 为你自己的小程序 AppID
 2. **开通云开发**：点击"云开发"开通环境，在 `miniprogram/app.js` 中将 `env` 改为你的云环境 ID
 3. **部署云函数**：在开发者工具中对 `cloudfunctions/` 下的每个云函数目录右键选择"上传并部署（云端安装依赖）"；或参考 `uploadCloudFunction.sh` 的命令行部署方式（该脚本为示例占位，需按实际环境 ID 与项目路径修改后使用）
-   > ⚠️ **重要**：请确保以下 **4 个云函数** 已重新上传部署：
+   > ⚠️ **重要**：请确保以下 **3 个云函数** 已重新上传部署：
    > - `submitInbound`（已改造，新增快照逻辑）
    > - `submitOutbound`（已改造，新增快照逻辑）
-   > - `createSnapshot`（新建，操作快照创建）
    > - `undoOperation`（新建，操作回退引擎）
 4. **创建数据库集合**：手动创建以下 **7 个**集合：
    - `products`、`employees`、`transaction_logs`、`warehouses`、`locations`、`settings`
@@ -245,12 +245,12 @@ miniprogram-1/
 │   │   ├── logs/         # 流水日志页
 │   │   ├── editPart/     # 编辑配件页
 │   │   └── ...
-│   ├── components/       # 自定义组件
+│   ├── components/       # 自定义组件（含常用备注快捷输入栏）
 │   ├── images/           # 图片与图标资源
 │   └── app.js            # 全局逻辑（云初始化、登录检查、库存状态计算）
 ├── cloudfunctions/       # 云函数（每个目录一个独立云函数）
-│   ├── createSnapshot/   # 🆕 操作快照创建云函数
 │   ├── undoOperation/    # 🆕 操作回退核心云函数
+│   ├── cleanEditSnapshots/ # 🆕 编辑快照一次性清理云函数
 │   ├── submitInbound/    # 🔄 入库云函数（已改造）
 │   ├── submitOutbound/   # 🔄 出库云函数（已改造）
 │   └── ...
@@ -273,12 +273,25 @@ miniprogram-1/
 
 ## 更新日志
 
+### v1.1.1 （2026-08-25）— 回退功能修正与体验优化
+
+**🔧 回退功能修正**
+- 编辑页（`editPart`）移除操作回退：保存时不再创建快照、不再写入"编辑产品"流水，回归"编辑不记录流水"的原有规则
+- `undoOperation` 云函数移除 `product_update` 回退分支；流水页同步移除编辑类型映射
+- 删除已无调用方的 `createSnapshot` 云函数
+- 新增 `cleanEditSnapshots` 一次性云函数：清理此前误接入期间产生的编辑快照、编辑流水及产品文档上残留的 `last_snapshot_id` 字段（默认预览模式，确认后执行）
+
+**✨ 新功能**
+- 新增**常用备注快捷输入栏**组件（`components/remark-shortcuts`）：入库 / 出库页备注框下方固定展示，点按标签即填入备注，支持添加（最多 20 条）与长按删除，本机缓存存储、两页共用
+- 客户端报价查询结果的 **OE 编号美化**：多个 OE 码拆分为固定宽度单元格，每行三个整齐排布，单码超长自动省略号
+
+---
+
 ### v1.1.0 （2026-08-23）— 操作回退功能
 
 **✨ 新功能**
-- 新增**全页面操作回退**功能，覆盖入库、出库、产品编辑、产品创建四大核心操作
+- 新增**操作回退**功能，覆盖入库、出库、产品创建三类核心操作（产品编辑回退曾于本版本接入，已在 v1.1.1 移除）
 - 新增 `operation_snapshots` 数据库集合，存储操作前完整数据快照
-- 新增 `createSnapshot` 云函数，用于创建操作前快照
 - 新增 `undoOperation` 云函数，作为操作回退的核心引擎
 - 流水日志页面新增**"↩ 撤销此操作"按钮**（仅管理员/主管可见）
 - 回退操作支持输入回退原因，便于事后审计
@@ -286,7 +299,6 @@ miniprogram-1/
 **🔄 改造**
 - `submitInbound` 云函数：入库事务中增加操作前快照创建逻辑
 - `submitOutbound` 云函数：出库事务中增加操作前快照创建逻辑
-- `editPart` 页面：产品编辑保存前先创建快照，再执行更新
 - `logs` 页面：JS/WXML/WXSS 全面升级，集成回退 UI 与交互逻辑
 
 **📝 详细设计文档**
@@ -312,11 +324,11 @@ A：回退按钮需要同时满足以下条件才会显示：
 
 ### Q：旧的历史数据可以回退吗？
 
-A：不可以。只有在部署新版本云函数（`submitInbound`、`submitOutbound`、`createSnapshot`）之后产生的操作才会带有快照 ID，旧历史数据没有快照无法回退。
+A：不可以。只有在部署新版本云函数（`submitInbound`、`submitOutbound`）之后产生的操作才会带有快照 ID，旧历史数据没有快照无法回退。
 
 ### Q：回退操作会物理删除数据吗？
 
-A：不会。入库/出库回退是通过调整库存数量实现的数据恢复；产品编辑回退是用快照数据覆盖当前字段；产品创建回退采用的是软删除（标记 `status: 'deleted'`），保留完整的审计痕迹。
+A：不会。入库/出库回退是通过调整库存数量实现的数据恢复；产品创建回退采用的是软删除（标记 `status: 'deleted'`），保留完整的审计痕迹。
 
 ### Q：如果回退时库存不足怎么办？
 

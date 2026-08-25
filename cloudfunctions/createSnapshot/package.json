@@ -1,1 +1,0 @@
-{"name": "createSnapshot", "version": "1.0.0", "description": "创建操作前快照，用于后续回退/撤销", "main": "index.js", "scripts": {"test": "node --check index.js"}, "dependencies": {"wx-server-sdk": "~2.6.3"}}

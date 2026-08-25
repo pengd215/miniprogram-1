@@ -3,7 +3,6 @@
 // 支持回退的操作类型：
 //   - inbound       → 扣减库存（抵消入库）
 //   - outbound      → 增加库存（抵消出库）
-//   - product_update → 恢复产品字段到编辑前
 //   - product_create → 软删除产品及关联流水
 
 const cloud = require('wx-server-sdk');
@@ -63,9 +62,6 @@ exports.main = async (event, context) => {
         break;
       case 'outbound':
         revertResult = await revertOutbound(snapshot);
-        break;
-      case 'product_update':
-        revertResult = await revertProductUpdate(snapshot);
         break;
       case 'product_create':
         revertResult = await revertProductCreate(snapshot, remark.trim());
@@ -201,44 +197,6 @@ async function revertOutbound(snapshot) {
 }
 
 /**
- * 回退产品编辑操作
- * 策略：用快照数据覆盖当前数据（选择性恢复关键字段）
- */
-async function revertProductUpdate(snapshot) {
-  const { target_doc_id, snapshot_data } = snapshot;
-
-  if (!snapshot_data) {
-    throw new Error('快照数据不完整，无法回退编辑操作');
-  }
-
-  // 构建恢复数据（从快照中提取核心字段）
-  const restoreData = {};
-  const RESTORABLE_FIELDS = [
-    'oe_no', 'kyb_no', 'car_model', 'model_year', 'direction',
-    'location', 'stock', 'price', 'brand', 'remark', 'warnStock',
-    'images', 'status'
-  ];
-
-  for (const field of RESTORABLE_FIELDS) {
-    if (snapshot_data.hasOwnProperty(field)) {
-      restoreData[field] = snapshot_data[field];
-    }
-  }
-  restoreData.update_time = db.serverDate();
-  restoreData.last_reverted_at = db.serverDate();
-  restoreData.last_reverted_by = ''; // 将在下面赋值
-
-  await db.collection('products').doc(target_doc_id).update({
-    data: restoreData
-  });
-
-  return {
-    restoredFields: Object.keys(restoreData),
-    message: `已恢复 ${Object.keys(restoreData).length} 个字段到编辑前的值`
-  };
-}
-
-/**
  * 回退产品创建操作
  * 策略：软删除（标记 deleted），保留审计痕迹
  */
@@ -287,7 +245,6 @@ function getOperationTypeName(type) {
   const map = {
     'inbound': '入库',
     'outbound': '出库',
-    'product_update': '产品编辑',
     'product_create': '产品创建',
     'warehouse_op': '仓库管理'
   };

@@ -66,10 +66,12 @@
           <text class="spec-value car-text">{{item.car_model}}</text>
         </view>
 
-        <!-- OE号 -->
+        <!-- OE号：固定宽度单元格，每行三个 -->
         <view class="spec-item full-width">
           <text class="spec-label">OE编号</text>
-          <text class="spec-value highlight oe-text">{{item.oe_no}}</text>
+          <view class="oe-cell-list">
+            <text class="oe-cell" wx:for="{{item.oeList}}" wx:for-item="oe" wx:key="index">{{oe}}</text>
+          </view>
         </view>
         <!-- KYB号 -->
         <view class="spec-item full-width">

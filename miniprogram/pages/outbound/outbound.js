@@ -90,6 +90,11 @@ Page({
     this.setData({ quantity: e.detail.value });
   },
 
+  // 快捷备注栏点按回填
+  onShortcutFill(e) {
+    this.setData({ remark: e.detail.value });
+  },
+
   // 监听备注输入
   onRemarkInput(e) {
     this.setData({ remark: e.detail.value });

@@ -44,6 +44,7 @@
         bindinput="onRemarkInput"
         auto-height
       ></textarea>
+      <remark-shortcuts accent="#ee5253" bindfill="onShortcutFill" />
     </view>
 
   </view>

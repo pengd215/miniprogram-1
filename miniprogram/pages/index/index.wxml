@@ -105,13 +105,12 @@
   <!-- 5. 结果展示区域-->
   <!-- 只有 productData 有值时才显示整个卡片 -->
   <view id="detailCard" wx:if="{{productData}}" class="result-card">
-    <view class="back-bar" bindtap="backToList">
-    <image src="/images/icons/return.png" class="back-icon" mode="aspectFit"></image>
-  </view>
 
-      
     <!-- 卡片头部 -->
     <view class="card-header">
+      <view class="back-bar" bindtap="backToList">
+    <image src="/images/icons/return.png" class="back-icon" mode="aspectFit"></image>
+  </view>
       <text class="card-title">库存详情</text>
         <!-- 根据 stock 数值动态切换样式类名 -->
         <text class="status-tag {{productData.stockStatusClass}}">{{productData.stockStatusText}}</text>

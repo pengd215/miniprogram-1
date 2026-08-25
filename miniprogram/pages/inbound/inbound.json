@@ -1,4 +1,7 @@
 {
+  "usingComponents": {
+    "remark-shortcuts": "/components/remark-shortcuts/index"
+  },
   "navigationBarTitleText": "进货入库",
   "enablePullDownRefresh": true 
 }

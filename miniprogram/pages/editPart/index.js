@@ -1,7 +1,5 @@
 // pages/editPart/index.js
-// 【已改造】支持操作前快照，可回退
 const db = wx.cloud.database();
-const app = getApp();
 
 Page({
   data: {
@@ -150,10 +148,10 @@ Page({
     });
   },
 
-  // 4. 保存补全信息 【已改造 — 支持操作回退】
+  // 4. 保存补全信息
   handleSubmit() {
     if (this.data.isSaving) return;
-    
+
     const { id, formData } = this.data;
     console.log('提交的数据:', JSON.stringify(formData));
     console.log('记录ID:', id);
@@ -174,8 +172,8 @@ Page({
       status: 'active', // 补全完成，状态改为正常
       update_time: db.serverDate(),
       images: this.data.formData.images,// 把图片数组一起保存
-      oe_no: oeNoStr,         
-      location: formData.location     
+      oe_no: oeNoStr,
+      location: formData.location
     };
 
     // 逐个字段判断：只有当新值不为空字符串时，才加入更新队列
@@ -185,7 +183,7 @@ Page({
     if (formData.kyb_no !== '' && formData.kyb_no !== null && formData.kyb_no !== undefined) updateData.kyb_no = formData.kyb_no || '';
     if (formData.brand !== '' && formData.brand !== null && formData.brand !== undefined) updateData.brand = formData.brand || '';
     if (formData.remark !== '' && formData.remark !== null && formData.remark !== undefined) updateData.remark = formData.remark || ''; 
-    
+
     // 数字类型特殊处理：0 是有效值，不能简单用 if(formData.stock) 判断
     if (formData.stock !== '' && formData.stock !== null) {
       updateData.stock = Number(formData.stock) || 0;
@@ -198,65 +196,10 @@ Page({
     }
     console.log('最终写入数据库的数据:', JSON.stringify(updateData));
 
-    // ========== 【新增】操作回退支持流程 ==========
-    
-    // Step A: 先读取当前数据创建快照
-    let snapshotId = null;
-    
-    db.collection('products').doc(id).get()
-      .then(currentDoc => {
-        const currentData = currentDoc.data;
-        
-        // 调用 createSnapshot 云函数创建操作前快照
-        return wx.cloud.callFunction({
-          name: 'createSnapshot',
-          data: {
-            operationType: 'product_update',
-            targetCollection: 'products',
-            targetDocId: id,
-            snapshotData: currentData,
-            payload: { ...updateData, operator: app.globalData.openid },
-            operatorOpenId: app.globalData.openid
-          }
-        });
-      })
-      .then(snapRes => {
-        if (snapRes.result && snapRes.result.success) {
-          snapshotId = snapRes.result.snapshotId;
-          console.log('[editPart] 快照创建成功:', snapshotId);
-        } else {
-          console.warn('[editPart] 快照创建失败，继续保存(无回退):', snapRes);
-        }
-
-        // Step B: 将 snapshotId 附加到更新数据
-        if (snapshotId) {
-          updateData.last_snapshot_id = snapshotId;
-        }
-
-        // Step C: 执行原有数据库更新
-        return db.collection('products').doc(id).update({ data: updateData });
-      })
-      .then(() => {
-        // Step D: 记录编辑流水日志（含快照关联）
-        return db.collection('transaction_logs').add({
-          data: {
-            type: 'product_update',
-            oe_no: formData.oe_no,
-            quantity: 0,
-            remark: `编辑产品: ${formData.car_model}`,
-            _openid: app.globalData.openid,
-            product_id: id,
-            snapshot_id: snapshotId || '',
-            create_time: db.serverDate()
-          }
-        });
-      })
+    db.collection('products').doc(id).update({ data: updateData })
       .then(() => {
         wx.hideLoading();
-        wx.showToast({ 
-          title: snapshotId ? '保存成功(可回退)' : '保存成功', 
-          icon: 'success' 
-        });
+        wx.showToast({ title: '保存成功', icon: 'success' });
         setTimeout(() => {
           wx.navigateBack(); // 返回上一页，列表会自动刷新
         }, 1500);

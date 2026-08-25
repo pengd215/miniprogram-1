@@ -41,6 +41,7 @@
         bindinput="onRemarkInput"
         value="{{remark}}"
       ></textarea>
+      <remark-shortcuts accent="#07c160" bindfill="onShortcutFill" />
     </view>
   </view>
 

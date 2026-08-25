@@ -478,7 +478,6 @@ Page({
     const map = {
       'inbound': '入库',
       'outbound': '出库',
-      'product_update': '编辑产品',
       'product_create': '新建产品',
       'undo': '回退操作'
     };

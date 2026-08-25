@@ -78,8 +78,18 @@ Page({
     }).then(res => {
       wx.hideLoading()
       if (res.result.code === 200) {
+        // 将 oe_no 字符串拆分为数组，供模板三列排布展示
+        const list = (res.result.data || []).map(item => {
+          let oeList = [];
+          if (Array.isArray(item.oe_no)) {
+            oeList = item.oe_no.map(v => String(v).trim()).filter(Boolean);
+          } else if (item.oe_no) {
+            oeList = String(item.oe_no).split(/[,，\s]+/).filter(Boolean);
+          }
+          return { ...item, oeList };
+        });
         this.setData({
-          results: res.result.data || []
+          results: list
         },() => {
           // 【核心修改】setData 的回调函数中执行滚动
           // 确保 DOM 渲染完成后再滚动，避免位置跳动

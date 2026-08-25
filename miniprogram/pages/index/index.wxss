@@ -227,9 +227,10 @@ page-container {
 }
 
 .card-title {
-  font-size: 32rpx; /* 标题字号 */
+  font-size: 36rpx; /* 标题字号 */
   font-weight: bold; /* 加粗 */
   color: #2f8157; /* 绿色文字 */
+  flex:1;
 }
 
 /* --- 2. 分割线样式 --- */
@@ -671,12 +672,12 @@ page-container {
 /* 返回列表按钮样式 */
 .back-bar {
   padding: 10rpx 20rpx;
-  margin-bottom: 10rpx;
   display: flex;
   align-items: center;
+  margin-right: 12rpx;        /* 返回按钮和标题之间的间距 */
 }
 .back-icon {
-  width: 40rpx;
-  height: 40rpx;
+  width: 44rpx;
+  height: 44rpx;
   display: block;
 }

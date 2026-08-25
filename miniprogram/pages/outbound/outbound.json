@@ -1,4 +1,7 @@
 {
+  "usingComponents": {
+    "remark-shortcuts": "/components/remark-shortcuts/index"
+  },
   "navigationBarTitleText": "销售出库",
   "enablePullDownRefresh": true 
 }

@@ -25,19 +25,21 @@
       bindtap="onTabChange" 
       data-type="all">
       全部</view>
+
       <view class="tab-item {{currentTab === 'inbound' ? 'active' : ''}}" 
       bindtap="onTabChange" 
       data-type="inbound">
       入库</view>
+
       <view class="tab-item {{currentTab === 'outbound' ? 'active' : ''}}" 
       bindtap="onTabChange" 
       data-type="outbound">
       出库</view>
+
+     <view class="tab-item export-btn" bindtap="onOpenExport">
+     导出</view>
    </view>
-   <!-- 批量导出入口：独立一行，不占用 Tab 行空间 -->
-   <view class="export-bar">
-     <view class="export-btn" bindtap="onOpenExport">批量导出</view>
-   </view>
+
   </view>
 
   <!-- 列表区域 -->

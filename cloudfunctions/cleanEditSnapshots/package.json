@@ -1,0 +1,1 @@
+{"name": "cleanEditSnapshots", "version": "1.0.0", "description": "清理编辑页误接入回退功能时产生的快照与流水数据", "main": "index.js", "scripts": {"test": "node --check index.js"}, "dependencies": {"wx-server-sdk": "~2.6.3"}}
