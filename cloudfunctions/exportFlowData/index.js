@@ -112,7 +112,7 @@ exports.main = async (event, context) => {
             timezone: 'Asia/Shanghai'
           })
         })
-        // H. 投影：只保留导出需要的字段
+        // H. 投影：只保留导出需要的字段（含方向和库存位置）
         .project({
           oe_no: 1,
           oe_key: 1,
@@ -121,6 +121,8 @@ exports.main = async (event, context) => {
           operator_name: 1,
           formatted_time: 1,
           car_model: '$product_info.car_model',
+          direction: '$product_info.direction',
+          location: '$product_info.location',
           price: '$product_info.price'
         })
         .end();

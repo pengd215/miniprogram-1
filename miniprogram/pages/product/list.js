@@ -118,33 +118,40 @@ Page({
       if (conditions.length > 0) {
         query = query.where(conditions.length === 1 ? conditions[0] : db.command.and(conditions));
       }
-      query.orderBy('stock', 'asc')
-        .skip((page - 1) * this.data.pageSize)
-        .limit(this.data.pageSize)
-        .get()
-        .then(res => {
-          wx.hideLoading();
-          const list = res.data.map(item => {
-            let raw = item.stock;
-            if (raw === undefined || raw === null) raw = 0;
-            const count = Number(raw);
-            const s = app.getStockStatus(count, item);
-            return {
-              _id: item._id,
-              kyb_no: item.kyb_no,
-              car_model: item.car_model,
-              stockCount: count,
-              images: item.images,
-              statusClass: s.color,
-              statusText: s.text
-            };
-          });
-          this.setData({
-            productList: isLoadMore ? [...this.data.productList, ...list] : list,
-            page: page + 1,
-            hasMore: list.length === this.data.pageSize,
-            isLoading: false
-          });
+      // 先取总数再分页：客户端单次查询受 20 条上限与集合权限约束，
+      // 单页可能返回不足一页，用"本页是否满页"判断会误报"已全部加载完成"
+      query.count()
+        .then(cntRes => {
+          const total = cntRes.total || 0;
+          return query.orderBy('stock', 'asc')
+            .skip((page - 1) * this.data.pageSize)
+            .limit(this.data.pageSize)
+            .get()
+            .then(res => {
+              wx.hideLoading();
+              const list = res.data.map(item => {
+                let raw = item.stock;
+                if (raw === undefined || raw === null) raw = 0;
+                const count = Number(raw);
+                const s = app.getStockStatus(count, item);
+                return {
+                  _id: item._id,
+                  kyb_no: item.kyb_no,
+                  car_model: item.car_model,
+                  stockCount: count,
+                  images: item.images,
+                  statusClass: s.color,
+                  statusText: s.text
+                };
+              });
+              const merged = isLoadMore ? [...this.data.productList, ...list] : list;
+              this.setData({
+                productList: merged,
+                page: page + 1,
+                hasMore: merged.length < total,
+                isLoading: false
+              });
+            });
         })
         .catch(err => {
           console.error('查询失败:', err);

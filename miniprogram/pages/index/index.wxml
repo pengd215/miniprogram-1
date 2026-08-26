@@ -209,6 +209,7 @@
       <view class="action-buttons">
       <!-- 编辑按钮：传递 _id -->
        <button 
+          wx:if="{{isAdmin}}"
           class="btn-custom btn-edit" 
           bindtap="goToEdit" 
           data-id="{{productData._id}}"
@@ -221,6 +222,7 @@
     
     <!-- 删除按钮：传递 _id -->
         <button 
+          wx:if="{{isAdmin}}"
           class="btn-custom btn-delete" 
           bindtap="handleDelete" 
          data-id="{{productData._id}}"

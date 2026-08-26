@@ -14,7 +14,8 @@ Page({
     showQrcode: false,
     productId:'',
     qrCodeBase64: '',
-    showList: true
+    showList: true,
+    isAdmin: false        // 当前用户是否为管理员，控制编辑/删除按钮显示
   },
 
   onLoad(options) {
@@ -113,6 +114,8 @@ Page({
       this._warnLoaded = true;
       app.loadWarningConfig();
     }
+    // 加载当前用户角色，控制编辑/删除按钮显示
+    this.loadMyRole();
     // 每次进入首页，刷新待办数量
     this.fetchPendingCount();
     // 如果当前输入框有值，返回时自动重新查询
@@ -121,6 +124,13 @@ Page({
         this.handleSearch();
       }, 300);
     }
+  },
+
+  // 加载当前用户角色（登录时已存入 Storage 的 userInfo / userRole）
+  loadMyRole() {
+    const userInfo = wx.getStorageSync('userInfo') || {};
+    const role = userInfo.role || wx.getStorageSync('userRole');
+    this.setData({ isAdmin: role === 'admin' });
   },
 
   // 获取待办数量
@@ -145,6 +155,10 @@ Page({
 
   // 跳转到编辑页
   goToEdit(e) {
+    if (!this.data.isAdmin) {
+      wx.showToast({ title: '仅管理员可编辑', icon: 'none' });
+      return;
+    }
     const id = e.currentTarget.dataset.id;
     if (!id) {
       wx.showToast({ title: '数据ID缺失', icon: 'none' });
@@ -199,6 +213,10 @@ Page({
 
   // 删除配件档案
   handleDelete(e) {
+    if (!this.data.isAdmin) {
+      wx.showToast({ title: '仅管理员可删除', icon: 'none' });
+      return;
+    }
     const id = e.currentTarget.dataset.id;
     if (!id) {
       wx.showToast({ title: '数据ID缺失', icon: 'none' });
