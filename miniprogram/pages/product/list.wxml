@@ -66,3 +66,86 @@
 </view>
 
 </view>
+
+<!-- 产品详情弹窗（仅展示，无出入库操作） -->
+<view class="detail-mask" wx:if="{{showDetail}}" bindtap="onCloseDetail">
+  <view class="detail-panel" catchtap="noop">
+    <!-- 弹窗头部 -->
+    <view class="detail-header">
+      <text class="detail-title">产品详情</text>
+      <image class="detail-close" src="/images/icons/close.png" mode="aspectFit" bindtap="onCloseDetail"></image>
+    </view>
+
+    <scroll-view class="detail-body" scroll-y>
+      <!-- 产品图片 -->
+      <view class="detail-images" wx:if="{{detailInfo.images.length > 0}}">
+        <image
+          wx:for="{{detailInfo.images}}"
+          wx:key="*this"
+          class="detail-img"
+          src="{{item}}"
+          mode="aspectFill"
+          data-url="{{item}}"
+          bindtap="onPreviewImage"
+        ></image>
+      </view>
+
+      <!-- OE号：数组固定格位展示，一行最多 3 个，单个 OE 号不跨格 -->
+      <view class="detail-row oe-row">
+        <text class="detail-label">OE号</text>
+        <view class="oe-grid" wx:if="{{detailInfo.oeList.length > 0}}">
+          <view class="oe-item" wx:for="{{detailInfo.oeList}}" wx:key="*this">{{item}}</view>
+        </view>
+        <text class="detail-value" wx:else>-</text>
+      </view>
+
+      <view class="detail-row">
+        <text class="detail-label">KYB号</text>
+        <text class="detail-value">{{detailInfo.kyb_no}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">车型</text>
+        <text class="detail-value car-model-value">{{detailInfo.car_model}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">年份</text>
+        <text class="detail-value">{{detailInfo.model_year}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">方向</text>
+        <text class="detail-value">{{detailInfo.direction}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">库位</text>
+        <text class="detail-value">{{detailInfo.location}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">当前库存</text>
+        <view class="detail-stock">
+          <text class="detail-value">{{detailInfo.stockCount}}</text>
+          <view class="status-tag {{detailInfo.stockStatusClass}}">{{detailInfo.stockStatusText}}</view>
+        </view>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">预警库存</text>
+        <text class="detail-value">{{detailInfo.warnStock}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">参考价格</text>
+        <text class="detail-value">{{detailInfo.price}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">记录状态</text>
+        <text class="detail-value">{{detailInfo.statusText}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">创建时间</text>
+        <text class="detail-value">{{detailInfo.createTime}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">备注</text>
+        <text class="detail-value">{{detailInfo.remark}}</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>
