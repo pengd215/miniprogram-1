@@ -9,7 +9,10 @@ Page({
     pageSize: 20,     // 每页条数
     hasMore: true,     // 是否还有更多数据
     isLoading: false, // 加载锁，防止重复请求
-    statusFilter: ''  // 库存状态筛选：''全部 | out缺货 | low紧张 | normal充足
+    statusFilter: '',  // 库存状态筛选：''全部 | out缺货 | low紧张 | normal充足
+    showDetail: false,    // 是否展示产品详情弹窗（仅展示，无出入库操作）
+    detailInfo: null,     // 弹窗展示的产品完整信息
+    detailLoading: false  // 详情加载锁，防止重复点击
   },
   onShow() {
     if (!app.checkLogin()) return;  // 未登录直接回登录页
@@ -47,6 +50,78 @@ Page({
     if (this.data.hasMore && !this.data.isLoading) {
       this.loadPage(this.data.page, true); // 加载下一页
     }
+  },
+
+  // 点击列表项：按 _id 查询完整产品信息并以弹窗展示（仅展示，无出入库操作）
+  onShowDetail: function (e) {
+    const item = e.currentTarget.dataset.item || {};
+    if (!item._id || this.data.detailLoading) return;
+    this.setData({ detailLoading: true });
+    wx.showLoading({ title: '加载中...', mask: true });
+    db.collection('products').doc(item._id).get().then(res => {
+      wx.hideLoading();
+      const d = res.data || {};
+      // OE号统一解析为数组：兼容数组存储与逗号/空格分隔的字符串存储
+      const rawOe = d.oe_no;
+      const oeList = Array.isArray(rawOe)
+        ? rawOe.map(v => String(v).trim()).filter(Boolean)
+        : (rawOe ? String(rawOe).split(/[,，\s]+/).filter(Boolean) : []);
+      const rawStock = d.stock === undefined || d.stock === null ? 0 : Number(d.stock);
+      const s = app.getStockStatus(rawStock, d);
+      const statusMap = { pending: '待完善', active: '正常' };
+      this.setData({
+        detailLoading: false,
+        showDetail: true,
+        detailInfo: {
+          oeList: oeList,
+          kyb_no: d.kyb_no || '-',
+          car_model: d.car_model || '-',
+          model_year: d.model_year || '-',
+          direction: d.direction || '-',
+          location: d.location || '-',
+          stockCount: rawStock,
+          warnStock: (d.warnStock === undefined || d.warnStock === null || d.warnStock === '') ? '-' : Number(d.warnStock),
+          price: (d.price === undefined || d.price === null) ? '-' : Number(d.price),
+          statusText: statusMap[d.status] || d.status || '-',
+          stockStatusClass: s.color,
+          stockStatusText: s.text,
+          createTime: this.formatDetailTime(d.create_time),
+          remark: d.remark || '暂无备注',
+          images: Array.isArray(d.images) ? d.images : []
+        }
+      });
+    }).catch(err => {
+      console.error('加载产品详情失败:', err);
+      wx.hideLoading();
+      this.setData({ detailLoading: false });
+      wx.showToast({ title: '加载详情失败', icon: 'none' });
+    });
+  },
+
+  // 关闭详情弹窗
+  onCloseDetail: function () {
+    this.setData({ showDetail: false, detailInfo: null });
+  },
+
+  // 阻止弹窗内容区的点击冒泡，避免点内容区时误关弹窗
+  noop: function () {},
+
+  // 预览产品图片
+  onPreviewImage: function (e) {
+    const url = e.currentTarget.dataset.url;
+    const urls = (this.data.detailInfo && this.data.detailInfo.images) || [];
+    if (!url || urls.length === 0) return;
+    wx.previewImage({ current: url, urls: urls });
+  },
+
+  // 把云数据库时间格式化为可读文本
+  formatDetailTime: function (t) {
+    if (!t) return '-';
+    const d = new Date(t);
+    if (isNaN(d.getTime())) return '-';
+    const pad = n => (n < 10 ? '0' + n : '' + n);
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+      ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
   },
 
   onPullDownRefresh: function () {
