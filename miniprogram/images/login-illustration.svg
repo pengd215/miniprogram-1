@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 560">
+  <!-- 地面 -->
+  <ellipse cx="375" cy="508" rx="330" ry="34" fill="#e9f2ea"/>
+
+  <!-- 左：弹簧圈组件 -->
+  <rect x="163" y="268" width="24" height="222" rx="12" fill="#bcd8be"/>
+  <circle cx="175" cy="262" r="16" fill="#d7ead8"/>
+  <circle cx="175" cy="262" r="7" fill="#f7faf7"/>
+  <rect x="118" y="300" width="114" height="26" rx="13" fill="#d7ead8"/>
+  <rect x="118" y="340" width="114" height="26" rx="13" fill="#cbe3cc"/>
+  <rect x="118" y="380" width="114" height="26" rx="13" fill="#d7ead8"/>
+  <rect x="118" y="420" width="114" height="26" rx="13" fill="#cbe3cc"/>
+  <rect x="118" y="460" width="114" height="26" rx="13" fill="#d7ead8"/>
+
+  <!-- 中：带活塞杆的减振器 -->
+  <rect x="330" y="238" width="26" height="122" rx="13" fill="#bcd8be"/>
+  <circle cx="343" cy="230" r="20" fill="#d7ead8"/>
+  <circle cx="343" cy="230" r="9" fill="#f7faf7"/>
+  <rect x="300" y="350" width="86" height="152" rx="26" fill="#d7ead8"/>
+  <rect x="300" y="350" width="34" height="152" rx="17" fill="#cbe3cc"/>
+  <rect x="350" y="382" width="24" height="7" rx="3.5" fill="#b7d4ba"/>
+  <rect x="350" y="412" width="24" height="7" rx="3.5" fill="#b7d4ba"/>
+  <rect x="350" y="442" width="24" height="7" rx="3.5" fill="#b7d4ba"/>
+  <rect x="350" y="472" width="24" height="7" rx="3.5" fill="#b7d4ba"/>
+
+  <!-- 右：高缸体 -->
+  <rect x="510" y="118" width="60" height="44" rx="14" fill="#cbe3cc"/>
+  <rect x="480" y="150" width="120" height="352" rx="30" fill="#ddefdd"/>
+  <rect x="480" y="150" width="40" height="352" rx="20" fill="#d2e7d3"/>
+  <rect x="544" y="206" width="36" height="8" rx="4" fill="#c3ddc5"/>
+  <rect x="544" y="246" width="36" height="8" rx="4" fill="#c3ddc5"/>
+  <rect x="544" y="286" width="36" height="8" rx="4" fill="#c3ddc5"/>
+  <rect x="544" y="326" width="36" height="8" rx="4" fill="#c3ddc5"/>
+  <rect x="544" y="366" width="36" height="8" rx="4" fill="#c3ddc5"/>
+  <rect x="544" y="406" width="36" height="8" rx="4" fill="#c3ddc5"/>
+  <rect x="544" y="446" width="36" height="8" rx="4" fill="#c3ddc5"/>
+
+  <!-- 漂浮点缀 -->
+  <circle cx="92" cy="182" r="10" fill="#ddefdd"/>
+  <circle cx="660" cy="96" r="14" fill="#ddefdd"/>
+  <circle cx="614" cy="52" r="7" fill="#e9f2ea"/>
+  <circle cx="256" cy="122" r="6" fill="#ddefdd"/>
+  <circle cx="430" cy="96" r="9" fill="#e9f2ea"/>
+</svg>

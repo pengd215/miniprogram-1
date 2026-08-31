@@ -1,54 +1,57 @@
 <!-- pages/login/login.wxml -->
-<view class="login-container">
-  <!-- 顶部 Logo 区域 -->
-  <view class="header">
-    <view class="logo-box">
-      <view class="logo-box">
-        <image src="/images/zhulu-logo.png" mode="aspectFit" class="logo-image"></image>
-      </view>   
-      
-    </view>
-    <text class="title">减振器库存系统</text>
-    <text class="subtitle">专业 · 高效 · 安全</text>
+<view class="login-page">
+  <!-- 背景动画层（位于内容之下） -->
+  <view class="bg-deco">
+    <view class="ring ring-a"></view>
+    <view class="ring ring-b"></view>
+    <view class="bubble bubble-1"></view>
+    <view class="bubble bubble-2"></view>
+    <view class="bubble bubble-3"></view>
+    <view class="bubble bubble-4"></view>
   </view>
 
-  <!-- 表单卡片区域 -->
-  <view class="form-card">
-    <!-- 用户名输入 -->
+  <view class="logo-box">
+      <image src="/images/zhulu-logo.png" mode="widthFix" class="logo-image"></image>
+    </view>
+
+  <!-- 顶部标识 + 问候语 -->
+  <view class="header">
+    <view class="greeting">
+      <text class="hi">你好，</text>
+      <text class="welcome">欢迎使用「减振器库存系统」</text>
+    </view>
+    <text class="tip">登录账号，即可开始使用</text>
+  </view>
+
+  <!-- 表单区 -->
+  <view class="form-area">
     <view class="input-group">
-      <view class="icon-user">
-         <svg width="20" height="20" viewBox="0 0 1024 1024"><path d="M512 512c113.6 0 204.8-91.2 204.8-204.8S625.6 102.4 512 102.4 307.2 193.6 307.2 307.2 398.4 512 512 512z m0 102.4c-136.533333 0-409.6 68.266667-409.6 204.8v102.4h819.2v-102.4c0-136.533333-273.066667-204.8-409.6-204.8z" fill="#2e7d32"></path></svg>
-      </view>
-      <input 
-        class="input-field" 
-        type="text" 
-        placeholder="请输入工号/用户名" 
+      <input
+        class="input-field"
+        type="text"
+        placeholder="请输入工号/用户名"
         placeholder-class="placeholder-style"
         bindinput="onInputUser"
       />
     </view>
 
-    <!-- 密码输入 -->
     <view class="input-group">
-      <view class="icon-lock">
-        <svg width="20" height="20" viewBox="0 0 1024 1024"><path d="M768 384V320c0-141.44-114.56-256-256-256S256 178.56 256 320v64c-70.4 0-128 57.6-128 128v384c0 70.4 57.6 128 128 128h512c70.4 0 128-57.6 128-128V512c0-70.4-57.6-128-128-128z m-426.666667-64c0-94.08 76.586667-170.666667 170.666667-170.666667s170.666667 76.586667 170.666667 170.666667v64H341.333333v-64z" fill="#2e7d32"></path></svg>
-      </view>
-      <input 
-        class="input-field" 
-        password 
-        placeholder="请输入密码" 
+      <input
+        class="input-field"
+        password
+        placeholder="请输入密码"
         placeholder-class="placeholder-style"
         bindinput="onInputPass"
       />
     </view>
 
-    <!-- 登录按钮 -->
-    <button class="login-btn" bindtap="handleLogin">
-      立即登录
-    </button>
-    
-    <view class="footer-text">
-      内部系统 · 请勿外传
+    <button class="login-btn" bindtap="handleLogin">立即登录</button>
+
+    <view class="footer-text">内部系统 · 请勿外传</view>
+
+    <!-- 底部插画 -->
+    <view class="illustration">
+      <image src="/images/login-illustration.svg" mode="widthFix" class="illu-image"></image>
     </view>
   </view>
 </view>

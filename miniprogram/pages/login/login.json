@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "登陆",
-  "enablePullDownRefresh": true 
+  "navigationBarBackgroundColor": "#f7f8fa",
+  "navigationBarTextStyle": "black",
+  "enablePullDownRefresh": true
 }
