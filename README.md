@@ -19,7 +19,7 @@
 
 | 登录页 | 个人中心 | 员工权限管理 |
 | :---: | :---: | :---: |
-| <img src="docs/screenshots/login.png" width="200"> | <img src="docs/screenshots/my_account.png" width="200"> | <img src="docs/screenshots/employees-management.png" width="200"> |
+| <img src="docs/screenshots/login2.png" width="200"> | <img src="docs/screenshots/my_account.png" width="200"> | <img src="docs/screenshots/employees-management.png" width="200"> |
 
 **配件查询**
 
@@ -37,7 +37,7 @@
 
 | 产品列表 | 产品库存查询 | 出入库完成 |
 | :---: | :---: | :---: |
-| <img src="docs/screenshots/product-list.png" width="200"> | <img src="docs/screenshots/product_features.png" width="200"> | <img src="docs/screenshots/inbound-pages.png" width="200"> |
+| <img src="docs/screenshots/product-list.png" width="200"> | <img src="docs/screenshots/product2.png" width="200"> | <img src="docs/screenshots/inbound-pages.png" width="200"> |
 
 **流水追踪**
 

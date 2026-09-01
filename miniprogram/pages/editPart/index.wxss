@@ -130,6 +130,31 @@ page {
   border: 1rpx solid #ebedf0; /* 淡淡的边框 */
 }
 
+/* 图片项默认带位移过渡动画，拖拽时其他图片平滑让位 */
+.img-item {
+  transition: transform 0.2s ease;
+}
+
+/* 正在被拖拽的图片：浮起 + 阴影，取消过渡保证完全跟手 */
+.img-item--drag {
+  z-index: 20;
+  transition: none;
+  box-shadow: 0 12rpx 30rpx rgba(0, 0, 0, 0.25);
+  opacity: 0.92;
+}
+
+/* 拖拽结束瞬间：关闭过渡，防止数组重排时画面回跳闪烁 */
+.img-item--settling {
+  transition: none;
+}
+
+/* 拖拽操作提示文字 */
+.drag-hint {
+  font-size: 22rpx;
+  color: #b0b3b8;
+  margin-top: 4rpx;
+}
+
 /* --- 已上传的图片样式 --- */
 .preview-img {
   width: 100%;
