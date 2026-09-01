@@ -44,21 +44,29 @@
     <view class="form-section">
      <view class="section-title">产品图片 (选填)</view>
       <view class="image-grid">
-        <!-- 已上传的图片列表 -->
-        <block wx:for="{{formData.images}}" wx:key="index">
-          <view class="img-item">
+        <!-- 已上传的图片列表：长按可拖动调整顺序 -->
+        <block wx:for="{{formData.images}}" wx:key="*this">
+          <view
+            class="img-item {{drag.dragging && drag.dragKey === index ? 'img-item--drag' : ''}} {{drag.settling ? 'img-item--settling' : ''}}"
+            style="transform: translate({{drag.transforms[index].x || 0}}px, {{drag.transforms[index].y || 0}}px);"
+            data-index="{{index}}"
+            catchlongpress="onImgLongPress"
+            catchtouchmove="onImgTouchMove"
+            bindtouchend="onImgTouchEnd"
+          >
            <image src="{{item}}" mode="aspectFill" class="preview-img" bindtap="previewImage" data-src="{{item}}"></image>
             <!-- 删除按钮 -->
-            <view class="delete-btn" bindtap="deleteImage" data-index="{{index}}">×</view>
+            <view class="delete-btn" catchtap="deleteImage" data-index="{{index}}">×</view>
           </view>
        </block>
 
-    <!-- 上传按钮 (限制最多3张) -->
+    <!-- 上传按钮 (限制最多3张，支持一次多选自动填入) -->
         <view class="upload-btn" wx:if="{{formData.images.length < 3}}" bindtap="chooseImage">
           <text class="icon">+</text>
           <text class="tip">添加图片</text>
         </view>
       </view>
+      <view class="drag-hint">提示：长按图片可拖动调整顺序</view>
     </view>
 
     <view class="form-group">
