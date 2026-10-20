@@ -1,0 +1,14 @@
+{
+  "name": "httpQueryPart",
+  "version": "1.0.0",
+  "description": "只读 HTTP 查询接口：按 KYB/OE 编号、配件 ID 或车型查询配件资料",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "~4.0.2"
+  }
+}

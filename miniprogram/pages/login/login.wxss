@@ -176,6 +176,34 @@
   font-size: 28rpx;
 }
 
+/* ===== 登录偏好选项 ===== */
+.login-options {
+  width: 100%;
+  min-height: 52rpx;
+  box-sizing: border-box;
+  padding: 0 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+}
+
+.option-item {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  color: #5f6873;
+  font-size: 24rpx;
+  line-height: 34rpx;
+}
+
+.option-item checkbox {
+  flex: 0 0 auto;
+  margin-right: -8rpx;
+  transform: scale(0.72);
+  transform-origin: left center;
+}
+
 /* ===== 登录按钮 ===== */
 .login-btn {
   position: relative;

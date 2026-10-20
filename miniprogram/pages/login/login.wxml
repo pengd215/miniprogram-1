@@ -1,5 +1,7 @@
 <!-- pages/login/login.wxml -->
 <view class="login-page">
+  <view wx:if="{{restoring}}" class="restore-loading"><text>正在恢复登录状态...</text></view>
+  <view wx:else class="login-content">
   <!-- 背景动画层（位于内容之下） -->
   <view class="bg-deco">
     <view class="ring ring-a"></view>
@@ -9,6 +11,7 @@
     <view class="bubble bubble-3"></view>
     <view class="bubble bubble-4"></view>
   </view>
+</view>
 
   <view class="logo-box">
       <image src="/images/zhulu-logo.png" mode="widthFix" class="logo-image"></image>
@@ -29,6 +32,7 @@
       <input
         class="input-field"
         type="text"
+        value="{{username}}"
         placeholder="请输入工号/用户名"
         placeholder-class="placeholder-style"
         bindinput="onInputUser"
@@ -43,6 +47,17 @@
         placeholder-class="placeholder-style"
         bindinput="onInputPass"
       />
+    </view>
+
+    <view class="login-options">
+      <label class="option-item">
+        <checkbox value="remember" checked="{{rememberAccount}}" bindchange="onRememberAccountChange" color="#2e7d32" />
+        <text>记住账号</text>
+      </label>
+      <label class="option-item">
+        <checkbox value="keep" checked="{{keepLogin}}" bindchange="onKeepLoginChange" color="#2e7d32" />
+        <text>自动登录</text>
+      </label>
     </view>
 
     <button class="login-btn" bindtap="handleLogin">立即登录</button>

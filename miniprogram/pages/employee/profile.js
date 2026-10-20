@@ -219,29 +219,26 @@ Page({
   },
 
   // 执行退出操作
+  // 改为「服务端撤销令牌 + 精确清理本地会话」：
+  // 不再使用 wx.clearStorageSync() 全清，以免连带抹掉记住的账号偏好
   performLogout() {
     wx.showLoading({ title: '退出中...' });
 
-    // 1. 清除本地缓存 (Token, UserInfo等)
-    wx.clearStorageSync(); 
-
-    // 模拟网络请求延迟（可选）
-    setTimeout(() => {
+    app.logout().then(() => {
       wx.hideLoading();
-      
-      // 2. 提示成功
+
       wx.showToast({
         title: '已退出',
         icon: 'success'
       });
 
-      // 3. 跳转回登录页 (使用 reLaunch 清空页面栈)
+      // 跳转回登录页 (使用 reLaunch 清空页面栈)
+      // 登录页会自动回填上次记住的账号，密码需重新输入
       setTimeout(() => {
         wx.reLaunch({
-          url: '/pages/login/login' 
+          url: '/pages/login/login'
         });
       }, 1500);
-      
-    }, 800);
+    });
   }
 })
