@@ -1,0 +1,37 @@
+page { min-height: 100%; background: #f3f5f3; }
+.checkout-page { min-height: 100vh; padding: 26rpx 24rpx calc(200rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
+.page-heading { display: flex; flex-direction: column; margin: 4rpx 2rpx 28rpx; }
+.page-title { color: #29392f; font-size: 34rpx; font-weight: 700; }
+.page-note { margin-top: 9rpx; color: #7c867f; font-size: 21rpx; line-height: 1.5; }
+.section-heading { display: flex; align-items: baseline; justify-content: space-between; margin: 26rpx 2rpx 14rpx; color: #35433a; font-size: 25rpx; font-weight: 600; }
+.section-heading text:last-child { color: #89928c; font-size: 20rpx; font-weight: 400; }
+.checkout-items,.contact-form { background: #fff; border: 1rpx solid #e3e8e3; border-radius: 8rpx; }
+.checkout-item { display: flex; align-items: center; min-width: 0; padding: 18rpx; border-bottom: 1rpx solid #edf0ed; }
+.checkout-item:last-child { border-bottom: 0; }
+.checkout-image { width: 112rpx; height: 112rpx; flex: 0 0 112rpx; background: #edf0ed; border-radius: 6rpx; }
+.checkout-item-info { display: flex; min-width: 0; flex: 1; flex-direction: column; margin-left: 16rpx; }
+.item-title { overflow: hidden; color: #2d3b32; font-size: 23rpx; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; }
+.item-meta { margin-top: 6rpx; color: #7f8982; font-size: 19rpx; }
+.item-price-row { display: flex; justify-content: space-between; gap: 8rpx; margin-top: 12rpx; color: #ad3d34; font-size: 21rpx; }
+.item-price-row text:nth-child(2) { color: #7d8780; }
+.contact-heading { margin-top: 30rpx; }
+.form-row { display: flex; min-height: 88rpx; align-items: center; padding: 0 20rpx; border-bottom: 1rpx solid #edf0ed; }
+.form-row > text,.form-remark > text { width: 150rpx; flex: 0 0 150rpx; color: #4c5950; font-size: 22rpx; }
+.form-row input { min-width: 0; flex: 1; color: #2f3d34; font-size: 23rpx; }
+.form-remark { display: flex; align-items: flex-start; padding: 22rpx 20rpx; }
+.form-remark > text { padding-top: 6rpx; }
+.form-remark textarea { min-width: 0; min-height: 110rpx; flex: 1; color: #2f3d34; font-size: 22rpx; line-height: 1.5; }
+.inventory-note,.price-change-note { margin-top: 18rpx; padding: 16rpx 18rpx; color: #6f7a72; font-size: 20rpx; line-height: 1.5; background: #eaf0eb; border-radius: 6rpx; }
+.price-change-note { color: #985039; background: #f8eee8; }
+.price-change-title { display: block; font-weight: 600; }
+.price-change-row { display: flex; justify-content: space-between; gap: 12rpx; margin-top: 8rpx; }
+.price-change-row text:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.price-change-footnote { display: block; margin-top: 8rpx; color: #9a776b; font-size: 18rpx; }
+.submit-bar { position: fixed; z-index: 80; right: 0; bottom: 0; left: 0; padding: 16rpx 24rpx calc(18rpx + env(safe-area-inset-bottom)); background: #fff; border-top: 1rpx solid #e2e7e3; }
+.total-block { display: flex; align-items: baseline; justify-content: space-between; color: #78827b; font-size: 20rpx; }
+.total-amount { color: #ad3d34; font-size: 30rpx; font-weight: 700; }
+.submit-button,.secondary-button { display: flex; height: 68rpx; align-items: center; justify-content: center; padding: 0; color: #fff; font-size: 23rpx; line-height: 1; background: #2f6e49; border-radius: 6rpx; }
+.submit-button { margin-top: 10rpx; }
+.submit-button::after,.secondary-button::after { border: 0; }
+.state-message { display: flex; min-height: 55vh; flex-direction: column; align-items: center; justify-content: center; color: #78827b; font-size: 23rpx; text-align: center; }
+.secondary-button { min-width: 220rpx; margin-top: 18rpx; padding: 0 22rpx; color: #286644; background: #fff; border: 1rpx solid #cbd8ce; }

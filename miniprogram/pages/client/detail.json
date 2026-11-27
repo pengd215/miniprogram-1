@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "商品详情",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "client-tabbar": "/components/client-tabbar/index"
+  }
+}

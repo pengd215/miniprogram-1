@@ -1,0 +1,17 @@
+page { min-height: 100%; background: #f3f5f3; }
+.orders-page { min-height: 100vh; padding: 26rpx 24rpx 40rpx; box-sizing: border-box; }
+.orders-heading { display: flex; flex-direction: column; margin: 4rpx 2rpx 26rpx; }
+.page-title { color: #29392f; font-size: 34rpx; font-weight: 700; }
+.page-note { margin-top: 8rpx; color: #7c867f; font-size: 21rpx; line-height: 1.45; }
+.orders-list { display: flex; flex-direction: column; }
+.order-row { margin-bottom: 14rpx; padding: 20rpx; background: #fff; border: 1rpx solid #e3e8e3; border-radius: 8rpx; }
+.order-top,.order-bottom { display: flex; align-items: baseline; justify-content: space-between; gap: 12rpx; }
+.order-number { min-width: 0; overflow: hidden; color: #536057; font-size: 19rpx; white-space: nowrap; text-overflow: ellipsis; }
+.order-status { flex: 0 0 auto; color: #286644; font-size: 20rpx; }
+.order-summary { display: block; margin-top: 18rpx; overflow: hidden; color: #2d3b32; font-size: 24rpx; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; }
+.order-bottom { margin-top: 18rpx; color: #ad3d34; font-size: 22rpx; }
+.order-bottom text:last-child { color: #89928c; font-size: 18rpx; }
+.orders-state { display: flex; min-height: 60vh; flex-direction: column; align-items: center; justify-content: center; color: #7c867f; font-size: 23rpx; }
+.empty-mark { width: 62rpx; height: 62rpx; margin-bottom: 20rpx; border: 2rpx solid #b9c4bc; border-radius: 50%; }
+.retry-button { margin-top: 20rpx; color: #286644; font-size: 22rpx; background: #fff; border: 1rpx solid #cbd8ce; border-radius: 6rpx; }
+.retry-button::after { border: 0; }

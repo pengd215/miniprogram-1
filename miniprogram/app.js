@@ -21,6 +21,7 @@ App({
   globalData: {
     eventChannel: null, //初始化全局事件通道
     openid: '' ,// 初始化为空字符串
+    cartCount: 0,
     userInfo: null,
     sessionToken: '',
     sessionExpireAt: 0,

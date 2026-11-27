@@ -1,0 +1,9 @@
+{
+  "name": "cartManage",
+  "version": "1.0.0",
+  "description": "客户购物车管理",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

@@ -1,0 +1,46 @@
+<view class="home-page">
+  <view class="home-header">
+    <image class="brand-logo" src="/images/zhulu-logo.png" mode="widthFix"></image>
+    <view class="header-copy">
+      <text class="eyebrow">ZHULU AUTO PARTS</text>
+      <text class="page-title">精选配件</text>
+      <text class="page-subtitle">车型适配 · 清晰报价</text>
+    </view>
+    <view class="header-rule"></view>
+  </view>
+
+  <view class="catalog-heading">
+    <text class="section-title">商品展览</text>
+    <text class="section-count" wx:if="{{products.length}}">{{products.length}} 件</text>
+  </view>
+
+  <view class="product-grid" wx:if="{{products.length}}">
+    <view class="product-card" wx:for="{{products}}" wx:key="_id" bindtap="openDetail" data-id="{{item._id}}">
+      <image class="product-image" src="{{item.coverImage}}" mode="aspectFill" lazy-load="true" binderror="onImageError" data-index="{{index}}" />
+      <view class="product-info">
+        <text class="product-model">{{item.car_model || '车型信息待补充'}}</text>
+        <text class="product-meta">{{item.model_year || '年款不限'}}<text wx:if="{{item.direction}}"> · {{item.direction}}</text></text>
+        <view class="product-price-row">
+          <text class="currency">¥</text>
+          <text class="product-price">{{item.price}}</text>
+          <text class="price-unit">参考价</text>
+        </view>
+        <button class="add-cart-button" catchtap="addToCart" data-id="{{item._id}}">加入购物车</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="state-block" wx:if="{{loadError && !products.length}}">
+    <text class="state-title">商品暂时无法加载</text>
+    <button class="retry-button" bindtap="retryLoad">重试</button>
+  </view>
+  <view class="state-block" wx:elif="{{hasLoaded && !products.length}}">
+    <text class="state-title">暂无可展示商品</text>
+  </view>
+  <view class="loading-row" wx:if="{{isLoading && products.length}}">正在加载</view>
+  <view class="loading-row" wx:elif="{{isLoading && !products.length}}">正在加载商品</view>
+  <button class="load-more" wx:if="{{hasMore && !isLoading && hasLoaded}}" bindtap="loadMore">加载更多商品</button>
+  <view class="end-row" wx:if="{{hasLoaded && products.length && !hasMore && !isLoading}}">已显示全部商品</view>
+
+  <client-tabbar id="client-tabbar" active="home" />
+</view>

@@ -1,0 +1,26 @@
+page { min-height: 100%; background: #f3f5f3; }
+.order-detail-page { min-height: 100vh; padding: 24rpx 24rpx 48rpx; box-sizing: border-box; }
+.submitted-banner { display: flex; flex-direction: column; align-items: center; margin: -24rpx -24rpx 22rpx; padding: 38rpx 32rpx; background: #eaf1ec; text-align: center; }
+.success-mark { display: flex; width: 62rpx; height: 62rpx; align-items: center; justify-content: center; color: #fff; font-size: 34rpx; background: #397b56; border-radius: 50%; }
+.submitted-title { margin-top: 14rpx; color: #2c5038; font-size: 28rpx; font-weight: 650; }
+.submitted-copy { max-width: 620rpx; margin-top: 8rpx; color: #68786d; font-size: 20rpx; line-height: 1.5; }
+.order-card { margin-bottom: 14rpx; padding: 18rpx 20rpx; background: #fff; border: 1rpx solid #e3e8e3; border-radius: 8rpx; }
+.detail-heading { display: flex; justify-content: space-between; gap: 16rpx; padding: 12rpx 0; color: #79837c; font-size: 21rpx; border-bottom: 1rpx solid #edf0ed; }
+.detail-heading:last-child { border-bottom: 0; }
+.detail-heading text:last-child { color: #35433a; text-align: right; }
+.status-value { color: #286644 !important; }
+.section-title { margin: 24rpx 2rpx 12rpx; color: #36443a; font-size: 24rpx; font-weight: 600; }
+.detail-item { display: flex; min-width: 0; align-items: center; padding: 12rpx 0; border-bottom: 1rpx solid #edf0ed; }
+.detail-image { width: 92rpx; height: 92rpx; flex: 0 0 92rpx; background: #edf0ed; border-radius: 5rpx; }
+.detail-item-info { display: flex; min-width: 0; flex: 1; flex-direction: column; margin-left: 14rpx; }
+.item-model { overflow: hidden; color: #2d3b32; font-size: 22rpx; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; }
+.item-meta { margin-top: 5rpx; color: #7f8982; font-size: 18rpx; }
+.item-price { margin-top: 8rpx; color: #ad3d34; font-size: 20rpx; }
+.detail-total { display: flex; justify-content: space-between; padding-top: 16rpx; color: #69746c; font-size: 21rpx; }
+.detail-total text:last-child { color: #ad3d34; font-size: 25rpx; font-weight: 700; }
+.contact-card { display: flex; flex-direction: column; gap: 12rpx; color: #4c5950; font-size: 21rpx; }
+.inventory-note { margin-top: 18rpx; padding: 16rpx; color: #6f7a72; font-size: 20rpx; line-height: 1.5; background: #eaf0eb; border-radius: 6rpx; }
+.action-row { display: flex; gap: 14rpx; margin-top: 22rpx; }
+.action-row button { display: flex; height: 70rpx; flex: 1; align-items: center; justify-content: center; color: #286644; font-size: 22rpx; background: #fff; border: 1rpx solid #cbd8ce; border-radius: 6rpx; }
+.action-row button::after { border: 0; }
+.order-state { display: flex; min-height: 50vh; align-items: center; justify-content: center; color: #78827b; font-size: 23rpx; }

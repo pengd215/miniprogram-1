@@ -1,0 +1,13 @@
+<view class="orders-page">
+  <view class="orders-heading"><text class="page-title">我的订单</text><text class="page-note">提交后由业务员联系确认商品、库存和最终报价</text></view>
+  <view wx:if="{{loading && !orders.length}}" class="orders-state">正在加载订单</view>
+  <view wx:elif="{{errorMessage && !orders.length}}" class="orders-state"><text>{{errorMessage}}</text><button class="retry-button" bindtap="retry">重试</button></view>
+  <view wx:elif="{{!orders.length}}" class="orders-state"><view class="empty-mark"></view><text>还没有订单</text></view>
+  <view wx:else class="orders-list">
+    <view class="order-row" wx:for="{{orders}}" wx:key="_id" bindtap="openOrder" data-id="{{item._id}}">
+      <view class="order-top"><text class="order-number">{{item.order_no}}</text><text class="order-status">{{item.status_label}}</text></view>
+      <text class="order-summary">{{item.items[0].car_model || '商品'}}<text wx:if="{{item.items.length > 1}}"> 等 {{item.items.length}} 种</text></text>
+      <view class="order-bottom"><text>¥ {{item.total_amount}}</text><text>{{item.create_time}}</text></view>
+    </view>
+  </view>
+</view>

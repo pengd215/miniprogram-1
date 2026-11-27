@@ -1,0 +1,9 @@
+{
+  "name": "orderManage",
+  "version": "1.0.0",
+  "description": "客户订单查询",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}
