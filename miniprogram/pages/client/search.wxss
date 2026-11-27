@@ -1,352 +1,452 @@
-/* pages/client/search/search.wxss */
-.container {
-  background-color: #f2f4f8; 
-  min-height: 100vh;
-  padding: 24rpx 24rpx calc(48rpx + env(safe-area-inset-bottom));
-  box-sizing: border-box; /* 防止padding导致页面出现横向滚动条 */
+page {
+  min-height: 100%;
+  background: #f3f5f3;
 }
-/* 标题卡片 */
-.search-card {
-  background-color: #ffffff; /* 纯白背景 */
-  margin: 0 30rpx 30rpx;     /* 左右留白，下方留白 */
-  padding: 60rpx 40rpx 80rpx;      /* 内部padding，让内容不贴边 */
-  border-radius: 30rpx;      /* 大圆角，显得圆润 */
-  
-  /* 关键：添加柔和的阴影，制造“大气”的悬浮感 */
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.05); 
-  
+
+.search-page {
   display: flex;
-  flex-direction: column; /* 垂直排列：上标题，下搜索框 */
-  align-items: center;    /* 内容水平居中 */
-}
-
-/* --- 0. 顶部品牌区 --- */
-.brand-bar {
-  padding: 16rpx 8rpx 28rpx;
-}
-
-.brand-title {
-  font-size: 44rpx;
-  font-weight: 700;
-  color: var(--primary-color);
-  letter-spacing: 2rpx;
-}
-
-.brand-sub {
-  margin-top: 8rpx;
-  font-size: 24rpx;
-  color: var(--text-sub);
-  letter-spacing: 1rpx;
-}
-
-/* --- 1. 顶部搜索栏 --- */
-.search-bar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
   width: 100%;
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
-  padding: 10rpx;
-  border-radius: 50rpx;
-  box-shadow: 0 4px 12px rgba(78, 80, 78, 0.08);
-  margin-bottom: 32rpx;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 20rpx 24rpx calc(136rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
-  justify-content: space-between;
 }
 
-.search-input-wrapper {
-  flex: 1;
+.page-heading {
   display: flex;
+  min-height: 80rpx;
   align-items: center;
-  background-color: #f0f0f0;
-  border-radius: 50rpx;
-  padding: 0 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.brand-mark {
+  flex: 0 0 72rpx;
+  width: 72rpx;
   height: 72rpx;
   margin-right: 16rpx;
 }
 
-.search-icon {
-  font-size: 46rpx;
-  color: #999999;
-  margin-right: 10rpx;
-  margin-top: -18rpx;
+.heading-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.brand-kicker {
+  color: #858f88;
+  font-size: 17rpx;
+  line-height: 1.25;
+}
+
+.page-title {
+  margin-top: 5rpx;
+  color: #26382d;
+  font-size: 34rpx;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.heading-note {
+  flex: 0 0 auto;
+  padding: 8rpx 14rpx;
+  color: #5d7464;
+  font-size: 20rpx;
+  background: #e8eee9;
+  border-radius: 6rpx;
+}
+
+.search-tools {
+  display: flex;
+  align-items: center;
+}
+
+.search-field {
+  display: flex;
+  min-width: 0;
+  height: 86rpx;
+  flex: 1;
+  align-items: center;
+  padding: 0 16rpx 0 20rpx;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1rpx solid #dde4de;
+  border-radius: 8rpx;
+}
+
+.search-glyph {
+  position: relative;
+  flex: 0 0 24rpx;
+  width: 24rpx;
+  height: 24rpx;
+  margin-right: 14rpx;
+  box-sizing: border-box;
+  border: 2rpx solid #78847b;
+  border-radius: 50%;
+}
+
+.search-glyph::after {
+  position: absolute;
+  right: -8rpx;
+  bottom: -5rpx;
+  width: 9rpx;
+  height: 2rpx;
+  background: #78847b;
+  content: '';
+  transform: rotate(45deg);
+  transform-origin: left center;
 }
 
 .search-input {
+  min-width: 0;
+  height: 100%;
   flex: 1;
-  font-size: 28rpx;
-  color: var(--text-main);
+  color: #2e3932;
+  font-size: 25rpx;
+  line-height: 86rpx;
 }
 
 .search-placeholder {
-  color: #999999;
+  color: #9aa29c;
+  font-size: 24rpx;
 }
 
-.search-btn {
-  /* 1. 基础外观 */
-  background-color: var(--primary-color); /* 使用主题色（绿色） */
-  color: #e2edf7;                         /* 白色文字 */
-  border-radius: 36rpx;                   /* 圆角（高度的一半即为全圆角，或者改小一点变方角） */
-  
-  /* 2. 尺寸与布局 */
-  height: 72rpx;                          /* 保持与输入框同高 */
-  min-width: 140rpx;                      /* 给一个最小宽度，防止文字太挤 */
-  padding: 0 30rpx;                       /* 左右内边距 */
-  
-  /* 3. 文字样式 */
-  font-size: 28rpx;
-  font-weight: 500;                       /* 字体粗细适中，不要太粗 */
-  line-height: 1;                         /* 修正行高，防止文字偏下 */
-  
-  /* 4. Flex布局居中 */
+.clear-button {
   display: flex;
+  width: 44rpx;
+  height: 48rpx;
+  flex: 0 0 44rpx;
   align-items: center;
   justify-content: center;
-  
-  /* 5. 去除多余装饰 */
-  box-shadow: none;                       /* 【关键】去掉阴影 */
-  background-image: none;                 /* 【关键】去掉渐变 */
-  margin: 0;                              /* 去除默认外边距 */
+  padding: 0;
+  color: #8b948e;
+  font-size: 36rpx;
+  font-weight: 300;
+  line-height: 1;
+  background: transparent;
 }
 
-.search-btn::after {
-  border: none;
-}
-.card-footer {
-  margin-top: auto;       /* 利用 Flex 布局推到最底部 */
-  padding-top: 60rpx;     /* 距离上方内容的间距 */
-  text-align: center;
-  width: 100%;
-  border-top: 1rpx solid #f0f0f0; /* 可选：加一条极淡的分割线 */
+.clear-button::after {
+  border: 0;
 }
 
-.card-footer text {
-  display: block;
-  color: #cccccc;         /* 非常浅的灰色，低调 */
-  font-size: 20rpx;       /* 字号很小 */
-  letter-spacing: 3rpx;   /* 关键：字间距拉大，显得精致 */
-  font-family: Arial, sans-serif; /* 英文用无衬线字体 */
-  transform: scale(0.9);  /* 稍微缩小一点点 */
-}
-
-.card-footer .copyright {
-  margin-top: 8rpx;
-  font-size: 18rpx;
-  color: #e0e0e0;
-}
-
-/* --- 2. 结果卡片 --- */
-.card {
-  width: 100%;
-  background: #ffffff;
-  border-radius: 24rpx;
-  padding: 28rpx;
-  margin-bottom: 28rpx;
-  box-shadow: 0 8rpx 24rpx rgba(46, 125, 50, 0.08);
-  overflow: hidden; /* 防止内容溢出卡片圆角 */
-  box-sizing: border-box;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.card-hover {
-  transform: scale(0.985);
-  box-shadow: 0 4rpx 12rpx rgba(46, 125, 50, 0.12);
-}
-
-.card-header {
+.search-button {
   display: flex;
-  align-items: flex-start;
-  margin-bottom: 20rpx;
-  padding-bottom: 20rpx;
-  border-bottom: 1rpx solid #f0f0f0;
+  width: 124rpx;
+  height: 86rpx;
+  flex: 0 0 124rpx;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #ffffff;
+  font-size: 25rpx;
+  font-weight: 600;
+  line-height: 1;
+  background: #2f6e49;
+  border-radius: 8rpx;
+  margin-left: 12rpx;
 }
 
-.img {
-  width: 100%;
-  height: 240rpx;
+.search-button[disabled] {
+  opacity: 0.72;
+}
+
+.search-button::after {
+  border: 0;
+}
+
+.search-hint {
   display: block;
-  background-color: #f0f0f0;
-  margin-bottom: 20rpx;
-  border-radius: 12rpx;
-  border-bottom: 1rpx solid #f0f0f0;
+  margin: 12rpx 2rpx 0;
+  color: #818b84;
+  font-size: 20rpx;
+  line-height: 1.45;
 }
 
-/* 多图横排展示（最多三张） */
-.img-list {
+.results-heading {
   display: flex;
-  gap: 16rpx;
-  margin-bottom: 20rpx;
-  padding-bottom: 20rpx;
-  border-bottom: 1rpx solid #f0f0f0;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 34rpx 2rpx 16rpx;
 }
 
-.img-item {
-  width: 160rpx;
-  height: 160rpx;
-  border-radius: 12rpx;
-  background-color: #f0f0f0;
-  flex-shrink: 0;
+.results-title {
+  color: #2d3b32;
+  font-size: 27rpx;
+  font-weight: 650;
 }
 
-.header-info {
-  flex: 1;
+.results-count {
+  color: #7e8981;
+  font-size: 21rpx;
+}
+
+.result-list {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-width: 0; /* 允许文字区域收缩，防止被图片挤压 */
 }
 
-.title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: var(--text-main);
-  margin-bottom: 8rpx;
+.product-result {
+  min-width: 0;
+  padding: 18rpx;
+  background: #ffffff;
+  border: 1rpx solid #e3e8e3;
+  border-radius: 8rpx;
+  transition: background-color 0.12s ease;
+}
+
+.product-result + .product-result {
+  margin-top: 14rpx;
+}
+
+.result-pressed {
+  background: #f8faf8;
+}
+
+.result-main {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+}
+
+.result-image {
+  display: block;
+  width: 152rpx;
+  height: 152rpx;
+  flex: 0 0 152rpx;
+  background: #edf0ed;
+  border-radius: 6rpx;
+}
+
+.result-info {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 18rpx;
+}
+
+.model-name {
   display: -webkit-box;
+  width: 100%;
+  overflow: hidden;
+  color: #28382e;
+  font-size: 26rpx;
+  font-weight: 650;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+.fitment-line {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  margin-top: 8rpx;
+  color: #78837b;
+  font-size: 21rpx;
+  line-height: 1.35;
+}
+
+.fitment-line text {
+  min-width: 0;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-/* --- 3. 参数网格：两列等宽 --- */
-.specs-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 20rpx;
-  row-gap: 24rpx;
-  padding-top: 20rpx;
-  border-top: 1rpx solid #f0f0f0;
-  width: 100%;
+.fitment-separator {
+  flex: 0 0 auto;
+  margin: 0 8rpx;
+  color: #b0b8b2;
 }
 
-.spec-item {
-  display: flex;
-  flex-direction: column;
-  min-width: 0; /* 允许子元素在 Grid 单元格内收缩 */
-}
-
-.spec-item.full-width {
-  grid-column: span 2;
-  background-color: #f6faf6;
-  padding: 12rpx 16rpx;
-  border-radius: 10rpx;
-}
-
-.spec-label {
-  font-size: 24rpx;
-  color: #999;
-  margin-bottom: 8rpx;
-}
-
-.spec-value {
-  font-size: 28rpx;
-  color: #333;
-  font-weight: 500;
-  line-height: 1.4;
-  word-break: break-all;
-  white-space: normal;
-  overflow-wrap: break-word;
-}
-
-/* 车型文字特别样式 */
-.car-text {
-  color: #2e7d32;
-  font-weight: 500;
-}
-
-.spec-value.highlight {
-  color: var(--primary-color);
-}
-
-/* --- OE编号：固定宽度单元格，每行三个 --- */
-.oe-cell-list {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.oe-cell {
-  width: 32%;              /* 固定宽度，不足三个时也保持同样大小 */
-  box-sizing: border-box;
-  background: #ffffff;
-  border: 1rpx solid #d7e8d8;
-  border-radius: 8rpx;
-  padding: 8rpx 6rpx;
-  margin-right: 2%;
-  margin-bottom: 10rpx;
-  font-size: 24rpx;
-  font-weight: 500;
-  color: var(--primary-color);
-  text-align: center;
-  white-space: nowrap;     /* 单码不换行 */
+.kyb-number {
+  display: block;
+  max-width: 100%;
+  margin-top: 6rpx;
   overflow: hidden;
-  text-overflow: ellipsis; /* 超长时省略号 */
+  color: #758078;
+  font-size: 19rpx;
+  line-height: 1.35;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.oe-cell:nth-child(3n) {
-  margin-right: 0;         /* 每行第三个去掉右边距，保证对齐 */
-}
-
-/* --- 4. 底部价格区 --- */
-.price-row {
+.price-line {
   display: flex;
-  justify-content: space-between;
+  min-width: 0;
   align-items: baseline;
-  background: linear-gradient(90deg, #f1f8e9 0%, #ffffff 100%);
-  padding: 18rpx 24rpx;
-  border-radius: 14rpx;
-  margin-top: 24rpx;
+  margin-top: auto;
+  padding-top: 10rpx;
+  color: #b34237;
 }
 
-.price-label {
-  font-size: 24rpx;
-  color: var(--text-sub);
+.price-currency {
+  flex: 0 0 auto;
+  margin-right: 2rpx;
+  font-size: 20rpx;
 }
 
-.price-val {
-  font-size: 38rpx;
-  font-weight: bold;
-  color: #e53935;
+.price-value {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 31rpx;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-/* --- 5. 空状态 --- */
-.empty {
+.price-caption {
+  flex: 0 0 auto;
+  margin-left: 8rpx;
+  color: #8a938c;
+  font-size: 18rpx;
+}
+
+.detail-arrow {
+  width: 12rpx;
+  height: 12rpx;
+  flex: 0 0 12rpx;
+  margin-left: 12rpx;
+  border-top: 2rpx solid #a1aaa3;
+  border-right: 2rpx solid #a1aaa3;
+  transform: rotate(45deg);
+}
+
+.oe-section {
   display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  margin-top: 16rpx;
+  padding-top: 14rpx;
+  border-top: 1rpx solid #edf0ed;
+}
+
+.oe-label {
+  flex: 0 0 56rpx;
+  padding-top: 5rpx;
+  color: #78837b;
+  font-size: 19rpx;
+  line-height: 1.4;
+}
+
+.oe-list {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.oe-tag,
+.oe-more {
+  max-width: 100%;
+  padding: 5rpx 10rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-size: 18rpx;
+  line-height: 1.35;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-radius: 4rpx;
+}
+
+.oe-tag {
+  color: #496b53;
+  background: #f0f4f0;
+  border: 1rpx solid #e0e8e0;
+}
+
+.oe-tag,
+.oe-more {
+  margin: 0 8rpx 8rpx 0;
+}
+
+.oe-more {
+  color: #6e7971;
+  background: #f5f6f5;
+}
+
+.add-cart-button {
+  display: flex;
+  height: 58rpx;
+  margin: 16rpx 0 0;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  color: #286644;
+  font-size: 21rpx;
+  line-height: 1;
+  background: #f0f5f1;
+  border-radius: 6rpx;
+}
+
+.add-cart-button::after {
+  border: 0;
+}
+
+.state-panel {
+  display: flex;
+  min-height: 360rpx;
   flex-direction: column;
   align-items: center;
-  padding-top: 120rpx;
-  color: var(--text-sub);
-  font-size: 28rpx;
+  justify-content: center;
+  padding: 20rpx 32rpx;
+  box-sizing: border-box;
+  text-align: center;
 }
 
-.empty-icon {
-  font-size: 80rpx;
+.initial-state {
+  min-height: 420rpx;
+}
+
+.state-title {
+  color: #3b4840;
+  font-size: 25rpx;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.state-description {
+  max-width: 100%;
+  margin-top: 8rpx;
+  color: #818b84;
+  font-size: 21rpx;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.state-indicator {
+  width: 42rpx;
+  height: 42rpx;
+  margin-bottom: 22rpx;
+  border: 4rpx solid #dce5dd;
+  border-top-color: #397b56;
+  border-radius: 50%;
+  animation: search-spin 0.8s linear infinite;
+}
+
+.empty-mark {
+  width: 54rpx;
+  height: 54rpx;
   margin-bottom: 20rpx;
-  opacity: 0.6;
+  border: 2rpx solid #b9c4bc;
+  border-radius: 50%;
 }
 
-.empty-text {
-  color: #666;
-  font-size: 28rpx;
+.search-guide-line {
+  width: 56rpx;
+  height: 4rpx;
+  margin-bottom: 22rpx;
+  background: #93a69a;
 }
 
-.empty-tip {
-  margin-top: 10rpx;
-  font-size: 24rpx;
-  color: #aaa;
-}
-
-/* Logo 容器样式 */
-.logo-container {
-  display: flex;
-  justify-content: center; /* 水平居中 */
-  align-items: center;     /* 垂直居中 */
-  padding: 40rpx 0;        /* 上下留白，避免太挤 */
-}
-
-/* Logo 图片样式 */
-.logo {
-  width: 400rpx;           /* 设置宽度，高度会自动适应 */
-  height: auto;            
+@keyframes search-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

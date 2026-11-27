@@ -37,7 +37,7 @@ Page({
       return
     }
     wx.reLaunch({
-      url: userInfo.role === 'customer' ? '/pages/client/search' : '/pages/index/index'
+      url: userInfo.role === 'customer' ? '/pages/client/home' : '/pages/index/index'
     })
   },
 

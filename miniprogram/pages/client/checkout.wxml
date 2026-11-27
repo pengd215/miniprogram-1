@@ -1,0 +1,47 @@
+<view class="checkout-page">
+  <view class="page-heading">
+    <text class="page-title">确认订单意向</text>
+    <text class="page-note">业务员确认库存与最终报价后再安排发货</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="state-message">正在核对商品与最新报价</view>
+  <view wx:elif="{{errorMessage && !items.length}}" class="state-message">
+    <text>{{errorMessage}}</text>
+    <button class="secondary-button" bindtap="retry">重新核价</button>
+    <button class="secondary-button" bindtap="backToCart">返回购物车</button>
+  </view>
+
+  <block wx:elif="{{items.length}}">
+    <view class="section-heading"><text>商品清单</text><text>{{items.length}} 种</text></view>
+    <view class="checkout-items">
+      <view class="checkout-item" wx:for="{{items}}" wx:key="cart_id">
+        <image class="checkout-image" src="{{item.image || '/images/default-product.png'}}" mode="aspectFill" />
+        <view class="checkout-item-info">
+          <text class="item-title">{{item.car_model || '车型信息待补充'}}</text>
+          <text class="item-meta">{{item.model_year || '年款不限'}}<text wx:if="{{item.direction}}"> · {{item.direction}}</text></text>
+          <view class="item-price-row"><text>¥ {{item.unit_price}}</text><text>× {{item.quantity}}</text><text>¥ {{item.line_total}}</text></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-heading contact-heading"><text>联系信息</text><text>用于业务员跟进</text></view>
+    <view class="contact-form">
+      <view class="form-row"><text>联系人</text><input value="{{contactName}}" data-field="contactName" bindinput="onFieldInput" maxlength="30" placeholder="填写联系人姓名" /></view>
+      <view class="form-row"><text>联系电话</text><input value="{{contactPhone}}" data-field="contactPhone" bindinput="onFieldInput" type="text" maxlength="24" placeholder="填写方便联系的电话" /></view>
+      <view class="form-remark"><text>备注</text><textarea value="{{remark}}" data-field="remark" bindinput="onFieldInput" maxlength="300" placeholder="车型、收货或其他需求（选填）" /></view>
+    </view>
+    <view class="price-change-note" wx:if="{{priceChanges.length}}">
+      <text class="price-change-title">以下报价较购物车中有变化</text>
+      <view class="price-change-row" wx:for="{{priceChanges}}" wx:key="cart_id">
+        <text>{{item.car_model}}</text>
+        <text>¥{{item.old_price}} → ¥{{item.new_price}}</text>
+      </view>
+      <text class="price-change-footnote">提交前将再次由服务端核价</text>
+    </view>
+    <view class="inventory-note">这是订单意向，不扣减或预留库存。最终库存、价格及定金由业务员联系确认。</view>
+    <view class="submit-bar">
+      <view class="total-block"><text>当前参考总额</text><text class="total-amount">¥ {{totalAmount}}</text></view>
+      <button class="submit-button" loading="{{submitting}}" disabled="{{submitting || loading}}" bindtap="onSubmitTap">提交订单意向</button>
+    </view>
+  </block>
+</view>

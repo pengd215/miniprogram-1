@@ -1,0 +1,9 @@
+{
+  "name": "submitOrder",
+  "version": "1.0.0",
+  "description": "客户订单意向报价与提交",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

@@ -1,0 +1,13 @@
+<view class="client-tabbar">
+  <view
+    wx:for="{{tabs}}"
+    wx:key="key"
+    class="tab-item {{active === item.key ? 'selected' : ''}}"
+    bindtap="selectTab"
+    data-key="{{item.key}}"
+  >
+    <text class="tab-label">{{item.label}}</text>
+    <text wx:if="{{item.key === 'cart' && cartCount > 0}}" class="tab-badge">{{cartCount > 99 ? '99+' : cartCount}}</text>
+    <view wx:if="{{active === item.key}}" class="active-mark"></view>
+  </view>
+</view>

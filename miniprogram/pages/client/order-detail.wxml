@@ -1,0 +1,24 @@
+<view class="order-detail-page">
+  <view wx:if="{{submitted && order}}" class="submitted-banner"><view class="success-mark">✓</view><text class="submitted-title">订单意向已提交</text><text class="submitted-copy">业务员将根据联系方式与您确认库存、价格和后续安排</text></view>
+  <view wx:if="{{loading}}" class="order-state">正在加载订单</view>
+  <view wx:elif="{{errorMessage}}" class="order-state">{{errorMessage}}</view>
+  <block wx:elif="{{order}}">
+    <view class="order-card">
+      <view class="detail-heading"><text>订单编号</text><text>{{order.order_no}}</text></view>
+      <view class="detail-heading"><text>当前状态</text><text class="status-value">{{order.status_label}}</text></view>
+      <view class="detail-heading"><text>提交时间</text><text>{{order.create_time}}</text></view>
+    </view>
+    <view class="section-title">商品明细</view>
+    <view class="order-card">
+      <view class="detail-item" wx:for="{{order.items}}" wx:key="product_id">
+        <image class="detail-image" src="{{item.image || '/images/default-product.png'}}" mode="aspectFill" />
+        <view class="detail-item-info"><text class="item-model">{{item.car_model}}</text><text class="item-meta">{{item.model_year || '年款不限'}}<text wx:if="{{item.direction}}"> · {{item.direction}}</text></text><text class="item-price">¥ {{item.unit_price}} × {{item.quantity}}　¥ {{item.line_total}}</text></view>
+      </view>
+      <view class="detail-total"><text>参考总额</text><text>¥ {{order.total_amount}}</text></view>
+    </view>
+    <view class="section-title">联系信息</view>
+    <view class="order-card contact-card"><text>{{order.contact.name}}</text><text>{{order.contact.phone}}</text><text wx:if="{{order.remark}}">备注：{{order.remark}}</text></view>
+    <view class="inventory-note">订单意向不代表库存锁定或订单自动成立，库存、最终报价和定金安排以业务员确认为准。</view>
+    <view class="action-row"><button bindtap="goOrders">我的订单</button><button bindtap="goHome">返回首页</button></view>
+  </block>
+</view>

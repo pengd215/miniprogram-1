@@ -16,6 +16,13 @@
     "pages/warehouse/warehouseArea/index",
     "pages/warehouse/locationMgr/index",
     "pages/client/search",
+    "pages/client/home",
+    "pages/client/detail",
+    "pages/client/cart",
+    "pages/client/checkout",
+    "pages/client/orders",
+    "pages/client/order-detail",
+    "pages/client/mine",
     "pages/permission/index"
   ],
     "tabBar": {

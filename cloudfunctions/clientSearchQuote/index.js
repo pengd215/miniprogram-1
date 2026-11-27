@@ -5,31 +5,44 @@ const db = cloud.database()
 const _ = db.command
 
 exports.main = async (event, context) => {
-  const { keyword } = event
-// 加日志：查看前端传了什么参数
-  console.log('[clientSearchQuote] 收到请求, keyword:', keyword)
+  const keyword = String((event && event.keyword) || '').trim()
+  const { OPENID } = cloud.getWXContext()
+
+  if (!OPENID) return { code: 401, msg: '请先登录后查询' }
+
+  try {
+    const customerRes = await db.collection('employees')
+      .where({ _openid: OPENID })
+      .limit(1)
+      .get()
+    const customer = customerRes.data[0]
+    if (!customer || customer.role !== 'customer' || customer.status === 'disabled') {
+      return { code: 403, msg: '当前账号无权查询客户报价' }
+    }
+  } catch (err) {
+    console.error('[clientSearchQuote] 客户身份校验失败:', err)
+    return { code: 500, msg: '查询失败' }
+  }
   
   // 正则转义工具：防止用户输入注入正则元字符（ReDoS）
   const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   
-  if (!keyword|| keyword.trim() === '') {
+  if (!keyword) {
     return { code: 400, msg: '请输入查询关键词' }
   }
 
   try {
     // 1. 构建正则搜索条件 (支持模糊匹配 OE号或名称)
-    const searchRegex = new RegExp(escapeRegExp(keyword.trim()), 'i') 
-    
-
-     // 加日志：查看构建的查询条件
-     console.log('[clientSearchQuote] 查询条件:', keyword)
+    const searchRegex = new RegExp(escapeRegExp(keyword), 'i')
     // 2. 核心操作：projection (投影)
-    // 第二个参数传入对象，1表示显示，0表示隐藏。
     const res = await db.collection('products')
-      .where(_.or([
-        { oe_no: searchRegex },
-        { kyb_no: searchRegex },
-        { car_model: searchRegex }
+      .where(_.and([
+        { status: 'active' },
+        _.or([
+          { oe_no: searchRegex },
+          { kyb_no: searchRegex },
+          { car_model: searchRegex }
+        ])
       ]))
       .limit(20) // 限制返回数量，防止被恶意刷爆
       .field({
@@ -45,9 +58,6 @@ exports.main = async (event, context) => {
       })
       .get()
 
-      // 加日志：查看查到了多少条
-    console.log('[clientSearchQuote] 查询结果数量:', res.data.length)
-
     return {
       code: 200,
       msg: '查询成功',
@@ -55,7 +65,7 @@ exports.main = async (event, context) => {
     }
 
   } catch (err) {
-    console.error(err)
+    console.error('[clientSearchQuote] 查询失败:', err)
     return { code: 500, msg: '查询失败' }
   }
 }

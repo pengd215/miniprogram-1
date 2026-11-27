@@ -1,0 +1,9 @@
+{
+  "name": "clientListProducts",
+  "version": "1.0.0",
+  "description": "客户首页商品分页展示与报价详情查询",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~4.0.2"
+  }
+}

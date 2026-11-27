@@ -1,0 +1,43 @@
+<view class="cart-page">
+  <view class="cart-heading">
+    <text class="cart-title">购物车</text>
+    <text class="cart-subtitle">加入清单的配件</text>
+  </view>
+  <view wx:if="{{loading && !items.length}}" class="cart-state">正在加载购物车</view>
+  <view wx:elif="{{errorMessage && !items.length}}" class="cart-state">
+    <text>{{errorMessage}}</text>
+    <button class="retry-button" bindtap="retryLoad">重试</button>
+  </view>
+  <view wx:elif="{{!items.length}}" class="cart-state">
+    <view class="empty-mark"></view>
+    <text class="empty-title">购物车还是空的</text>
+    <text class="empty-copy">去首页挑选适配商品</text>
+  </view>
+  <view wx:else class="cart-list">
+    <view class="cart-item" wx:for="{{items}}" wx:key="_id">
+      <checkbox class="item-check" checked="{{item.selected}}" disabled="{{!item.available}}" color="#286644" bindtap="toggleSelected" data-index="{{index}}" />
+      <image class="item-image" src="{{item.displayProduct.images[0] || '/images/default-product.png'}}" mode="aspectFill" />
+      <view class="item-info">
+        <text class="item-model">{{item.displayProduct.car_model || '车型信息待补充'}}</text>
+        <text class="item-meta">{{item.displayProduct.model_year || '年款不限'}}<text wx:if="{{item.displayProduct.direction}}"> · {{item.displayProduct.direction}}</text></text>
+        <text class="item-warning" wx:if="{{!item.available}}">商品已下架，无法选择</text>
+        <text class="item-warning" wx:elif="{{item.priceChanged}}">当前报价已变化，请核对新价格</text>
+        <view class="item-bottom">
+          <text class="item-price">¥ {{item.displayProduct.price}}</text>
+          <view class="quantity-control">
+            <button bindtap="changeQuantity" data-index="{{index}}" data-step="-1">-</button>
+            <text>{{item.quantity}}</text>
+            <button bindtap="changeQuantity" data-index="{{index}}" data-step="1">+</button>
+          </view>
+        </view>
+        <text class="remove-link" bindtap="removeItem" data-id="{{item._id}}">移除</text>
+      </view>
+    </view>
+  </view>
+  <view class="cart-footer" wx:if="{{items.length}}">
+    <view><text class="total-label">已选 {{selectedCount}} 件</text><text class="total-value">¥ {{selectedTotal}}</text></view>
+    <text class="footer-note">报价及库存以业务员最终确认为准</text>
+    <button class="continue-button" bindtap="checkout">提交订单意向</button>
+  </view>
+  <client-tabbar id="client-tabbar" active="cart" />
+</view>

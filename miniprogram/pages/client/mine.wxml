@@ -1,0 +1,24 @@
+<view class="mine-page">
+  <view class="account-heading">
+    <image class="avatar" src="/images/avatar.png" mode="aspectFill" />
+    <view class="account-copy">
+      <text class="account-name">{{userInfo.name || '客户'}}</text>
+      <text class="account-role">客户账号</text>
+    </view>
+  </view>
+  <view class="mine-section">
+    <view class="account-row order-entry" bindtap="openOrders">
+      <text class="row-label">我的订单</text>
+      <text class="row-arrow">›</text>
+    </view>
+  </view>
+  <view class="mine-section">
+    <text class="section-label">账户</text>
+    <view class="account-row">
+      <text class="row-label">登录账号</text>
+      <text class="row-value">{{userInfo.username || '—'}}</text>
+    </view>
+  </view>
+  <button class="logout-button" bindtap="logout">退出登录</button>
+  <client-tabbar active="mine" />
+</view>

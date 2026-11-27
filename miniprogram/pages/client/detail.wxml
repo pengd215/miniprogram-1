@@ -1,0 +1,60 @@
+<view class="detail-page">
+  <view class="loading-state" wx:if="{{isLoading}}">正在加载商品</view>
+  <view class="error-state" wx:elif="{{errorMessage}}">
+    <text class="error-title">{{errorMessage}}</text>
+    <button class="back-button" bindtap="goBack">返回</button>
+  </view>
+
+  <block wx:elif="{{product}}">
+    <view class="gallery">
+      <swiper
+        class="product-swiper"
+        current="{{currentImage}}"
+        indicator-dots="{{product.images.length > 1}}"
+        indicator-color="rgba(255,255,255,0.5)"
+        indicator-active-color="#ffffff"
+        circular="{{product.images.length > 1}}"
+        bindchange="onImageChange"
+        bindtap="previewImages"
+      >
+        <swiper-item wx:for="{{product.images}}" wx:key="*this">
+          <image class="detail-image" src="{{item}}" mode="aspectFill" binderror="onImageError" data-index="{{index}}" />
+        </swiper-item>
+      </swiper>
+      <text class="image-counter" wx:if="{{product.images.length > 1}}">{{currentImage + 1}} / {{product.images.length}}</text>
+    </view>
+
+    <view class="detail-content">
+      <view class="price-line">
+        <text class="detail-price"><text class="currency">¥</text>{{product.price}}</text>
+        <text class="reference-label">批发参考价</text>
+      </view>
+      <text class="model-title">{{product.car_model || '车型信息待补充'}}</text>
+
+      <view class="spec-list">
+        <view class="spec-row">
+          <text class="spec-label">适用年款</text>
+          <text class="spec-value">{{product.model_year || '不限'}}</text>
+        </view>
+        <view class="spec-row">
+          <text class="spec-label">适用方向</text>
+          <text class="spec-value">{{product.direction || '未标注'}}</text>
+        </view>
+        <view class="spec-row spec-row-top">
+          <text class="spec-label">OE 编号</text>
+          <view class="oe-list">
+            <text class="oe-tag" wx:for="{{product.oeList}}" wx:key="index">{{item}}</text>
+            <text class="spec-value" wx:if="{{!product.oeList.length}}">未标注</text>
+          </view>
+        </view>
+      </view>
+      <view class="notice">商品报价以业务员最终确认信息为准</view>
+    </view>
+
+    <view class="detail-actions">
+      <button class="add-cart-action" bindtap="addToCart">加入购物车</button>
+      <button class="back-button" bindtap="goBack">返回商品</button>
+    </view>
+  </block>
+  <client-tabbar id="client-tabbar" active="home" />
+</view>
